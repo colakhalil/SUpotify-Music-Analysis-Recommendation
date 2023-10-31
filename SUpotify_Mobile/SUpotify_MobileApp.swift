@@ -11,7 +11,7 @@ import SwiftUI
 struct SUpotify_MobileApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginView()
         }
     }
 }
