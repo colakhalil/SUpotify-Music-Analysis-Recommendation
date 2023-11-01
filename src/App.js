@@ -1,10 +1,7 @@
-import React from 'react';
-import { BrowserRouter as Router, Route ,Routes} from 'react-router-dom'; 
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import './App.css';
-
-// Diğer bileşenleri içe aktarın
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 
 function App() {
   return (

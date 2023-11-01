@@ -1,7 +1,21 @@
+body {
+  /* fallback for old browsers */
+  background: #001a0c;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(
+    to right,
+    rgb(14, 37, 26),
+    rgb(74, 36, 79)
+  );
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to right, rgb(13, 35, 22), rgb(30, 16, 37));
+}
+
 .App {
   text-align: center;
 }
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -37,14 +51,14 @@
   }
 }
 
-.mcard-locat{
+.mcard-locat {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
 
-.m-card{
+.m-card {
   border-radius: 1rem;
   max-width: 500px;
   background-color: #363636;
@@ -53,8 +67,8 @@
   flex-direction: column;
 }
 
-h1{
-  font-family: 'Avantgarde Gothic', sans-serif;
+h1 {
+  font-family: "Avantgarde Gothic", sans-serif;
   font-size: 3rem;
   font-weight: bold;
   margin-bottom: 1rem;
@@ -62,17 +76,17 @@ h1{
   color: white;
 }
 
-.get-input{
-  font-family:'Avantgarde Gothic', sans-serif;
+.get-input {
+  font-family: "Avantgarde Gothic", sans-serif;
   margin-bottom: 1rem;
   padding: 1rem;
   width: 100%;
   border-radius: 0.5rem;
-  border: none; 
+  border: none;
 }
 
-.button-log-reg{
-  font-family: 'Avantgarde Gothic', sans-serif;
+.button-log-reg {
+  font-family: "Avantgarde Gothic", sans-serif;
   background-color: #c1cdc1;
   color: #363636;
   padding: 1rem;
@@ -85,35 +99,24 @@ h1{
   font-size: 1rem;
 }
 
-.details-register-p{
-  font-family: 'Avantgarde Gothic', sans-serif;
+.details-register-p {
+  font-family: "Avantgarde Gothic", sans-serif;
   color: gray;
   margin-bottom: 2rem;
   text-align: center;
 }
 
-.white-p{
-  font-family: 'Avantgarde Gothic', sans-serif;
+.white-p {
+  font-family: "Avantgarde Gothic", sans-serif;
   color: white;
   text-align: center;
 }
 
-.g-link{
-  font-family: 'Avantgarde Gothic', sans-serif;
+.g-link {
+  font-family: "Avantgarde Gothic", sans-serif;
   color: green;
 }
 
-hr{
+hr {
   margin: 1rem 0;
 }
-
-
-
-
-
-
-
-
-
-
-
