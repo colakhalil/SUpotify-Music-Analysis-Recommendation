@@ -2,14 +2,14 @@ import { useState } from "react";
 import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../pagesCSS/SignIN-UP.css";
 function SignUp() {
   const [username, setUsernamen] = useState("");
   const [emailn, setEmailn] = useState("");
   const [passwordn, setPasswordn] = useState("");
   const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
-
+  const navigate = useNavigate();
   const Register = () => {
     let json = {
       email: emailn,
@@ -20,9 +20,10 @@ function SignUp() {
 
     //VAR JSON WILL BE SEND AND isRegister will be received.
 
-    let isRegister = false; //if isRegister is false
+    let isRegister = true; //if isRegister is false
     if (isRegister) {
       //Than naviagte to main page
+      navigate("/main");
     }
     if (!isRegister) {
       //Than show pop-up register unsucessful!

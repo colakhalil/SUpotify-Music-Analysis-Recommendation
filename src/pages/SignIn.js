@@ -1,13 +1,13 @@
 import { useState } from "react";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../pagesCSS/SignIN-UP.css";
 
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
-
+  const navigate = useNavigate();
   const handleUserNameChange = (event) => {
     setEmail(event.target.value);
   };
@@ -27,9 +27,9 @@ function SignIn() {
 
     //VAR JSON WILL BE SEND AND isLogin will be received.
 
-    let isLogin = false; //if isLogin is false
+    let isLogin = true; //if isLogin is false
     if (isLogin) {
-      //Than naviagte to main page
+      navigate("/main");
     }
     if (!isLogin) {
       //Than show pop-up login unsucessful!
