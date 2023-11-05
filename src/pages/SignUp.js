@@ -8,7 +8,39 @@ function SignUp() {
   const [username, setUsernamen] = useState("");
   const [emailn, setEmailn] = useState("");
   const [passwordn, setPasswordn] = useState("");
+  const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
 
+  const Register = () => {
+    let json = {
+      email: emailn,
+      password: passwordn,
+      username: username,
+    };
+    console.log(json);
+
+    //VAR JSON WILL BE SEND AND isRegister will be received.
+
+    let isRegister = false; //if isRegister is false
+    if (isRegister) {
+      //Than naviagte to main page
+    }
+    if (!isRegister) {
+      //Than show pop-up register unsucessful!
+      setShowPopup(true); // Show the popup
+      setTimeout(() => setShowPopup(false), 3000);
+    }
+  };
+
+  const handleEmailChange = (event) => {
+    setEmailn(event.target.value);
+  };
+
+  const handleUserNameChange = (event) => {
+    setUsernamen(event.target.value);
+  };
+  const handlePasswordChange = (event) => {
+    setPasswordn(event.target.value);
+  };
   return (
     <div className="mcard-locat">
       <div className="m-card">
@@ -16,29 +48,33 @@ function SignUp() {
         <p className="details-register-p">
           Please enter your details to register!
         </p>
-
+        {showPopup && (
+          <div className="popup">
+            <p>Register unsuccessful! Please try again!</p>
+          </div>
+        )}
         <input
           className="get-input"
-          onClick={() => setUsernamen("")}
           placeholder="Username"
           type="usernamen"
+          onChange={handleUserNameChange}
         />
         <input
           className="get-input"
-          onClick={() => setEmailn("")}
           placeholder="Email Address"
           type="emailn"
+          onChange={handleEmailChange}
         />
         <input
           className="get-input"
-          onClick={() => setPasswordn("")}
           placeholder="Password"
           type="passwordn"
+          onChange={handlePasswordChange}
         />
 
         <hr />
 
-        <button type="submit" className="button-log-reg">
+        <button type="submit" className="button-log-reg" onClick={Register}>
           Register
         </button>
 

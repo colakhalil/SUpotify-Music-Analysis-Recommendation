@@ -12,6 +12,12 @@ body {
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   background: linear-gradient(to right, rgb(13, 35, 22), rgb(30, 16, 37));
 }
+/* CSS for the login warning popup */
+.popup {
+  text-align: center;
+
+  color: red;
+}
 
 .App {
   text-align: center;
