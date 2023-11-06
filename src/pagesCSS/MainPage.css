@@ -1,0 +1,111 @@
+/* MainPage.css */
+
+.song-bar {
+  width: 100%;
+  position: fixed; /* Fixed position to keep it at the bottom */
+  bottom: 0; /* Align to the bottom */
+  background: #181818; /* Dark background */
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3); /* slight shadow on top */
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.song-info {
+  display: flex;
+  align-items: center;
+}
+
+.album-cover {
+  width: 60px; /* Adjust as necessary */
+  height: 60px; /* Adjust as necessary */
+  object-fit: cover;
+  margin-right: 1rem;
+  border-radius: 4px;
+}
+
+.song-title,
+.song-artist {
+  margin: 0;
+  color: #fff;
+}
+
+.song-title {
+  font-weight: bold;
+}
+
+.song-artist {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.song-like {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+.song-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* to align children elements to the start of the container */
+}
+
+.play-btn {
+  background-color: #1db954; /* Spotify green */
+  color: #fff;
+  border: none;
+  padding: 0.5rem 2rem;
+  font-size: 1rem;
+  border-radius: 500px; /* Rounded pill shape */
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+.song-progress {
+  display: flex;
+  align-items: center;
+}
+
+.slider {
+  -webkit-appearance: none; /* Override default CSS styles */
+  appearance: none;
+  width: 200px; /* Adjust as necessary */
+  height: 4px; /* Slider thickness */
+  background: #535353; /* Slider background */
+  outline: none;
+  opacity: 0.7; /* Slider opacity */
+  -webkit-transition: 0.2s; /* Transition for slider */
+  transition: opacity 0.2s;
+  border-radius: 2px;
+  margin-right: 1rem;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default CSS styles */
+  appearance: none;
+  width: 12px; /* Slider handle width */
+  height: 12px; /* Slider handle height */
+  background: #fff; /* Slider handle color */
+  cursor: pointer; /* Cursor on hover */
+  border-radius: 50%; /* Round shape */
+}
+
+.slider::-moz-range-thumb {
+  width: 12px; /* Slider handle width */
+  height: 12px; /* Slider handle height */
+  background: #fff; /* Slider handle color */
+  cursor: pointer; /* Cursor on hover */
+  border-radius: 50%; /* Round shape */
+}
+
+.song-timer {
+  font-size: 0.8rem;
+  color: #aaa;
+}
