@@ -8,6 +8,8 @@ function SignUp() {
   const [username, setUsernamen] = useState("");
   const [emailn, setEmailn] = useState("");
   const [passwordn, setPasswordn] = useState("");
+  const [confirmPassword,setConfirmPassword] = useState("");
+  const [userData, setUserData] = useState([]); //dummy json
   const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
   const navigate = useNavigate();
   const Register = () => {
@@ -32,6 +34,19 @@ function SignUp() {
     }
   };
 
+  const handleSignUpClick = () => {
+    if (passwordn !== confirmPassword) {
+      alert('The two passwords must match.'); // Parolalar eşleşmiyorsa bir uyarı gösterin.
+    } else {
+      //kullanıcı verisi json'a kaydetmek için
+      const newUser = { username, emailn, passwordn };
+      setUserData([...userData, newUser]);
+      alert('Registration Succesfull!') //test amaçlı doğrulama mesajı
+      // Burada parolalar eşleştiğinde yapılacak işlemler yer alacak.
+      // Örneğin bir API'ye kayıt isteği gönderebilirsiniz.
+    }
+  };
+
   const handleEmailChange = (event) => {
     setEmailn(event.target.value);
   };
@@ -41,6 +56,10 @@ function SignUp() {
   };
   const handlePasswordChange = (event) => {
     setPasswordn(event.target.value);
+  };
+
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value);
   };
   return (
     <div className="mcard-locat">
@@ -69,8 +88,15 @@ function SignUp() {
         <input
           className="get-input"
           placeholder="Password"
-          type="passwordn"
+          type="password"
           onChange={handlePasswordChange}
+        />
+        <input
+        className="get-input"
+        onChange={handleConfirmPasswordChange}
+        placeholder="Confirm Password"
+        type="password"
+        value={confirmPassword}
         />
 
         <hr />

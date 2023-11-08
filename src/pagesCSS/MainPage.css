@@ -212,3 +212,112 @@
   font-size: 0.8em;
   color: #aaa;
 }
+
+
+.main-container {
+  display: flex;
+  height: 100vh; /* Full viewport height */
+}
+
+.content-container {
+  flex-grow: 1; /* Take up remaining space */
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+}
+
+.last-played-title{
+  font-size: 30px;
+  margin-left: 1.5rem;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color:rgb(194, 189, 189);
+}
+
+.search-bar-container {
+  align-self: flex-start; /* Align to the top-left */
+}
+
+
+
+.search-bar-container {
+  display: flex;
+  width: 26rem;
+  align-items: center;
+  background-color: white; /* Dark background color */
+  border: 2px solid #000000; /* Light border color */
+  border-radius: 25px; /* Rounded corners for the whole search bar */
+  padding: 0rem;
+  padding-right: 5.8rem;
+}
+.search-bar{
+  display:flex;
+  justify-content: space-between;
+  border:none;
+}
+.search-input {
+  flex-grow: 1;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 25px 0 0 25px;
+  background-color: transparent; /* Ensure the input has a transparent background */
+  border: none; /* Remove border from the input */
+  outline: none; /* Remove the focus outline to maintain style */
+  padding: 0rem 16rem 0rem 0.5rem; /* Space for the text inside the input */
+  color: rgb(0, 0, 0); /* Text color for the input */
+}
+.search-bar::text{
+  width:100%;
+}
+.search-input::placeholder {
+  color: rgb(24, 22, 22); /* Light text color for the placeholder */
+
+}
+
+.search-button {
+  margin: 0rem;
+  background: none; /* No background for the button */
+  border-width: 1px; /* No border for the button */
+  border-radius: 30px;
+  color: rgb(0, 0, 0); /* Set the icon color */
+  cursor: pointer;
+  padding: 0.7rem 1rem;
+}
+
+
+/* PLAYLIST */
+/* Playlist.css */
+/* MainPage.css */
+.lastPlaylists-container {
+  display: grid;
+  flex-wrap: wrap;
+  justify-content: space-around; /* This will space your playlists evenly */
+  align-content: flex-start; /* Aligns the content to the top */
+  flex: 1; /* Takes up the remaining space between left bar and friend activity */
+  max-width: calc(100% - 500px); /* Assuming left bar and friend activity bar are 250px each */
+  margin: 0 20px; /* Adds some space between the bars */
+}
+
+
+.Playlist {
+  flex:1;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc((100% / 2) - 40px); /* Divide by 3 for three playlists in a row, minus margin */
+  margin: 10px; /* Adds margin between playlists */
+}
+
+.lastPlaylists-thumbnail {
+  width: 100%; /* ensures the image takes the full width of the grid column */
+  height: auto; /* maintains the aspect ratio of the image */
+  object-fit: cover; /* ensures the images are nicely cropped to fit the box */
+  border-radius: 8px; /* optional, for rounded corners */
+}
+
+
+.lastPlaylists-name {
+  color: white; /* Change the color as needed */
+  text-align: center;
+  font-size: 1rem;
+  /* Add more styling as required */
+}
