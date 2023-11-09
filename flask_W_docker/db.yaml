@@ -1,5 +1,0 @@
-mysql_host: 'localhost'
-mysql_user: 'root'
-# Enter your password in field below
-mysql_password: '987123'
-mysql_db: 'flaskapp'

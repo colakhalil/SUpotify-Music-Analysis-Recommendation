@@ -1,0 +1,29 @@
+version: "2"
+services:
+  app:
+    build: ./app
+    networks:
+      - mynetwork
+    links:
+      - db
+    ports:
+      - "8008:8008"
+    depends_on:
+      - db
+
+
+  db:
+    image: mysql
+    networks:
+      - mynetwork
+    ports:
+      - "32000:3306"
+    environment:
+      - MYSQL_DATABASE=flaskapp
+      - MYSQL_ROOT_PASSWORD=Atakan2002
+    volumes:
+      - ./data:/var/lib/mysql
+  
+networks:
+  mynetwork:
+    driver: bridge

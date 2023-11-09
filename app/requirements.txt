@@ -1,0 +1,7 @@
+Flask
+mysql-connector
+flask-mysqldb
+flask-cors
+blueprint
+spotipy
+requests
