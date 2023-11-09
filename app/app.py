@@ -80,6 +80,13 @@ def sign_up():
         # Create the User table if it doesn't exist
         cur.execute(user_table_query)
         
+        query = """SELECT * FROM User WHERE user_id = %s"""
+        cur.execute(query, (data["user_id"],))
+        db_data = cur.fetchone()
+        
+        if db_data:
+            return jsonify({"message": "This user already exists"})
+        
         # Insert user data into the User table
         cur.execute(insert_user_query, (data["user_id"], data["password"], data["email"]))
         mysql.connection.commit()
