@@ -3,6 +3,7 @@ import SongDetails from './subcomponents/SongDetails';
 import SongControls from './subcomponents/SongControls';
 import SongRating from './subcomponents/SongRating';
 import SongOptions from './subcomponents/SongOptions';
+import SongDetailsExtra from './subcomponents/SongDetailsExtra';
 
 const BottomBar = ({ song }) => {
   const [userRating, setUserRating] = useState(song.userPrevRating);
@@ -65,9 +66,11 @@ const BottomBar = ({ song }) => {
         currentTime={currentTime}
         songDurationInSeconds={songDurationInSeconds}
         song={song}
+        toggleLyrics={toggleLyrics}
+        userRating={userRating}
+         handleRatingChange={handleRatingChange}
       />
-      <SongRating userRating={userRating} handleRatingChange={handleRatingChange} />
-      <SongOptions toggleLyrics={toggleLyrics} />
+      <SongDetailsExtra song={song}/>
     </div>
   );
 };

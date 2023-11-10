@@ -4,13 +4,13 @@ const NavigationButtons = ({ onHomeClick, onSearchClick }) => {
   return (
     <>
       <button className="left-bar-button" onClick={onHomeClick}>
-        Ana sayfa
+        Main Page
       </button>
       <button className="left-bar-button" onClick={onSearchClick}>
-        Profil
+        Profile
       </button>
       <button className="left-bar-button">
-        Kitaplığın
+        Library
       </button>
     </>
   );

@@ -35,6 +35,17 @@ const userData = {
 
     // Add more playlists as needed
   ];
+  const recomendedPlaylists= [
+    { name: 'Mix 1', thumbnail: 'https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp' },
+    { name: 'Mix 2', thumbnail: 'https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp' },
+    { name: 'Mix 3', thumbnail: 'https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp' },
+    { name: 'Mix 4', thumbnail: 'https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp' },
+    { name: 'Mix 5', thumbnail: 'https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp' },
+    { name: 'Mix 6', thumbnail: 'https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp' },
+    { name: 'Mix 7', thumbnail: 'https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp' },
+    { name: 'Mix 8', thumbnail: 'https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp' },
+
+  ]
 
   const song = {
     title: "Beni Böyle Hatırla",
@@ -113,19 +124,29 @@ const userData = {
           <div className="content-container">
             <SearchBar onSearch={handleSearch}/>
             <h2 className="last-played-title">Your last played Playlists </h2>
-    
             <div className="lastPlaylists-container">
-              {lastPlaylists.map((playlist, index) => (
+              {lastPlaylists.map((lastPlaylists, index) => (
                 <Playlist
                   key={index}
-                  name={playlist.name}
-                  thumbnail={playlist.thumbnail}
-                  onClick={() => handlePlaylistClick(playlist.name)}
+                  name={lastPlaylists.name}
+                  thumbnail={lastPlaylists.thumbnail}
+                  onClick={() => handlePlaylistClick(lastPlaylists.name)}
             
                 />
               ))}
-        </div>
+            </div>
+             <h2 className="recommended-playlists">Recomended Playlists</h2>
+             <div className="recomended-playlists-container">
+              {recomendedPlaylists.map((recomendedPlaylists, index) => (
+                <Playlist
+                  key={index}
+                  name={recomendedPlaylists.name}
+                  thumbnail={recomendedPlaylists.thumbnail}
+                  onClick={() => handlePlaylistClick(recomendedPlaylists.name)}
             
+                />
+              ))}
+            </div>
           </div>
           
         <FriendActivity friendsData={friendsData} />

@@ -106,9 +106,9 @@ function SignUp() {
         </button>
 
         <p className="white-p">
-          have an account?{" "}
+          Already have an account?{" "}
           <Link to="/" className="g-link">
-            sign in here
+            Sign in here
           </Link>
         </p>
         <p className="details-register-p">
