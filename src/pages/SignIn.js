@@ -14,25 +14,40 @@ function SignIn() {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
-
-  const LogIn = () => {
-    //LOGIN REQUEST WILL BE GET AND IF LOGIN IS TRUE THAN GO TO MAIN PAGE
-
+  const LogIn = async () => {
     let json = {
       email: email,
       password: password,
     };
-    console.log("LOGIN CLICKED");
     console.log(json);
+    let isLogin = false;
+    try {
+      const response = await fetch("http://127.0.0.1:8008/login", {
+        method: "POST", // or 'PUT' if your backend requires
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(json),
+      });
 
-    //VAR JSON WILL BE SEND AND isLogin will be received.
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-    let isLogin = true; //if isLogin is false
+      const data = await response.json();
+      isLogin = data["message"]; //if isLogin is false
+      console.log("Success:", data);
+      // Handle the response data in here
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    console.log("islogin: ", isLogin);
     if (isLogin) {
+      //Than naviagte to main page
       navigate("/main");
     }
     if (!isLogin) {
-      //Than show pop-up login unsucessful!
+      //Than show pop-up register unsucessful!
       setShowPopup(true); // Show the popup
       setTimeout(() => setShowPopup(false), 3000);
     }

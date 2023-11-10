@@ -8,21 +8,40 @@ function SignUp() {
   const [username, setUsernamen] = useState("");
   const [emailn, setEmailn] = useState("");
   const [passwordn, setPasswordn] = useState("");
-  const [confirmPassword,setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [userData, setUserData] = useState([]); //dummy json
   const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
   const navigate = useNavigate();
-  const Register = () => {
+
+  const Register = async () => {
     let json = {
       email: emailn,
       password: passwordn,
-      username: username,
+      user_id: username,
     };
     console.log(json);
+    let isRegister = false;
+    try {
+      const response = await fetch("http://127.0.0.1:8008/sign_up", {
+        method: "POST", // or 'PUT' if your backend requires
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(json),
+      });
 
-    //VAR JSON WILL BE SEND AND isRegister will be received.
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-    let isRegister = true; //if isRegister is false
+      const data = await response.json();
+      isRegister = data["message"]; //if isRegister is false
+      console.log("Success:", data);
+      // Handle the response data in here
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    console.log("isregister: ", isRegister);
     if (isRegister) {
       //Than naviagte to main page
       navigate("/main");
@@ -36,12 +55,12 @@ function SignUp() {
 
   const handleSignUpClick = () => {
     if (passwordn !== confirmPassword) {
-      alert('The two passwords must match.'); // Parolalar eşleşmiyorsa bir uyarı gösterin.
+      alert("The two passwords must match."); // Parolalar eşleşmiyorsa bir uyarı gösterin.
     } else {
       //kullanıcı verisi json'a kaydetmek için
       const newUser = { username, emailn, passwordn };
       setUserData([...userData, newUser]);
-      alert('Registration Succesfull!') //test amaçlı doğrulama mesajı
+      alert("Registration Succesfull!"); //test amaçlı doğrulama mesajı
       // Burada parolalar eşleştiğinde yapılacak işlemler yer alacak.
       // Örneğin bir API'ye kayıt isteği gönderebilirsiniz.
     }
@@ -92,11 +111,11 @@ function SignUp() {
           onChange={handlePasswordChange}
         />
         <input
-        className="get-input"
-        onChange={handleConfirmPasswordChange}
-        placeholder="Confirm Password"
-        type="password"
-        value={confirmPassword}
+          className="get-input"
+          onChange={handleConfirmPasswordChange}
+          placeholder="Confirm Password"
+          type="password"
+          value={confirmPassword}
         />
 
         <hr />
