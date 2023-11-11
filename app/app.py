@@ -4,6 +4,8 @@ from flask_cors import CORS, cross_origin
 from spotipy.oauth2 import SpotifyOAuth 
 import spotipy
 import requests
+import time 
+import json  
 
 
 app = Flask(__name__)
@@ -37,9 +39,10 @@ def create_spotify_outh():
     return SpotifyOAuth(
         client_id=client_id,
         client_secret=client_secret,
-        redirect_uri=url_for("redirect_page", _external=True),
+        redirect_uri=url_for("redirect_page", _external=True),  # Make sure this matches the registered redirect URI
         scope="user-read-playback-state user-read-private user-read-email user-follow-read user-top-read",
     )
+
 
 """@login_required  # make sure cannot go this page unless user is logged in 
 def login_spotify():
@@ -64,11 +67,6 @@ VALUES (%s, %s, %s)
 """
 
 select_user_query = "SELECT * FROM User" 
-
-@app.route('/login_spotify')
-def login_spotify():
-    auth_url = create_spotify_outh().get_authorize_url()
-    return redirect(auth_url)
 
 @app.route('/sign_up', methods=['POST', 'GET'])
 def sign_up():
@@ -116,8 +114,13 @@ def login():
         else:
             return jsonify({"message": "This user does not exist"})
 
-
-@app.route("/redirect_page")
+# spotify login 
+@app.route('/')
+def login_spotify():
+    auth_url = create_spotify_outh().get_authorize_url()
+    return redirect(auth_url)
+ 
+@app.route("/redirect")
 def redirect_page():
     session.clear()
     code = request.args.get("code")
@@ -127,17 +130,92 @@ def redirect_page():
     spotify = spotipy.Spotify(auth=token_info['access_token'])
     user_data = spotify.current_user()
     
-    cur = mysql.connection.cursor()
+    #cur = mysql.connection.cursor()
     
-    update_query = """
-        UPDATE `User`
-        SET `spotifyid` = %s, `country` = %s
-        WHERE `email` = %s
-    """
-    cur.execute(update_query, (user_data["id"], user_data["country"], user_data["email"]))
+    #update_query = """
+    #    UPDATE `User`
+    #   SET `spotifyid` = %s, `country` = %s
+    #    WHERE `email` = %s
+    #"""
+    #cur.execute(update_query, (user_data["id"], user_data["country"], user_data["email"])) 
+    print ("basarili.. ")
+     
+    return token_info 
+
+def fetch_and_store_song_info(sp, song_id):
+    # Spotify API'yi kullanarak şarkı bilgilerini al
+    track_info = sp.track(song_id)
     
-    return user_data  
+    # Albüm bilgilerini al
+    album_info = sp.album(track_info['album']['id'])
+    
+    
+    # Sanatçı bilgilerini al
+    artist_info = sp.artist(track_info['artists'][0]['id'])
+    
+    # Veritabanına bilgileri eklemek için gerekli alanları seç
+    data = {
+        'song_id': track_info['id'],
+        'artist_id': track_info['artists'][0]['id'],
+        'album_id': track_info['album']['id'],
+        'rate': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
+        'tempo': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
+        'popularity': track_info['popularity'],
+        'valence': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz  
+        'duration': track_info['duration_ms'],
+        'energy': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz 
+        'danceability': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz 
+    }
+    
+    # Veritabanına ekleme işlemi
+    #cur = mysql.connection.cursor()
+    #cur.execute("""
+    #    INSERT INTO `Song` (
+    #        `song_id`, `artist_id`, `album_id`, `rate`, `tempo`, `popularity`, `valence`, `duration`, `energy`, `danceability`
+    #    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    #""", (
+    #    data['song_id'], data['artist_id'], data['album_id'], data['rate'], data['tempo'],
+    #    data['popularity'], data['valence'], data['duration'], data['energy'], data['danceability']
+    #))
+    #mysql.connection.commit()
+    #cur.close()
 
+@app.route('/recommendations/<genre>')
+def get_recommendations_by_genre(genre):
+    # Spotify API'yi kullanarak belirli bir tür için önerilen şarkıları al
+    sp = spotipy.Spotify(auth=session[TOKEN_INFO]['access_token'])
+    recommendations = sp.recommendations(seed_genres=[genre], limit=10)
 
+    # Her şarkı için şarkı ve albüm bilgilerini çek
+    for track in recommendations['tracks']:
+        fetch_and_store_song_info(sp, track['id'])
+
+    # Önerilen şarkıları template'e gönder
+    song_list = [
+        {
+            'song_id': track['id'],
+            'artist_id': track['artists'][0]['id'],
+            'album_id': track['album']['id'],
+            'rate': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
+            'tempo': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
+            'popularity': track['popularity'],
+            'valence': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
+            'duration': track['duration_ms'],
+            'energy': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
+            'danceability': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
+            'name': track['name'],
+            'artists': ', '.join(artist['name'] for artist in track['artists']),
+            'album': {
+                'name': track['album']['name'],
+                'release_date': track['album']['release_date'],
+                'image': track['album']['images'][0]['url']
+            }
+        }
+        for track in recommendations['tracks']
+    ] 
+    # JSON formatında şarkı ve albüm bilgilerini döndür
+    return jsonify(song_list) 
+## not : cekebilecegi ornek genres Pop rock , hiphop , electronic county , jazz , blues , rnb , reggae , classical 
+ 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8008, debug=True)
