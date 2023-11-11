@@ -23,6 +23,7 @@ services:
       - MYSQL_ROOT_PASSWORD=Atakan2002
     volumes:
       - ./data:/var/lib/mysql
+      - ./sql-scripts:/docker-entrypoint-initdb.d
   
 networks:
   mynetwork:
