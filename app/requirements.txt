@@ -1,7 +1,6 @@
-Flask
-mysql-connector
-flask-mysqldb
-flask-cors
-blueprint
-spotipy
-requests
+Flask==3.0.0
+mysql-connector==2.2.9
+flask-mysqldb==2.0.0
+flask-cors==4.0.0
+spotipy==2.22.1
+requests==2.31.0
