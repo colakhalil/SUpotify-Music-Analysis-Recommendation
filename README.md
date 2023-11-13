@@ -1,6 +1,6 @@
-#SUpotify - Music Analysis and Recommendation System
+#SUpotify - Music Analysis and Recommendation System#
 
-#General Information
+#General Information#
 Project Title
 SUpotify
 
@@ -14,13 +14,13 @@ Mobile App Group: Halil İbrahim Deniz, Ayça Ataer, Furkan Emre Güler
 Date
 15.10.2023
 
-B. Technology Stack
+#Technology Stack#
 Project-Configuration Management: Jira, GitHub
 Backend Stack: RestAPI, MySQL, Python, Flask
 Web Stack: CSS, JS, HTML, ReactJS
 Mobile Stack: Swift, SwiftUI
 
-#MVP Features
+#MVP Features#
 Data Format:
 
 Collects song information as part of an album, single, or other media.
