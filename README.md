@@ -1,6 +1,6 @@
-##SUpotify - Music Analysis and Recommendation System
+###SUpotify - Music Analysis and Recommendation System###
 
-#General Information#
+##General Information##
 Project Title
 SUpotify
 
@@ -14,13 +14,13 @@ Mobile App Group: Halil İbrahim Deniz, Ayça Ataer, Furkan Emre Güler
 Date
 15.10.2023
 
-#Technology Stack#
+##Technology Stack##
 Project-Configuration Management: Jira, GitHub
 Backend Stack: RestAPI, MySQL, Python, Flask
 Web Stack: CSS, JS, HTML, ReactJS
 Mobile Stack: Swift, SwiftUI
 
-#MVP Features#
+##MVP Features##
 Data Format:
 
 Collects song information as part of an album, single, or other media.
@@ -51,7 +51,7 @@ Friends and Friendship Management: Allows adding friends and managing how much o
 Result Sharing: Ability to share analysis results on social media.
 Data Exporting: Export song ratings and other data in various file formats.
 
-#Additional Features
+##Additional Features##
 Extended Song Information:
 
 Includes additional properties like song length, lyrics, tempo, genres, mood, recording type, instruments, play count, release year, and addition date to the user's database.
@@ -81,13 +81,13 @@ Automatic Playlist Creation:
 Generates playlists that resemble the user's own, simplifying the process of discovering and organizing music.
 
 
-#Effort Estimation
+##Effort Estimation##
 Duration: 12 weeks
 Team: 9 members
 Total: ~11 man-months
 
 
-#Project Milestones
+##Project Milestones##
 Milestone/Deliverable	Date
 Graphical Design of UI and Backend-Database Diagrams	22.10.2023
 User Authentication and Database Setup	6.11.2023
