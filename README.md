@@ -1,4 +1,4 @@
-#SUpotify - Music Analysis and Recommendation System#
+##SUpotify - Music Analysis and Recommendation System
 
 #General Information#
 Project Title
