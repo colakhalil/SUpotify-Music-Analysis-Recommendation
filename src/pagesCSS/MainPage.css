@@ -401,6 +401,20 @@
   padding-left: 120px;
 }
 
+
+.lastPlaylists-container-forPP {
+  max-width: 1200px;
+  width: %100;
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+  gap: 0.2rem;
+  padding: 0.2rem;
+  justify-content: center;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+
 .recomended-playlists-container{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
