@@ -216,6 +216,65 @@ def get_recommendations_by_genre(genre):
     # JSON formatında şarkı ve albüm bilgilerini döndür
     return jsonify(song_list) 
 ## not : cekebilecegi ornek genres Pop rock , hiphop , electronic county , jazz , blues , rnb , reggae , classical 
+
+app.route('/get_song_info/<song_id>') 
+def fetch_and_store_song_info(sp, song_id):
+        # Spotify API'yi kullanarak şarkı bilgilerini al
+        track_info = sp.track(song_id)
+        
+        # Albüm bilgilerini al
+        album_info = sp.album(track_info['album']['id'])
+        
+        
+        # Sanatçı bilgilerini al
+        artist_info = sp.artist(track_info['artists'][0]['id'])
+        
+        # Veritabanına bilgileri eklemek için gerekli alanları seç
+        data = {
+            'song_id': track_info['id'],
+            'artist_id': track_info['artists'][0]['id'],
+            'album_id': track_info['album']['id'],
+            'rate': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
+            'tempo': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
+            'popularity': track_info['popularity'],
+            'valence': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz  
+            'duration': track_info['duration_ms'],
+            'energy': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz 
+            'danceability': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz 
+        }
+        
+        # Veritabanına ekleme işlemi
+        #cur = mysql.connection.cursor()
+        #cur.execute("""
+        #    INSERT INTO `Song` (
+        #        `song_id`, `artist_id`, `album_id`, `rate`, `tempo`, `popularity`, `valence`, `duration`, `energy`, `danceability`
+        #    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        #""", (
+        #    data['song_id'], data['artist_id'], data['album_id'], data['rate'], data['tempo'],
+        #    data['popularity'], data['valence'], data['duration'], data['energy'], data['danceability']
+        #))
+        #mysql.connection.commit()
+        #cur.close()
+        return jsonify(data)   
+    
+@app.route('/get_user_playlists')
+def get_user_playlists():
+    # Kullanıcının çalma listelerini al
+    sp = spotipy.Spotify(auth=session['token_info']['access_token'])
+    user_playlists = sp.current_user_playlists()
+
+    # Kullanıcının çalma listelerini belirtilen formata dönüştür
+    formatted_playlists = [
+        {
+            "name": playlist['name'],
+            "playlistPic": playlist['images'][0]['url'] if playlist['images'] else None,
+            "songNumber": playlist['tracks']['total'],
+            "playlistID": playlist['id']
+        }
+        for playlist in user_playlists['items']
+    ]
+    return jsonify(formatted_playlists) 
  
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8008, debug=True)
