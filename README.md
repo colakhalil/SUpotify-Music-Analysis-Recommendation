@@ -88,11 +88,17 @@ Total: ~11 man-months
 
 
 ## Project Milestones
-Milestone/Deliverable	Date
+
 Graphical Design of UI and Backend-Database Diagrams	22.10.2023
+
 User Authentication and Database Setup	6.11.2023
+
 Data Collection in JSON Format	20.11.2023
+
 UI Completion for Mobile App and Website	4.12.2023
+
 Recommendation System and API Creation	16.12.2023
+
 Implementation of Additional Features	30.12.2023
+
 Testing and Debugging	14.01.2023
