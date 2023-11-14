@@ -2,13 +2,14 @@ import React from "react";
 import SearchBar from "./subcomponents/SearchBar";
 import Playlist from "./subcomponents/Playlist";
 
-const MainMiddle = ({ lastPlaylists, recomendedPlaylists }) => {
+const MainMiddle = ({ lastPlaylists, recomendedPlaylists, setCurrentPlace }) => {
   const handleSearch = (searchTerm) => {
     console.log(`Search term submitted: ${searchTerm}`);
     // You can now do something with the search term,
     // like making an API call to fetch search results
   };
-  const handlePlaylistClick = (playlistName) => {
+  const handlePlaylistClick = (playlistName, setCurrentPlace) => {
+    setCurrentPlace("playlist");
     console.log(`Playlist clicked: ${playlistName}`);
     // Here you would handle the click event, such as navigating to the playlist page.
   };
@@ -24,7 +25,7 @@ const MainMiddle = ({ lastPlaylists, recomendedPlaylists }) => {
             key={index}
             name={lastPlaylists.name}
             thumbnail={lastPlaylists.thumbnail}
-            onClick={() => handlePlaylistClick(lastPlaylists.name)}
+            onClick={() => handlePlaylistClick(lastPlaylists.name, setCurrentPlace)}
           />
         ))}
       </div>
@@ -35,7 +36,7 @@ const MainMiddle = ({ lastPlaylists, recomendedPlaylists }) => {
             key={index}
             name={recomendedPlaylists.name}
             thumbnail={recomendedPlaylists.thumbnail}
-            onClick={() => handlePlaylistClick(recomendedPlaylists.name)}
+            onClick={() => handlePlaylistClick(recomendedPlaylists.name, setCurrentPlace)}
           />
         ))}
       </div>

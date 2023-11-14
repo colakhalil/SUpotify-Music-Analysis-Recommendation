@@ -6,11 +6,51 @@ import BottomBar from "../components/BottomBar";
 
 import MainMiddle from "../components/MainMiddle";
 import ProfileMiddle from "../components/ProfileMiddle";
+import PlaylistMiddle from "../components/PlaylistMiddle";
 
 const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
 
   // DUMMY DATALAR
+  const playlistData = {
+    playlistID: "playlist123",
+    playlistName: "Chill Vibes",
+    playlistPicture: "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
+    songs: [
+      {
+        songName: "Ocean Breeze",
+        duration: "3:45",
+        releaseYear: 2021,
+        artist: "Tropical Sound",
+        songRating: 4.5
+      },
+      {
+        songName: "Mountain Serenity",
+        duration: "4:20",
+        releaseYear: 2020,
+        artist: "Nature Melody",
+        songRating: 4.7
+      },
+      {
+        songName: "Urban Sunset",
+        duration: "5:00",
+        releaseYear: 2019,
+        artist: "City Lights",
+        songRating: 4.3
+      },
+      {
+        songName: "Virginia Beach",
+        duration: "5:00",
+        releaseYear: 2023,
+        artist: "City Lights",
+        songRating: 4.3
+      },
+      // Add more songs as needed
+    ]
+  };
+  
+
+
   const userData = {
     username: "UserName",
     profilePicture:
@@ -136,6 +176,7 @@ const MainPage = () => {
   // Dummy data for playlists
   const playlists = [
     {
+      
       playlist_name: "EFKARLI IKEN",
       playlist_picture:
         "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
@@ -165,6 +206,7 @@ const MainPage = () => {
           <MainMiddle
             lastPlaylists={lastPlaylists}
             recomendedPlaylists={recomendedPlaylists}
+            setCurrentPlace={setCurrentPlace}
           ></MainMiddle>
         )}
         {currentPlace === "profile" && (
@@ -173,7 +215,11 @@ const MainPage = () => {
             userData={userData}
           ></ProfileMiddle>
         )}
-
+        {currentPlace === "playlist" && (
+          <PlaylistMiddle
+            playlistData = {playlistData}
+          ></PlaylistMiddle>
+        )}
         <FriendActivity friendsData={friendsData} />
         <BottomBar song={song} />
       </div>

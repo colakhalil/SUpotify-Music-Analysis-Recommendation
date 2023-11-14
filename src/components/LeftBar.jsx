@@ -4,6 +4,7 @@ import PlaylistCardLeftbar from "./subcomponents/PlaylistCardLeftbar";
 
 const LeftBar = ({ playlists, setCurrentPlace }) => {
   const handleClick = (playlistName) => {
+    setCurrentPlace("playlist");
     console.log(`You clicked on ${playlistName}`);
     // Implement your playlist click functionality here
   };
@@ -32,6 +33,7 @@ const LeftBar = ({ playlists, setCurrentPlace }) => {
         onProfileClick={handleProfile}
       />
       <PlaylistCardLeftbar
+
         playlists={playlists}
         onPlaylistClick={handleClick}
       />
