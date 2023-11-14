@@ -1,0 +1,33 @@
+.lyrics-container {
+    color: white;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .album-cover {
+    width: 260px; /* Set the width as needed */
+    height: 260px; /* Set the height as needed */
+    margin: 0 auto 20px; /* Centers the block horizontally and adds space below */
+    display: block; /* Ensures the div is treated as a block element */
+    background-size: cover; /* Ensures the background image covers the element */
+    background-position: center; /* Centers the background image within the element */
+    /* Removed border-radius to make it square */
+  }
+  
+  .song-name {
+    font-size: 40px;
+    margin-bottom: 5px;
+  }
+  
+  .artist-name {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .lyrics p {
+    margin: 15px 0;
+    text-align: center;
+    font-size: 17px;
+  }
+  

@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import MainPage from "./pages/MainPage";
+import LyricsPage from "./pages/LyricsPage"
+
 
 function App() {
   return (
@@ -11,6 +13,7 @@ function App() {
         <Route exact path="/" element={<SignIn></SignIn>} />
         <Route exact path="/signup" element={<SignUp></SignUp>} />
         <Route exact path="/main" element={<MainPage></MainPage>} />
+        <Route exact path="/Lyrics" element={<LyricsPage></LyricsPage>}/>
       </Routes>
     </Router>
   );
