@@ -113,6 +113,57 @@ def login():
                 return jsonify({"message": "Wrong password"})
         else:
             return jsonify({"message": "This user does not exist"})
+     
+    elif request.method == "GET":
+        data = request.get_json()
+        user_id = data["user_id"]
+
+        cur = mysql.connection.cursor()
+        get_friends_query = f"""
+        SELECT
+            U.user_id AS user_id,
+            COUNT(F.user2_id) AS friendsCount,
+            GROUP_CONCAT(U2.username) AS friendsList
+        FROM
+            User U
+        JOIN
+            Friendship F ON U.user_id = F.user1_id
+        JOIN
+            User U2 ON F.user2_id = U2.user_id
+        WHERE
+            U.user_id = '{user_id}';
+        """
+
+        cursor.execute(sql_query)
+        result = cursor.fetchone()
+
+        if result:
+            user_id = result[0],
+            friendsCount = result[1],
+            friendsList = result[2].split(",") if result[2] else []
+            
+        query = sql_query = f"""
+        SELECT
+            image,
+            last_sid
+        FROM
+            User;
+        """
+        cur.execute(query, user_id)
+        db_data = cur.fetchone()
+        cur.close()
+
+        image, last_sid = db_data if db_data is not None else ("", "")
+
+        user_data_dict = {
+            "user_id": user_id,
+            "profilePicture": image,
+            "friendsCount": friendsCount,
+            "friends": friendsList,
+            "lastListenedSong": last_sid
+        }
+        
+        return jsonify(user_data_dict)
 
 # spotify login 
 @app.route('/')
@@ -217,7 +268,7 @@ def get_recommendations_by_genre(genre):
     return jsonify(song_list) 
 ## not : cekebilecegi ornek genres Pop rock , hiphop , electronic county , jazz , blues , rnb , reggae , classical 
 
-app.route('/get_song_info/<song_id>') 
+app.route('/get_song_info/<song_id>',methods=['POST', 'GET']) 
 def fetch_and_store_song_info(sp, song_id):
         # Spotify API'yi kullanarak şarkı bilgilerini al
         track_info = sp.track(song_id)
