@@ -139,7 +139,6 @@ def redirect_page():
     #    WHERE `email` = %s
     #"""
     #cur.execute(update_query, (user_data["id"], user_data["country"], user_data["email"])) 
-    print ("basarili.. ")
     
     return redirect("http://localhost:3000/main") 
 
