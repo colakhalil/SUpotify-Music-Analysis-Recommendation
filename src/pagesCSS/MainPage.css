@@ -21,7 +21,9 @@
     height: auto;
   }
 
-  .song-info, .song-controls, .song-rating {
+  .song-info,
+  .song-controls,
+  .song-rating {
     width: 100%; /* Full width on smaller screens */
     margin: 0.5rem 0; /* Add some space between */
   }
@@ -33,7 +35,7 @@
   width: 400px;
   align-items: center;
   margin-bottom: auto;
-  gap:15px;
+  gap: 15px;
 }
 
 .album-cover {
@@ -44,17 +46,17 @@
   border-radius: 4px;
 }
 
-
 .song-title,
 .song-artist {
   margin: 0;
   color: #fff;
 }
 
-.song-title, .song-artist {
+.song-title,
+.song-artist {
   margin: 0;
-  font-size:0.8rem;
-  color:#fff;
+  font-size: 0.8rem;
+  color: #fff;
   white-space: nowrap;
 }
 
@@ -72,8 +74,6 @@
   margin-left: 1rem;
 }
 
-
-
 .play-btn {
   background-color: #1db954; /* Spotify green */
   color: #fff;
@@ -89,8 +89,8 @@
   display: flex;
   align-items: center;
 }
-.firstInfo{
-  display:flex;
+.firstInfo {
+  display: flex;
   flex-direction: column;
   justify-content: center;
   margin-right: 20px;
@@ -102,10 +102,10 @@
   height: auto;
   width: 180px;
 }
-.song-meta{
+.song-meta {
   margin-top: 0px;
   margin-bottom: 0px;
-  padding:5px;
+  padding: 5px;
 }
 
 .slider {
@@ -146,7 +146,7 @@
   white-space: nowrap;
   color: #aaa;
 }
-.song-lyrics-btn{
+.song-lyrics-btn {
   background: transparent;
   border: 1px solid white;
   border-radius: 10px;
@@ -154,7 +154,7 @@
   color: white;
   margin-left: 3rem;
   padding: 5px 10px;
-  cursor:pointer;
+  cursor: pointer;
 }
 /* This container will hold both the controls and the rating, spaced between */
 .song-controls-container {
@@ -183,7 +183,7 @@
   margin-right: 5rem; /* Adjust or remove this as needed */
 }
 
-.song-rating-container{
+.song-rating-container {
   margin-right: 15rem;
 }
 
@@ -193,14 +193,13 @@
   margin-right: 5rem; /* Ensure this is not too large to push content off screen */
 }
 
-.song-details-extra{
+.song-details-extra {
   display: flex;
   flex-direction: column;
   margin-right: 5rem;
   height: auto;
   width: auto;
 }
-
 
 /*FOR FRIEND BAR*/
 .friend-bar {
@@ -305,10 +304,9 @@
   color: #aaa;
 }
 
-
 .main-container {
   display: flex;
-  overflow:hidden;
+  overflow: hidden;
   height: 100vh; /* Full viewport height */
 }
 
@@ -316,30 +314,28 @@
   flex-grow: 1; /* Take up remaining space */
   display: flex;
   flex-direction: column; /* Stack children vertically */
-  overflow-y :auto;
+  overflow-y: auto;
   margin-right: 15rem;
-  margin-bottom:120px;
+  margin-bottom: 120px;
 }
 
-.last-played-title{
+.last-played-title {
   font-size: 30px;
   margin-left: 1.5rem;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  color:rgb(194, 189, 189);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  color: rgb(194, 189, 189);
 }
 
-.recommended-playlists{
+.recommended-playlists {
   font-size: 30px;
   margin-left: 1.5rem;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  color:rgb(194, 189, 189);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  color: rgb(194, 189, 189);
 }
 
 .search-bar-container {
   align-self: flex-start; /* Align to the top-left */
 }
-
-
 
 .search-bar-container {
   display: flex;
@@ -351,10 +347,10 @@
   padding: 0rem;
   padding-right: 5.8rem;
 }
-.search-bar{
-  display:flex;
+.search-bar {
+  display: flex;
   justify-content: space-between;
-  border:none;
+  border: none;
 }
 .search-input {
   flex-grow: 1;
@@ -367,12 +363,11 @@
   padding: 0rem 16rem 0rem 0.5rem; /* Space for the text inside the input */
   color: rgb(0, 0, 0); /* Text color for the input */
 }
-.search-bar::text{
-  width:100%;
+.search-bar::text {
+  width: 100%;
 }
 .search-input::placeholder {
   color: rgb(24, 22, 22); /* Light text color for the placeholder */
-
 }
 
 .search-button {
@@ -385,13 +380,8 @@
   padding: 0.7rem 1rem;
 }
 
-
 /* PLAYLIST */
 /* Playlist.css */
-
-
-
-
 
 .lastPlaylists-container {
   display: grid;
@@ -401,11 +391,10 @@
   padding-left: 120px;
 }
 
-
 .lastPlaylists-container-forPP {
   max-width: 1200px;
   width: %100;
-  display:grid;
+  display: grid;
   grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
   gap: 0.2rem;
   padding: 0.2rem;
@@ -414,8 +403,7 @@
   padding-right: 100px;
 }
 
-
-.recomended-playlists-container{
+.recomended-playlists-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 5px;
@@ -425,16 +413,14 @@
 }
 
 .Playlist {
-  border:none;
+  border: none;
   cursor: pointer;
   padding: 10px;
   font-size: 30px;
-  margin:10px;
-  width: calc((100% / 1) - 130px); 
+  margin: 10px;
+  width: calc((100% / 1) - 130px);
   text-align: center;
 }
-
-
 
 .lastPlaylists-thumbnail {
   width: 100%; /* ensures the image takes the full width of the grid column */
@@ -442,7 +428,6 @@
   object-fit: cover; /* ensures the images are nicely cropped to fit the box */
   border-radius: 8px; /* optional, for rounded corners */
 }
-
 
 .lastPlaylists-name {
   color: white; /* Change the color as needed */

@@ -6,51 +6,12 @@ import BottomBar from "../components/BottomBar";
 
 import MainMiddle from "../components/MainMiddle";
 import ProfileMiddle from "../components/ProfileMiddle";
-import PlaylistMiddle from "../components/PlaylistMiddle";
+import LyrcsMieddle from "../components/LyrcsMiddle";
+import LyrcsMiddle from "../components/LyrcsMiddle";
 
 const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
-
   // DUMMY DATALAR
-  const playlistData = {
-    playlistID: "playlist123",
-    playlistName: "Chill Vibes",
-    playlistPicture: "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    songs: [
-      {
-        songName: "Ocean Breeze",
-        duration: "3:45",
-        releaseYear: 2021,
-        artist: "Tropical Sound",
-        songRating: 4.5
-      },
-      {
-        songName: "Mountain Serenity",
-        duration: "4:20",
-        releaseYear: 2020,
-        artist: "Nature Melody",
-        songRating: 4.7
-      },
-      {
-        songName: "Urban Sunset",
-        duration: "5:00",
-        releaseYear: 2019,
-        artist: "City Lights",
-        songRating: 4.3
-      },
-      {
-        songName: "Virginia Beach",
-        duration: "5:00",
-        releaseYear: 2023,
-        artist: "City Lights",
-        songRating: 4.3
-      },
-      // Add more songs as needed
-    ]
-  };
-  
-
-
   const userData = {
     username: "UserName",
     profilePicture:
@@ -140,7 +101,50 @@ const MainPage = () => {
     title: "Beni Böyle Hatırla",
     artist: "Çetin Dilşiz",
     duration: "2:48",
-    lyrics: "Here would be the lyrics of the song...",
+    lyrics: [
+      "Sessiz bir köşede her şeyden uzak",
+      "Meçhul yarınlara terk edilmişim",
+      "Dostluklar yalanmış sevgiler tuzakmış",
+      "Tuzak",
+      "Hayret yanılmışım yalnızım şimdi",
+      "Oysa mutluluğu hayal etmiştim",
+      "Gidenler unutmuş aşkları yalanmış",
+      "Yalan",
+      "Güneşin doğuşu batışı farksız",
+      "Nasıl yaşanırsa yaşadım ben aşksız",
+      "Güneşin doğuşu batışı farksız",
+      "Nasıl yaşanırsa yaşadım ben aşksız",
+      "Demir attım yalnızlığa",
+      "Bir hasret denizinde",
+      "Ve şimdi hayallerim o günlerin izinde",
+      "Yüreğimde duygular ümitlerim nerede",
+      "Demir attım yalnızlığa",
+      "Bir hasret denizinde",
+      "Ve şimdi hayallerim o günlerin izinde",
+      "Yüreğimde duygular ümitlerim nerede",
+      "Şöyle bir düşünüp her şeyi birden",
+      "Neden anıları bitirmeyişim",
+      "Yalanmış sevgiler kalbimden uzakmış",
+      "Uzak",
+      "Boşa beklemişim yollara bakıp",
+      "Kurak topraklara umutlar ekmişim",
+      "Arzular avuttu gördüğüm hayalmiş",
+      "Hayal",
+      "Güneşin doğuşu batışı farksız",
+      "Nasıl yaşanırsa yaşadım ben aşksız",
+      "Güneşin doğuşu batışı farksız",
+      "Nasıl yaşanırsa yaşadım ben aşksız",
+      "Demir attım yalnızlığa",
+      "Bir hasret denizinde",
+      "Ve şimdi hayallerim o günlerin izinde",
+      "Yüreğimde duygular ümitlerim nerede",
+      "Demir attım yalnızlığa",
+      "Bir hasret denizinde",
+      "Ve şimdi hayallerim o günlerin izinde",
+      "Yüreğimde duygular ümitlerim nerede",
+
+      // ... More lyrics lines
+    ],
     genre: "Pop, Dance",
     mood: "Uplifting",
     recordingType: "Studio",
@@ -176,7 +180,6 @@ const MainPage = () => {
   // Dummy data for playlists
   const playlists = [
     {
-      
       playlist_name: "EFKARLI IKEN",
       playlist_picture:
         "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
@@ -206,22 +209,22 @@ const MainPage = () => {
           <MainMiddle
             lastPlaylists={lastPlaylists}
             recomendedPlaylists={recomendedPlaylists}
-            setCurrentPlace={setCurrentPlace}
           ></MainMiddle>
         )}
+        {currentPlace === "lyrc" && <LyrcsMiddle song={song}></LyrcsMiddle>}
         {currentPlace === "profile" && (
           <ProfileMiddle
             lastPlaylists={lastPlaylists}
             userData={userData}
           ></ProfileMiddle>
         )}
-        {currentPlace === "playlist" && (
-          <PlaylistMiddle
-            playlistData = {playlistData}
-          ></PlaylistMiddle>
-        )}
+
         <FriendActivity friendsData={friendsData} />
-        <BottomBar song={song} />
+        <BottomBar
+          song={song}
+          setCurrentPlace={setCurrentPlace}
+          currentPlace={currentPlace}
+        />
       </div>
     </>
   );

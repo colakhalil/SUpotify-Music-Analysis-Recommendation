@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import SongDetails from './subcomponents/SongDetails';
-import SongControls from './subcomponents/SongControls';
-import SongRating from './subcomponents/SongRating';
-import SongOptions from './subcomponents/SongOptions';
-import SongDetailsExtra from './subcomponents/SongDetailsExtra';
+import React, { useState, useEffect } from "react";
+import SongDetails from "./subcomponents/SongDetails";
+import SongControls from "./subcomponents/SongControls";
+import SongRating from "./subcomponents/SongRating";
+import SongOptions from "./subcomponents/SongOptions";
+import SongDetailsExtra from "./subcomponents/SongDetailsExtra";
 
-const BottomBar = ({ song }) => {
+const BottomBar = ({ song, setCurrentPlace, currentPlace }) => {
   const [userRating, setUserRating] = useState(song.userPrevRating);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -23,6 +23,8 @@ const BottomBar = ({ song }) => {
 
   const toggleLyrics = () => {
     console.log("Lyrics toggled");
+    setCurrentPlace("lyrc");
+
     // Add additional logic for when lyrics are toggled
   };
 
@@ -68,9 +70,9 @@ const BottomBar = ({ song }) => {
         song={song}
         toggleLyrics={toggleLyrics}
         userRating={userRating}
-         handleRatingChange={handleRatingChange}
+        handleRatingChange={handleRatingChange}
       />
-      <SongDetailsExtra song={song}/>
+      <SongDetailsExtra song={song} />
     </div>
   );
 };
