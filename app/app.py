@@ -22,7 +22,8 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 CORS(app, resources={
     r"/sign_up": {"origins": "http://localhost:3000"},
-    r"/login": {"origins": "http://localhost:3000"}
+    r"/login": {"origins": "http://localhost:3000"},
+    r"/sauth": {"origins": "http://localhost:3000"}
 })
 # 'auth' Blueprint'ini kaydetme
 #import auth  # Import 'auth' Blueprint
@@ -115,11 +116,11 @@ def login():
             return jsonify({"message": "This user does not exist"})
 
 # spotify login 
-@app.route('/')
+@app.route('/sauth')
 def login_spotify():
     auth_url = create_spotify_outh().get_authorize_url()
     return redirect(auth_url)
- 
+
 @app.route("/redirect")
 def redirect_page():
     session.clear()
@@ -139,8 +140,8 @@ def redirect_page():
     #"""
     #cur.execute(update_query, (user_data["id"], user_data["country"], user_data["email"])) 
     print ("basarili.. ")
-     
-    return token_info 
+    
+    return redirect("http://localhost:3000/main") 
 
 def fetch_and_store_song_info(sp, song_id):
     # Spotify API'yi kullanarak şarkı bilgilerini al
