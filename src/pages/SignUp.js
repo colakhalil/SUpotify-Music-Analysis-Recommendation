@@ -44,7 +44,7 @@ function SignUp() {
     console.log("isregister: ", isRegister);
     if (isRegister) {
       //Than naviagte to main page
-      navigate("/main");
+      window.location.href = "http://127.0.0.1:8008/sauth";
     }
     if (!isRegister) {
       //Than show pop-up register unsucessful!
