@@ -116,11 +116,11 @@ def login():
             return jsonify({"message": "This user does not exist"})
 
 # spotify login 
-@app.route('/sauth')
+@app.route('/satuh')
 def login_spotify():
     auth_url = create_spotify_outh().get_authorize_url()
     return redirect(auth_url)
-
+ 
 @app.route("/redirect")
 def redirect_page():
     session.clear()
@@ -139,46 +139,9 @@ def redirect_page():
     #    WHERE `email` = %s
     #"""
     #cur.execute(update_query, (user_data["id"], user_data["country"], user_data["email"])) 
-    
-    return redirect("http://localhost:3000/main") 
-
-def fetch_and_store_song_info(sp, song_id):
-    # Spotify API'yi kullanarak şarkı bilgilerini al
-    track_info = sp.track(song_id)
-    
-    # Albüm bilgilerini al
-    album_info = sp.album(track_info['album']['id'])
-    
-    
-    # Sanatçı bilgilerini al
-    artist_info = sp.artist(track_info['artists'][0]['id'])
-    
-    # Veritabanına bilgileri eklemek için gerekli alanları seç
-    data = {
-        'song_id': track_info['id'],
-        'artist_id': track_info['artists'][0]['id'],
-        'album_id': track_info['album']['id'],
-        'rate': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
-        'tempo': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
-        'popularity': track_info['popularity'],
-        'valence': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz  
-        'duration': track_info['duration_ms'],
-        'energy': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz 
-        'danceability': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz 
-    }
-    
-    # Veritabanına ekleme işlemi
-    #cur = mysql.connection.cursor()
-    #cur.execute("""
-    #    INSERT INTO `Song` (
-    #        `song_id`, `artist_id`, `album_id`, `rate`, `tempo`, `popularity`, `valence`, `duration`, `energy`, `danceability`
-    #    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-    #""", (
-    #    data['song_id'], data['artist_id'], data['album_id'], data['rate'], data['tempo'],
-    #    data['popularity'], data['valence'], data['duration'], data['energy'], data['danceability']
-    #))
-    #mysql.connection.commit()
-    #cur.close()
+    print ("basarili.. ")
+     
+    return token_info 
 
 @app.route('/recommendations/<genre>')
 def get_recommendations_by_genre(genre):
@@ -229,6 +192,8 @@ def fetch_and_store_song_info(sp, song_id):
         # Sanatçı bilgilerini al
         artist_info = sp.artist(track_info['artists'][0]['id'])
         
+        cur = mysql.connection.cursor()
+
         # Veritabanına bilgileri eklemek için gerekli alanları seç
         data = {
             'song_id': track_info['id'],
@@ -242,19 +207,56 @@ def fetch_and_store_song_info(sp, song_id):
             'energy': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz 
             'danceability': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz 
         }
+
+        song_data = {
+            'song_id': track_info['id'],
+            'artist_id': track_info['artists'][0]['id'],
+            'album_id': track_info['album']['id'],
+            'song_name': None,
+            'image': None,
+            'rate': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
+            'tempo': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz
+            'popularity': track_info['popularity'],
+            'valence': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz  
+            'duration': track_info['duration_ms'],
+            'energy': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz 
+            'danceability': None,  # Buraya isteğe bağlı bir değer ekleyebilirsiniz 
+            'date_added': None,
+            'play_count': None,
+            'lyrics': None,
+            'release_year': None
+        }
+        insert_query = """
+            INSERT INTO Song
+            (song_id, artist_id, album_id, song_name, image, rate, tempo, popularity, valence, duration, energy, danceability, date_added, play_count, lyrics, release_year)
+            VALUES
+            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+
+        data_tuple = (
+            song_data['song_id'],
+            song_data['artist_id'],
+            song_data['album_id'],
+            song_data['song_name'],
+            song_data['image'],
+            song_data['rate'],
+            song_data['tempo'],
+            song_data['popularity'],
+            song_data['valence'],
+            song_data['duration'],
+            song_data['energy'],
+            song_data['danceability'],
+            song_data['date_added'],
+            song_data['play_count'],
+            song_data['lyrics'],
+            song_data['release_year']
+        )
+
+        cursor.execute(insert_query, data_tuple)
+        connection.commit()
+
+        cursor.close()
         
-        # Veritabanına ekleme işlemi
-        #cur = mysql.connection.cursor()
-        #cur.execute("""
-        #    INSERT INTO `Song` (
-        #        `song_id`, `artist_id`, `album_id`, `rate`, `tempo`, `popularity`, `valence`, `duration`, `energy`, `danceability`
-        #    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        #""", (
-        #    data['song_id'], data['artist_id'], data['album_id'], data['rate'], data['tempo'],
-        #    data['popularity'], data['valence'], data['duration'], data['energy'], data['danceability']
-        #))
-        #mysql.connection.commit()
-        #cur.close()
         return jsonify(data)   
     
 @app.route('/get_user_playlists')
@@ -273,6 +275,39 @@ def get_user_playlists():
         }
         for playlist in user_playlists['items']
     ]
+    playlist_data = [
+        {
+            "playlistID": playlist['id'],
+            "user_id": None,
+            "playlist_name": playlist['name'],
+            "image": playlist['images'][0]['url'] if playlist['images'] else None,
+        }
+        for playlist in user_playlists['items']
+    ]
+    cur = mysql.connection.cursor()
+
+    insert_query = """
+    INSERT INTO Playlist
+    (playlist_id, user_id, playlist_name, image)
+    VALUES
+    (%s, %s, %s, %s)
+    """
+
+    # Iterate through each playlist in the playlist_data list
+    for playlist in playlist_data:
+        # Define the data tuple for the current playlist
+        data_tuple = (
+            playlist["playlistID"],
+            playlist["user_id"],
+            playlist["playlist_name"],
+            playlist["image"],
+        )
+        cursor.execute(insert_query, data_tuple)
+
+    connection.commit()
+
+    cursor.close()
+    
     return jsonify(formatted_playlists) 
  
 
