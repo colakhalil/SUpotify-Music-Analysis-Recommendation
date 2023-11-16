@@ -37,7 +37,7 @@ struct LoginView: View {
                     .padding(.bottom, 70)
                 
                 
-                Text("Please enter your email and password!")
+                Text("Please dont enter your email and password!")
                     .font(Font.custom("Avantgarde Gothic", size: 18))
                     .font(.headline)
                     .foregroundColor(.gray)
