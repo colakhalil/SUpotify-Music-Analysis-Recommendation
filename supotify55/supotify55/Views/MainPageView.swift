@@ -6,16 +6,6 @@
 //
 
 import SwiftUI
-func colorBasedOnCondition(DarkModeOn: Bool) -> Color {
-    return DarkModeOn ? .black : .mint
-}
-func stringBasedOnCondition(DarkModeOn:Bool)->String{
-    return DarkModeOn ? "Evening" : "Morning"
-}
-func imageBasedOnCondition(DarkModeOn: Bool)-> String{
-    return DarkModeOn ? "moon.stars" : "sun.max"
-}
-
 
 struct MainPageView: View {
     @State private var rating: Int = 0
@@ -53,7 +43,7 @@ struct MainPageView: View {
                 .edgesIgnoringSafeArea(.all)
             
             Rectangle()
-                .fill(/*Color.hex("#363636").opacity(0.9)*/colorBasedOnCondition(DarkModeOn: DarkModeOn))
+                .fill(.black)
                 .frame(width: 370, height: 750)
                 .cornerRadius(15)
             
@@ -64,14 +54,14 @@ struct MainPageView: View {
                         .frame(width: 40, height: 40)
                         .foregroundColor(.white)
                     Spacer()
-                    Text(stringBasedOnCondition(DarkModeOn: DarkModeOn))
+                    Text("Evening")
                         .font(Font.custom("Avantgarde Gothic", size: 28))
                         .foregroundColor(.white)
                     Spacer()
                     Button(action: {
                         DarkModeOn.toggle()
                     }){
-                        Image(systemName: imageBasedOnCondition(DarkModeOn: DarkModeOn))
+                        Image(systemName: "moon")
                             .resizable()
                             .frame(width: 40, height: 40)
                             .foregroundColor(.white)
@@ -79,14 +69,10 @@ struct MainPageView: View {
 
                     Spacer()
                     Button(action: {
-                                // Handle the tap action here
-                                // You can put your code to execute when the image is clicked inside this closure.
+
                                 print("Image clicked")
                             }) {
-                                Image(systemName: "magnifyingglass")
-                                    .resizable()
-                                    .frame(width: 40, height: 40)
-                                    .foregroundColor(.white)
+                                Image(systemName: "person.3.fill")
                             }
                 }
                 .padding()

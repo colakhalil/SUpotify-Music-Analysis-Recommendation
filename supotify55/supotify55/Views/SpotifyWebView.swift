@@ -13,26 +13,26 @@ struct SpotifyWebView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 0) { // Set spacing to 0 to eliminate any default spacing
+            VStack(spacing: 0) {
                 HStack {
-                    Button(action: navigator.WebToLogin) {
+                    Button(action: {
+                        navigator.WebToLogin()
+                    }) {
                         Text("Login")
-                            .foregroundColor(.white)
-                            .frame(width: 60, height: 20)
-                            .padding()
-                            .background(Color.blue)
-                            .cornerRadius(8)
+                            .foregroundColor(.green)
+                            .font(Font.custom("Avantgarde Gothic", size: 18))
+                            .padding(.top, 30)
                     }
-                    .padding(.leading, 20)
+                    .padding(.leading, 45)
                     Spacer()
                 }
                 .frame(height: 90)
-                .background(Color.green) // Set the background color of the HStack containing the button
+                .background(Color.black)
 
                 WebView(url: URL(string: url)!)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .background(Color.white) // Set the background color of the VStack
+            .background(Color.white)
             .edgesIgnoringSafeArea(.all)
         }
     }

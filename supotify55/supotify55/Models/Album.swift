@@ -20,3 +20,4 @@ struct Album: Identifiable {
         self.id = id
     }
 }
+ 
