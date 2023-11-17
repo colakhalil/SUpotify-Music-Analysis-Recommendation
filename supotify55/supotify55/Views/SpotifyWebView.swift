@@ -9,32 +9,37 @@ import SwiftUI
 import WebKit
 
 struct SpotifyWebView: View {
-    private let url : String = "http://127.0.0.1:8008/sauth"
+    private let url: String = "http://127.0.0.1:8008/sauth"
+    
     var body: some View {
         GeometryReader { geometry in
-            VStack {
-                HStack{
-                    Button(action: navigator.WebToLogin, label: {
+            VStack(spacing: 0) { // Set spacing to 0 to eliminate any default spacing
+                HStack {
+                    Button(action: navigator.WebToLogin) {
                         Text("Login")
-                            .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
-                            .frame(width: 100, height: 50)
+                            .foregroundColor(.white)
+                            .frame(width: 60, height: 20)
                             .padding()
-                            .background(Color.yellow)
+                            .background(Color.blue)
                             .cornerRadius(8)
-
-                    })
+                    }
+                    .padding(.leading, 20)
                     Spacer()
                 }
                 .frame(height: 90)
-                .frame(width: geometry.size.width) // Set width to device's width
-                VStack{
-                    WebView(url: URL(string: url)!)
-                }
+                .background(Color.green) // Set the background color of the HStack containing the button
+
+                WebView(url: URL(string: url)!)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .background(Color.white) // Set the background color of the VStack
             .edgesIgnoringSafeArea(.all)
         }
     }
 }
+
+
+
 
 struct WebView: UIViewRepresentable {
     var url: URL
