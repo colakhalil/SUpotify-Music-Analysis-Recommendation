@@ -1,87 +1,95 @@
 /* General Styles for the Playlist Middle */
 .playlist-middle {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start; /* Align content to the top */
-    padding: 20px;
-    height: calc(100vh - [BottomBarHeight]px); /* Adjust [BottomBarHeight] to the height of your BottomBar */
-    box-sizing: border-box; /* Include padding in the height calculation */
-    overflow: hidden; /* Ensures the component doesn't overflow the width of the viewport */
-    }
-  
-  /* Playlist Picture Styling */
-  .playlist-picture img {
-    max-width: 100%;
-    max-height: 200px; /* Or any size you see fit */
-    object-fit: contain;
-   }
-  
-  /* Playlist Name Styling */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Align content to the top */
+  padding: 20px;
+  height: calc(
+    100vh - [BottomBarHeight]px
+  ); /* Adjust [BottomBarHeight] to the height of your BottomBar */
+  box-sizing: border-box; /* Include padding in the height calculation */
+  overflow: hidden; /* Ensures the component doesn't overflow the width of the viewport */
+}
+
+/* Playlist Picture Styling */
+.playlist-picture img {
+  max-width: 100%;
+  max-height: 200px; /* Or any size you see fit */
+  object-fit: contain;
+}
+
+/* Playlist Name Styling */
+.playlist-name {
+  font-size: 1em;
+  margin: 20px 0;
+  text-align: center;
+  color: #fff;
+}
+
+/* Playlist Container Styling */
+.playlist-container {
+  width: 100%;
+
+  overflow-y: auto; /* Enables scrolling */
+  margin-bottom: 20px; /* Space between the playlist name and the song list */
+}
+
+/* Song Row Styling */
+.song-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #444; /* Slight border for each row */
+  padding: 10px;
+  color: #fff;
+}
+
+.song-row:hover {
+  background-color: #282828; /* Slight highlight on hover */
+}
+
+/* Index, Name, Artist, and Duration Styling */
+.song-index,
+.song-name,
+.song-artist,
+.song-duration,
+.song-rating {
+  margin-right: 15px; /* Space between elements */
+}
+
+.song-index {
+  color: #b3b3b3; /* Slightly lighter color for the index */
+}
+
+.song-name,
+.song-artist {
+  flex-grow: 1; /* Allows name and artist to fill the available space */
+}
+
+.song-duration {
+  color: #b3b3b3; /* Slightly lighter color for the duration */
+}
+
+.song-rating {
+  color: #1db954; /* Spotify's green color for the rating */
+}
+
+/* Responsive considerations */
+@media (max-width: 768px) {
   .playlist-name {
-    font-size: 1em;
-    margin: 20px 0;
-    text-align: center;
-    color: #fff;
+    font-size: 1.5em; /* Smaller text on smaller screens */
   }
-  
-  /* Playlist Container Styling */
-  .playlist-container {
-    width: 100%;
-    
-    overflow-y: auto; /* Enables scrolling */
-    margin-bottom: 20px;/* Space between the playlist name and the song list */
+
+  .song-info {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  /* Song Row Styling */
-  .song-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid #444; /* Slight border for each row */
-    padding: 10px;
-    color: #fff;
-   }
-  
-  .song-row:hover {
-    background-color: #282828; /* Slight highlight on hover */
-  }
-  
-  /* Index, Name, Artist, and Duration Styling */
-  .song-index, .song-name, .song-artist, .song-duration, .song-rating {
-    margin-right: 15px; /* Space between elements */
-  }
-  
-  .song-index {
-    color: #b3b3b3; /* Slightly lighter color for the index */
-  }
-  
-  .song-name, .song-artist {
-    flex-grow: 1; /* Allows name and artist to fill the available space */
-  }
-  
-  .song-duration {
-    color: #b3b3b3; /* Slightly lighter color for the duration */
-  }
-  
+
+  .song-name,
+  .song-artist,
+  .song-duration,
   .song-rating {
-    color: #1db954; /* Spotify's green color for the rating */
+    margin-right: 10px;
   }
-  
-  /* Responsive considerations */
-  @media (max-width: 768px) {
-    .playlist-name {
-      font-size: 1.5em; /* Smaller text on smaller screens */
-    }
-  
-    .song-info {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .song-name, .song-artist, .song-duration, .song-rating {
-      margin-right: 10px;
-    }
-    
-  }
-  
+}

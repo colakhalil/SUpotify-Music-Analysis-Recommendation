@@ -3,15 +3,54 @@ import "../pagesCSS/MainPage.css";
 import LeftBar from "../components/LeftBar";
 import FriendActivity from "../components/FriendActivity";
 import BottomBar from "../components/BottomBar";
+import LyrcsMiddle from "../components/LyrcsMiddle";
 
 import MainMiddle from "../components/MainMiddle";
 import ProfileMiddle from "../components/ProfileMiddle";
-import LyrcsMieddle from "../components/LyrcsMiddle";
-import LyrcsMiddle from "../components/LyrcsMiddle";
+import PlaylistMiddle from "../components/PlaylistMiddle";
 
 const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
+
   // DUMMY DATALAR
+  const playlistData = {
+    playlistID: "playlist123",
+    playlistName: "Chill Vibes",
+    playlistPicture:
+      "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
+    songs: [
+      {
+        songName: "Ocean Breeze",
+        duration: "3:45",
+        releaseYear: 2021,
+        artist: "Tropical Sound",
+        songRating: 4.5,
+      },
+      {
+        songName: "Mountain Serenity",
+        duration: "4:20",
+        releaseYear: 2020,
+        artist: "Nature Melody",
+        songRating: 4.7,
+      },
+      {
+        songName: "Urban Sunset",
+        duration: "5:00",
+        releaseYear: 2019,
+        artist: "City Lights",
+        songRating: 4.3,
+      },
+      {
+        songName: "Virginia Beach",
+        duration: "5:00",
+        releaseYear: 2023,
+        artist: "City Lights",
+        songRating: 4.3,
+      },
+      // Add more songs as needed
+    ],
+  };
+
   const userData = {
     username: "UserName",
     profilePicture:
@@ -209,22 +248,21 @@ const MainPage = () => {
           <MainMiddle
             lastPlaylists={lastPlaylists}
             recomendedPlaylists={recomendedPlaylists}
+            setCurrentPlace={setCurrentPlace}
           ></MainMiddle>
         )}
-        {currentPlace === "lyrc" && <LyrcsMiddle song={song}></LyrcsMiddle>}
         {currentPlace === "profile" && (
           <ProfileMiddle
             lastPlaylists={lastPlaylists}
             userData={userData}
           ></ProfileMiddle>
         )}
-
+        {currentPlace === "lyrc" && <LyrcsMiddle song={song}></LyrcsMiddle>}
+        {currentPlace === "playlist" && (
+          <PlaylistMiddle playlistData={playlistData}></PlaylistMiddle>
+        )}
         <FriendActivity friendsData={friendsData} />
-        <BottomBar
-          song={song}
-          setCurrentPlace={setCurrentPlace}
-          currentPlace={currentPlace}
-        />
+        <BottomBar song={song} setCurrentPlace={setCurrentPlace} />
       </div>
     </>
   );
