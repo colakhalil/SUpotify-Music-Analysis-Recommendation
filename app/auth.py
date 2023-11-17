@@ -59,14 +59,14 @@ def sign_up():
         db_data = cur.fetchone()
         
         if db_data:
-            return jsonify({"message": "False"})
+            return jsonify({"message": False})
         
         # Insert user data into the User table
         cur.execute(insert_user_query, (data["user_id"], data["password"], data["email"]))
         db.connection.commit()
         
         cur.close()
-        return jsonify({"message": "True"})
+        return jsonify({"message": True})
         
 
 @auth.route('/login', methods=['POST', 'GET'])
@@ -84,11 +84,11 @@ def login():
         cur.close()
         if user_data:
             if user_data["password"] == password:
-                return jsonify({"message": "True"})
+                return jsonify({"message": True})
             else:
-                return jsonify({"message": "False"})
+                return jsonify({"message": False})
         else:
-            return jsonify({"message": "False"})
+            return jsonify({"message": False})
 
 # spotify login 
 @auth.route('/sauth')
