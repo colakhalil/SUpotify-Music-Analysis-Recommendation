@@ -60,7 +60,7 @@ def get_recommendations_by_genre(genre):
     recommendations = sp.recommendations(seed_genres=[genre], limit=10)
 
     for track in recommendations['tracks']:
-        fetch_and_store_song_info(sp, track['id'])
+        fetch_and_store_song_info(track['id'])
 
     song_list = [
         {
