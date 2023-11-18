@@ -18,16 +18,10 @@ CREATE TABLE IF NOT EXISTS `User` (
   `country` varchar(5) DEFAULT NULL,
   `spotifyid` varchar(45) DEFAULT NULL,
   `last_sid` varchar(45) DEFAULT NULL,
-  `email` varchar(150) NOT NULL,
-  'profile_pic' varchar(200) DEFAULT NULL,
+  `email` varchar(50) NOT NULL,
+  `profile_pic` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`user_id`)
 )"""
-
-insert_user_query = """
-INSERT INTO `User` (`user_id`, `password`, `email`)
-VALUES (%s, %s, %s)
-"""
-select_user_query = "SELECT * FROM User" 
 
 
 TOKEN_INFO = "token_info" 
@@ -63,7 +57,11 @@ def sign_up():
             return jsonify({"message": False})
         
         # Insert user data into the User table
-        cur.execute(insert_user_query, (data["user_id"], data["password"], data["email"]))
+        cur.execute("""
+            INSERT INTO `User` (`user_id`, `password`, `email`)
+            VALUES (%s, %s, %s)
+            """, (data["user_id"], data["password"], data["email"]))
+        
         db.connection.commit()
         
         cur.close()
@@ -111,8 +109,9 @@ def redirect_page():
     
     update_query = """
         UPDATE `User`
-        SET `spotifyid` = %s, `country` = %s, 'profile_pic' = %s
+        SET `spotifyid` = %s, `country` = %s, `profile_pic` = %s
         WHERE `email` = %s
     """
-    cur.execute(update_query, (user_data["id"], user_data["country"], user_data["email"], user_data["images"][0]["url"]))
+    cur.execute(update_query, (user_data["id"], user_data["country"], user_data["images"][0]["url"], user_data["email"]))
+
     return redirect("http://localhost:3000/main") 
