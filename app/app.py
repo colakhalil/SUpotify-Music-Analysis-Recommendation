@@ -118,29 +118,29 @@ def login():
 # spotify login 
 @app.route('/sauth')
 def login_spotify():
+    if 'TOKEN_INFO' in session:
+        # Kullanıcı zaten oturum açmışsa, başka bir sayfaya yönlendir
+        return redirect(url_for('main_page'))
+    
     auth_url = create_spotify_outh().get_authorize_url()
     return redirect(auth_url)
 
 @app.route("/redirect")
 def redirect_page():
+    if 'TOKEN_INFO' in session:
+        # Kullanıcı zaten oturum açmışsa, başka bir sayfaya yönlendir
+        return redirect(url_for('main_page'))
+
     session.clear()
     code = request.args.get("code")
     token_info = create_spotify_outh().get_access_token(code)
-    session[TOKEN_INFO] = token_info
+    session['TOKEN_INFO'] = token_info
     
     spotify = spotipy.Spotify(auth=token_info['access_token'])
     user_data = spotify.current_user()
     
-    #cur = mysql.connection.cursor()
-    
-    #update_query = """
-    #    UPDATE `User`
-    #   SET `spotifyid` = %s, `country` = %s
-    #    WHERE `email` = %s
-    #"""
-    #cur.execute(update_query, (user_data["id"], user_data["country"], user_data["email"])) 
-    
-    return redirect("http://localhost:3000/main") 
+    # Kullanıcıyı başka bir sayfaya yönlendir
+    return redirect(url_for('MainPageView'))
 
 def fetch_and_store_song_info(sp, song_id):
     # Spotify API'yi kullanarak şarkı bilgilerini al
