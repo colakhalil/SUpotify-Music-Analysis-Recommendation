@@ -24,10 +24,12 @@ def create_app():
 
     from .auth import auth
     from .main_page import main
+    from .user_page import user
     
     
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(main, url_prefix='/')
+    app.register_blueprint(user, url_prefix='/')
     
     db.init_app(app)
     return app
