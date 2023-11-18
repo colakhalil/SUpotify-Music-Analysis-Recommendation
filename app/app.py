@@ -117,7 +117,41 @@ def lyrics(song_name):
     song = genius.search_song(title = song_name)
     return str(song.lyrics )
     
+db = MySQLdb(app) 
+app.route("/get_playlist_info/<playlist_id>")
+def get_playlist_info(playlist_id):
+    sp = spotipy.Spotify(auth=session['token_info']['access_token'])
+    playlist_info = sp.playlist(playlist_id)
+    song_list = []
+    Song = namedtuple("Song", ["song_id", "song_name", "duration", "release_year", "artist", "song_rating"]) 
 
+    cur = db.connection.cursor()
+ 
+    for i in range(len(playlist_info['tracks']['items'])):  
+
+        cur.execute("""
+        SELECT `rate` FROM `Song` WHERE `song_id` = %s
+    """, (playlist_info['tracks']['items'][i]['track']['id'],)) 
+        s = cur.fetchone()  
+        song_1 = Song(
+            song_id = playlist_info['tracks']['items'][i]['track']['id'],
+            song_name = playlist_info['tracks']['items'][i]['track']['name'],
+            duration = playlist_info['tracks']['items'][i]['track']['duration_ms'],
+            release_year = playlist_info['tracks']['items'][i]['track']['album']['release_date'],
+            artist = playlist_info['tracks']['items'][i]['track']['artists'][0]['name'],
+            song_rate = s 
+        ) 
+        song_list.append(song_1) 
+    data = {
+        'playlisID': playlist_id,
+        'playlistName': playlist_info['name'],
+        'playlistPicture': playlist_info['images'][0]['url'],
+        'songs' : song_list,
+        
+        }  
+    cur.close()
+    return jsonify(data) 
+ 
 
 app.run(debug=True, port=8080) 
  
