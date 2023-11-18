@@ -69,6 +69,46 @@ VALUES (%s, %s, %s)
 
 select_user_query = "SELECT * FROM User" 
 
+create_song_table_query = '''
+CREATE TABLE IF NOT EXISTS Song (
+  song_id VARCHAR(45) NOT NULL,
+  artist_id VARCHAR(45) DEFAULT NULL,
+  album_id VARCHAR(45) DEFAULT NULL,
+  song_name VARCHAR(100) DEFAULT NULL,
+  image VARCHAR(200) DEFAULT NULL,
+  rate DOUBLE DEFAULT NULL,
+  tempo INT DEFAULT NULL,
+  popularity INT DEFAULT NULL,
+  valence DOUBLE DEFAULT NULL,
+  duration INT DEFAULT NULL,
+  energy DOUBLE DEFAULT NULL,
+  danceability DOUBLE DEFAULT NULL,
+  date_added DATE DEFAULT NULL,
+  play_count INT DEFAULT NULL,
+  lyrics TEXT DEFAULT NULL,
+  release_year INT DEFAULT NULL,
+  PRIMARY KEY (song_id),
+  KEY artist_id (artist_id),
+  KEY album_id (album_id),
+  CONSTRAINT fk_artist FOREIGN KEY (artist_id) REFERENCES Artist (artist_id),
+  CONSTRAINT fk_album FOREIGN KEY (album_id) REFERENCES Album (album_id)
+)
+'''
+
+
+create_playlist_table_query = '''
+CREATE TABLE IF NOT EXISTS `Playlist` (
+  `playlist_id` varchar(45) NOT NULL,
+  `user_id` varchar(45) DEFAULT NULL,
+  `playlist_name` varchar(45) DEFAULT NULL,
+  `rate` double DEFAULT NULL,
+  `image` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`playlist_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `playlist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+)
+'''
+
 @app.route('/sign_up', methods=['POST', 'GET'])
 def sign_up():
     if request.method == "POST":
@@ -213,6 +253,33 @@ def get_recommendations_by_genre(genre):
         }
         for track in recommendations['tracks']
     ] 
+
+    cur = mysql.connection.cursor()
+    cur.execute(create_song_table_query)
+
+    insert_query = '''
+    INSERT INTO Song (song_id, artist_id, album_id, rate, tempo, popularity, valence, duration, energy, danceability)
+    VALUES (%(song_id)s, %(artist_id)s, %(album_id)s, %(rate)s, %(tempo)s, %(popularity)s, %(valence)s, %(duration)s, %(energy)s, %(danceability)s)
+    '''
+    for song in song_list:
+        cur.execute(insert_query, {
+            'song_id': song['song_id'],
+            'artist_id': song['artist_id'],
+            'album_id': song['album_id'],
+            'rate': song['rate'],
+            'tempo': song['tempo'],
+            'popularity': song['popularity'],
+            'valence': song['valence'],
+            'duration': song['duration'],
+            'energy': song['energy'],
+            'danceability': song['danceability'],
+            'name': song['name'],
+            'artists': song['artists']
+            })
+
+    cur.execute(insert_query, data)
+    mysql.connection.commit()
+    cur.close()
     # JSON formatında şarkı ve albüm bilgilerini döndür
     return jsonify(song_list) 
 ## not : cekebilecegi ornek genres Pop rock , hiphop , electronic county , jazz , blues , rnb , reggae , classical 
@@ -257,7 +324,18 @@ def fetch_and_store_song_info(song_id):
         #))
         #mysql.connection.commit()
         #cur.close()
-        
+
+        cur = mysql.connection.cursor()
+        cur.execute(create_song_table_query)
+
+        insert_query = '''
+        INSERT INTO Song (song_id, artist_id, album_id, rate, tempo, popularity, valence, duration, energy, danceability)
+        VALUES (%(song_id)s, %(artist_id)s, %(album_id)s, %(rate)s, %(tempo)s, %(popularity)s, %(valence)s, %(duration)s, %(energy)s, %(danceability)s)
+        '''
+
+        cur.execute(insert_query, data)
+        mysql.connection.commit()
+        cur.close()
         return jsonify(data)   
     
 @app.route('/get_user_playlists')
@@ -276,7 +354,25 @@ def get_user_playlists():
         }
         for playlist in user_playlists['items']
     ]
+
+    cur = mysql.connection.cursor()
+    cur.execute(create_playlist_table_query)
+
+    insert_query = '''
+    INSERT INTO Playlist (playlist_id, playlist_name)
+    VALUES (%(playlist_id)s, %(playlist_name)s)
+    '''
+
+    for playlist in formatted_playlists:
+        data = (playlist['playlistID'], playlist['name'])
+        cur.execute(insert_query, data)
+        
+    db.connection.commit()
+    cur.close()
+
     return jsonify(formatted_playlists) 
+
+    
 
 
 if __name__ == '__main__':
