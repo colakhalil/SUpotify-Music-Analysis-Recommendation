@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `User` (
   `spotifyid` varchar(45) DEFAULT NULL,
   `last_sid` varchar(45) DEFAULT NULL,
   `email` varchar(150) NOT NULL,
+  'profile_pic' varchar(200) DEFAULT NULL,
   PRIMARY KEY (`user_id`)
 )"""
 
@@ -106,12 +107,12 @@ def redirect_page():
     spotify = spotipy.Spotify(auth=token_info['access_token'])
     user_data = spotify.current_user()
     
-    #cur = db.connection.cursor()
+    cur = db.connection.cursor()
     
-    #update_query = """
-    #    UPDATE `User`
-    #    SET `spotifyid` = %s, `country` = %s
-    #    WHERE `email` = %s
-    #"""
-    #cur.execute(update_query, (user_data["id"], user_data["country"], user_data["email"])) 
+    update_query = """
+        UPDATE `User`
+        SET `spotifyid` = %s, `country` = %s, 'profile_pic' = %s
+        WHERE `email` = %s
+    """
+    cur.execute(update_query, (user_data["id"], user_data["country"], user_data["email"], user_data["images"][0]["url"]))
     return redirect("http://localhost:3000/main") 

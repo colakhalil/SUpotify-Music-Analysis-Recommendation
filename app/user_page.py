@@ -24,23 +24,17 @@ def user_page(email):
     """, (email,))
     user = cur.fetchone()
     
-    
-    sp = spotipy.Spotify(auth=session[TOKEN_INFO]['access_token'])
-    profile_pic = sp.me()['images'][0]['url']
-    
     cur.execute("""
-        SELECT user2_id FROM Friendship WHERE `user1_id` = %s
-    """, (user['user_id'],))
-    
-    friends = []
-    for friend in cur.fetchall():
-        friends.append(friend['user2_id'])
+        SELECT User.user_id, User.profile_pic, User.last_sid
+        FROM Friendship
+        JOIN User ON (Friendship.user1_id = User.user_id OR Friendship.user2_id = User.user_id)
+        WHERE (Friendship.user1_id = %s OR Friendship.user2_id = %s)
+        """, (user['user_id'], user['user_id']))
+    friends = cur.fetchall()
     
     cur.close()
     return jsonify({
         'user_id': user['user_id'],
-        'last_sid': user['last_sid'],
-        'profile_pic': profile_pic,
-        'friends': friends,
-        'friendsCount': len(friends)
-    })
+        'profile_pic': user['profile_pic'],
+        'last_sid': user['last_sid']
+    } for user in friends)
