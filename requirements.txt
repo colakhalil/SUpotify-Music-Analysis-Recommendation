@@ -1,0 +1,6 @@
+flask
+Flask-SQLAlchemy
+flask-login
+Flask-Cors
+spotipy
+datetime
