@@ -1,0 +1,23 @@
+[
+  {
+    "_comment": "Artist Placement According to Number of Songs Released",
+    "performer": "Artist Name 1",
+    "songsAdded": 15
+  },
+  {
+    "performer": "Artist Name 2",
+    "songsAdded": 20
+  },
+  {
+    "performer": "Artist Name 3 ",
+    "songsAdded": 30
+  },
+  {
+    "performer": "Artist Name 4 ",
+    "songsAdded": 2
+  },
+  {
+    "performer": "Artist Name 5",
+    "songsAdded": 15
+  }
+]
