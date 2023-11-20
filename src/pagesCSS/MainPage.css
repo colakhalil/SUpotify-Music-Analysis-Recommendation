@@ -39,8 +39,8 @@
 }
 
 .album-cover {
-  width: 60px; /* Adjust as necessary */
-  height: 50px; /* Adjust as necessary */
+  width: 80px; /* Adjust as necessary */
+  height: 70px; /* Adjust as necessary */
   object-fit: cover;
   margin-right: 1rem;
   border-radius: 4px;
@@ -155,6 +155,21 @@
   margin-left: 3rem;
   padding: 5px 10px;
   cursor: pointer;
+}
+
+.delete-btn {
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 10px;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.delete-btn-disabled {
+  background: darkgray;
+  border: 1px solid gray;
+  color: white;
+  cursor: not-allowed;
 }
 /* This container will hold both the controls and the rating, spaced between */
 .song-controls-container {
@@ -393,7 +408,7 @@
 
 .lastPlaylists-container-forPP {
   max-width: 1200px;
-  width: %100;
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
   gap: 0.2rem;
@@ -434,4 +449,17 @@
   text-align: center;
   font-size: 1rem;
   /* Add more styling as required */
+}
+
+
+.add-song-btn{
+  width: 15rem;
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 10px;
+  margin-right: 2rem;
+  color: white;
+  margin-left: 68rem;
+  padding: 5px 10px;
+  cursor: pointer;
 }

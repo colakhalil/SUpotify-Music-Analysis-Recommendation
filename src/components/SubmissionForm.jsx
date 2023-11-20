@@ -1,0 +1,142 @@
+import React, { useState } from 'react';
+import "../pagesCSS/SubmissionForm.css";
+const SubmissionForm = () => {
+  const [fileData, setFileData] = useState(null);
+  const [formData, setFormData] = useState({
+    songTitle: '',
+    artistName: '',
+    songDuration: '',
+    songReleaseYear: '',
+    songRating: ''
+
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type === "application/json") {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          // Perform validation on data here
+          if (isValidData(data)) {
+            setFileData(data);
+          } else {
+            console.error('Invalid file format');
+          }
+        } catch (error) {
+          console.error('Error parsing JSON:', error);
+        }
+      };
+      reader.readAsText(file);
+    } else {
+      console.error('Please upload a valid JSON file');
+    }
+  };
+  const handleImportSubmit = async () => {
+    if (fileData) {
+      // Send fileData to the backend
+      try {
+        const response = await fetch('/your-api-endpoint', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(fileData)
+        });
+        // Handle response...
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    } else {
+      console.error('No valid data to submit');
+    }
+  };
+  const isValidData = (data) => {
+    // Define the expected fields in order
+    const expectedFields = ['songTitle', 'artistName', 'songDuration', 'songReleaseYear', 'songRating'];
+  
+    // Check if all required fields are present and in order
+    return expectedFields.every((field, index) => {
+      return Object.keys(data)[index] === field && data.hasOwnProperty(field);
+    });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/your-api-endpoint', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        console.log('Song data submitted successfully');
+        // Handle successful submission, e.g., clearing the form or giving user feedback
+      } else {
+        console.error('Failed to submit song data');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  return (
+    <form className="submission-form" onSubmit={handleSubmit}>
+      <h2>Add a song to the database</h2>
+      <p>Please provide the details of the song you want to add</p>
+      <input
+        type="text"
+        name="songTitle"
+        value={formData.songTitle}
+        onChange={handleChange}
+        placeholder="Song Title"
+      />
+      <input
+        type="text"
+        name="artistName"
+        value={formData.artistName}
+        onChange={handleChange}
+        placeholder="Artist's Name"
+      />
+      <input
+        type="text"
+        name="songDuration"
+        value={formData.songDuration}
+        onChange={handleChange}
+        placeholder="Song's Duration in minutes(?)"
+      />
+      <input
+        type="text"
+        name="songReleaseYear"
+        value={formData.songReleaseYear}
+        onChange={handleChange}
+        placeholder="Song's Release Year"
+      />
+      
+      <input
+        type="text"
+        name="songRating"
+        value={formData.songRating}
+        onChange={handleChange}
+        placeholder="Song Rating 0-5"
+      />
+      <button type="submit">Submit</button>
+      <input type= "file" accept='.json' onChange={handleFileChange}/>
+      <button type='submit' onClick={handleImportSubmit}>Import</button>
+
+
+      
+    </form>
+  );
+};
+
+export default SubmissionForm;

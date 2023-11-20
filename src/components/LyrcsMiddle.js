@@ -3,7 +3,7 @@ const LyrcsMiddle = ({ song }) => {
     <>
       <div className="lyrics-container">
         <div
-          className="album-cover"
+          className="album-pic"
           style={{ backgroundImage: `url(${song.img})` }}
         ></div>
         <h1 className="song-name">{song.title}</h1>

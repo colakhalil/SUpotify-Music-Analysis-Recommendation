@@ -8,6 +8,7 @@ import LyrcsMiddle from "../components/LyrcsMiddle";
 import MainMiddle from "../components/MainMiddle";
 import ProfileMiddle from "../components/ProfileMiddle";
 import PlaylistMiddle from "../components/PlaylistMiddle";
+import SubmissionForm from "../components/SubmissionForm";
 
 const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
@@ -251,10 +252,14 @@ const MainPage = () => {
             setCurrentPlace={setCurrentPlace}
           ></MainMiddle>
         )}
+        {currentPlace === "submit-form" && (
+          <SubmissionForm></SubmissionForm>
+        )}
         {currentPlace === "profile" && (
           <ProfileMiddle
             lastPlaylists={lastPlaylists}
             userData={userData}
+            setCurrentPlace={setCurrentPlace}
           ></ProfileMiddle>
         )}
         {currentPlace === "lyrc" && <LyrcsMiddle song={song}></LyrcsMiddle>}

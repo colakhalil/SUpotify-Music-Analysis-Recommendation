@@ -5,10 +5,37 @@ import SongRating from "./subcomponents/SongRating";
 import SongOptions from "./subcomponents/SongOptions";
 import SongDetailsExtra from "./subcomponents/SongDetailsExtra";
 
+
 const BottomBar = ({ song, setCurrentPlace, currentPlace }) => {
   const [userRating, setUserRating] = useState(song.userPrevRating);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const [isDeleted, setIsDeleted] = useState(false);
+  
+  const handleDelete = async () => {
+    if (isDeleted) {
+      return; // Prevent further action if already clicked
+    }
+
+    try {
+      const response = await fetch('/delete-song', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ song }),
+      });
+
+      if (response.ok) {
+        console.log('Song deleted successfully');
+        setIsDeleted(true); // Update state to reflect deletion
+      } else {
+        console.error('Failed to delete the song');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const handleRatingChange = (newRating) => {
     setUserRating(newRating);
@@ -72,6 +99,13 @@ const BottomBar = ({ song, setCurrentPlace, currentPlace }) => {
         userRating={userRating}
         handleRatingChange={handleRatingChange}
       />
+      <button 
+        className="delete-btn" 
+        onClick={handleDelete}
+        disabled={isDeleted}
+      >
+        Delete
+      </button>
       <SongDetailsExtra song={song} />
     </div>
   );
