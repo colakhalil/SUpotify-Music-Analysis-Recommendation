@@ -1,0 +1,33 @@
+[
+  {
+    "_comment": "MOST LIKED 5 SONGS IN 90'S ERA BY THE USER",
+    "title": "title name 1",
+    "artist": "artist name 1",
+    "releaseYear": 1995
+  },
+  {
+    "title": "title name 2",
+    "artist": "artist name 2",
+    "releaseYear": 1999
+  },
+  {
+    "title": "title name 3",
+    "artist": "artist name 3",
+    "releaseYear": 1993
+  },
+  {
+    "title": "title name 4",
+    "artist": "artist name 4",
+    "releaseYear": 1992
+  },
+  {
+    "title": "title name 5",
+    "artist": "artist name 5",
+    "releaseYear": 1992
+  },
+  {
+    "title": "title name 6",
+    "artist": "artist name 6",
+    "releaseYear": 1999
+  }
+]

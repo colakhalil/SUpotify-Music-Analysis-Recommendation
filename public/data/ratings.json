@@ -1,0 +1,19 @@
+[
+  {
+    "_comment": "Monthly average rating of user (AVERAGE RATING OF SONGS)",
+    "month": "2023-01",
+    "averageRating": 3.4
+  },
+  {
+    "month": "2023-02",
+    "averageRating": 4
+  },
+  {
+    "month": "2023-03",
+    "averageRating": 5
+  },
+  {
+    "month": "2023-04",
+    "averageRating": 2.1
+  }
+]

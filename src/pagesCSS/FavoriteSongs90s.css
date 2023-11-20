@@ -1,0 +1,36 @@
+.albumsList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Adjust the gap as needed */
+  padding-left: 4rem;
+}
+
+.albumCard {
+  background: rgb(0, 5, 9);
+  border: 1px solid #ddd;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  padding: 20px;
+  width: 200px; /* Adjust the width as needed */
+  text-align: center;
+}
+
+.albumCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.albumTitle {
+  font-size: 1.2em;
+  margin: 0;
+}
+
+.albumArtistYear {
+  color: #666;
+  font-size: 1em;
+  margin-bottom: 10px;
+}

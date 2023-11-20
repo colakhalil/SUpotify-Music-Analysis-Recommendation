@@ -1,6 +1,10 @@
 import React from "react";
 import UserPart from "./subcomponents/UserPart";
 import Playlist from "./subcomponents/Playlist";
+import FavoriteSongs90s from "./subcomponents/FavoriteSongs90s";
+import FavoriteRecentSongs from "./subcomponents/FavoriteRecentSongs";
+import MonthlyAverageRatingsChart from "./subcomponents/MonthlyAverageRatingsChart";
+import SongsAddedByPerformerChart from "./subcomponents/SongsAddedByPerformerChart";
 
 const ProfileMiddle = ({ lastPlaylists, userData, setCurrentPlace }) => {
   const handlePlaylistClick = (playlistName) => {
@@ -33,7 +37,10 @@ const ProfileMiddle = ({ lastPlaylists, userData, setCurrentPlace }) => {
               />
             ))}
           </div>
-          {/* Diğer içerikler */}
+          <FavoriteSongs90s />
+          <FavoriteRecentSongs />
+          <MonthlyAverageRatingsChart />
+          <SongsAddedByPerformerChart />
         </div>
       </div>
     </>
