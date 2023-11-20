@@ -1,6 +1,7 @@
 from flask import Blueprint, Flask, request, url_for, session, jsonify, redirect
 from flask_cors import CORS, cross_origin
 from spotipy.oauth2 import SpotifyOAuth 
+import lyricsgenius as lg
 import spotipy
 import requests
 import time 
@@ -15,6 +16,18 @@ TOKEN_INFO = "token_info"
 
 client_id = "e3bb122dc61347a6b496d5f15a036a68"
 client_secret = "e217a887698a43479bcbcc3698853677"
+
+GENIUS_API_KEY = "ELYRzAgCM0wR2jm42T8YVN3sJZMXH4Yss-hBIERYV4xFp2RJGiRbrfnuQh5gqJfg"
+
+@main.route("/lyrics/<artist_name>/<song_name>")
+def lyrics(artist_name, song_name):
+    
+    #DB check must be done here
+    
+    genius = lg.Genius(GENIUS_API_KEY)
+    song = genius.search_song(title = song_name, artist = artist_name)
+    
+    return jsonify(song.lyrics)
 
 def fetch_and_store_song_info(sp, song_id):
 
