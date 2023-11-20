@@ -6,6 +6,7 @@ import spotipy
 import requests
 import time 
 import json
+from collections import namedtuple
 from datetime import datetime
 from . import db 
 from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist, Song, User
@@ -61,11 +62,11 @@ def fetch_and_store_song_info(sp, song_id):
     
 @main.route('/save_song/<songid>', methods=['GET, POST'])
 def save_song(songid):
-    
-    sp = spotipy.Spotify(auth=session['token_info']['access_token'])
-    fetch_and_store_song_info(sp, songid)
-    
-    return jsonify({'message': 'Song saved successfully'})
+    if request.method == 'POST':
+        sp = spotipy.Spotify(auth=session['token_info']['access_token'])
+        fetch_and_store_song_info(sp, songid)
+        
+        return jsonify({'message': True})
 
 
 @main.route('/recommendations/<genre>')
@@ -76,13 +77,14 @@ def get_recommendations_by_genre(genre):
 
     return jsonify(recommendations)
 
-@main.route('/song_info/<song_id>') 
-def get_song_info(song_id):
+@main.route('/song_info/<user_id>/<song_id>') 
+def get_song_info(song_id, user_id):
     song = Song.query.filter_by(song_id=song_id).first()
     
-    prev_rate = RateSong.query.filter_by(song_id=song_id, user_id=session['user_id']).first()
-    
     if song:
+        
+        prev_rate = RateSong.query.filter_by(song_id=song_id, user_id=user_id).first()
+        
         song_info = {
             'song_id': song.song_id,
             'artists': song.artist_id.artist_name,
@@ -177,7 +179,7 @@ def song_played():
 @main.route('/search/<query>', methods=['GET'])
 def search(query):
     sp = spotipy.Spotify(auth=session['token_info']['access_token'])
-    search_result = sp.search(q=query, type = "", limit=10)
+    search_result = sp.search(q=query, type = "track", limit=10)
     
     formatted_result = [
         {
@@ -191,3 +193,32 @@ def search(query):
     ]
     
     return jsonify(formatted_result)
+
+@main.route("/get_playlist_info/<playlist_id>")
+def get_playlist_info(playlist_id):
+    sp = spotipy.Spotify(auth=session['token_info']['access_token'])
+    playlist_info = sp.playlist(playlist_id)
+    song_list = []
+ 
+    for i in range(len(playlist_info['tracks']['items'])):  
+
+        s = RateSong.query.filter_by(song_id=playlist_info['tracks']['items'][i]['track']['id']).all()
+        
+        song_1 = {
+            'song_id' : playlist_info['tracks']['items'][i]['track']['id'],
+            'song_name' : playlist_info['tracks']['items'][i]['track']['name'],
+            'duration' : playlist_info['tracks']['items'][i]['track']['duration_ms'],
+            'release_year' : playlist_info['tracks']['items'][i]['track']['album']['release_date'],
+            'artist' : playlist_info['tracks']['items'][i]['track']['artists'][0]['name'],
+            'song_rating' : s.rate if s else 0
+        }
+
+        song_list.append(song_1) 
+    data = {
+        'playlisID': playlist_id,
+        'playlistName': playlist_info['name'],
+        'playlistPicture': playlist_info['images'][0]['url'],
+        'songs' : song_list
+        }
+    
+    return jsonify(data)

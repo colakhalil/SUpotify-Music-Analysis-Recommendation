@@ -55,10 +55,10 @@ def login():
     if request.method == 'POST':
         
         data = request.get_json()
-        email = data.get("email")
-        entered_password = data.get("password")
+        user_id = data['user_id']
+        entered_password = data['password']
         
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(user_id=user_id).first()
     
         if user:
             password_from_db = user.password

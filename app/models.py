@@ -15,7 +15,9 @@ class User(db.Model):
 
     last_song = db.relationship('Song', foreign_keys=[last_sid])
     playlists = db.relationship('Playlist', back_populates='user', lazy='dynamic')
-    friendships = db.relationship('Friendship', back_populates='user1', lazy='dynamic')
+    #friendships = db.relationship('Friendship', back_populates='user1', lazy='dynamic')
+    friendships = db.relationship('Friendship', foreign_keys='Friendship.user1_id', backref='user')
+    friendships = db.relationship('Friendship', foreign_keys='Friendship.user2_id', backref='user')
     rated_songs = db.relationship('RateSong', back_populates='user', lazy='dynamic')
 
 class Friendship(db.Model):
