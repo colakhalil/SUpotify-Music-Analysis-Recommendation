@@ -1,5 +1,4 @@
 from flask import Blueprint, Flask, request, url_for, session, jsonify, redirect
-from flask_mysqldb import MySQL
 from flask_cors import CORS, cross_origin
 from spotipy.oauth2 import SpotifyOAuth 
 import spotipy
@@ -8,6 +7,7 @@ import time
 import json
 from datetime import datetime
 from . import db 
+from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist, Song, User
 
 main = Blueprint('main', __name__)
 
@@ -26,6 +26,8 @@ def fetch_and_store_song_info(sp, song_id):
         'song_id': track_info['id'],
         'artist_id': track_info['artists'][0]['id'],
         'album_id': track_info['album']['id'],
+        'song_name': track_info['name'],
+        'picture': track_info['album']['images'][0]['url'],
         'rate': 0,
         'play_count': 0,
         'tempo': audio_features['tempo'],  
@@ -34,20 +36,24 @@ def fetch_and_store_song_info(sp, song_id):
         'duration': track_info['duration_ms'],
         'energy': audio_features['energy'],  
         'danceability': audio_features['danceability'],
-        'song_name': track_info['name'],
-        'picture': track_info['album']['images'][0]['url'],
         'genre': track_info['atists'][0]['genres'],
         'release_date': track_info['album']['release_date'],
         'date_added': datetime.now().strftime("%Y-%m-%d")
     }
+    # dict unpacking
+    new_song = Song(**data)
+
+    db.session.add(new_song)
+    db.session.commit()
     
-    cur = db.connection.cursor()
-    cur.execute("""
-        INSERT INTO `Song` (`song_id`, `artist_id`, `album_id`, `rate`, `play_count`, `tempo`, `popularity`, `valence`, `duration`, `energy`, `danceability`, `song_name`, `picture`, `genre`, `release_date`, `date_added`)
-        VALUES (%(song_id)s, %(artist_id)s, %(album_id)s, %(rate)s, %(play_count)s, %(tempo)s, %(popularity)s, %(valence)s, %(duration)s, %(energy)s, %(danceability)s, %(song_name)s, %(picture)s, %(genre)s, %(release_date)s, %(date_added)s)
-    """, data)
-    db.connection.commit()
-    cur.close()
+@main.route('/save_song/<songid>', methods=['GET, POST'])
+def save_song(songid):
+    
+    sp = spotipy.Spotify(auth=session['token_info']['access_token'])
+    fetch_and_store_song_info(sp, songid)
+    
+    return jsonify({'message': 'Song saved successfully'})
+
 
 @main.route('/recommendations/<genre>')
 def get_recommendations_by_genre(genre):
@@ -56,19 +62,33 @@ def get_recommendations_by_genre(genre):
     recommendations = sp.recommendations(seed_genres=[genre], limit=10)
 
     return jsonify(recommendations)
-## not : cekebilecegi ornek genres Pop rock , hiphop , electronic county , jazz , blues , rnb , reggae , classical 
 
 @main.route('/get_song_info/<song_id>') 
 def get_song_info(song_id):
     
-    cur = db.connection.cursor()
-    cur.execute("""
-        SELECT * FROM `Song` WHERE `song_id` = %s
-    """, (song_id,))
-    
-    song_info = cur.fetchone()
-    cur.close()
-    return jsonify(song_info)   
+    song = Song.query.filter_by(song_id=song_id).first()
+    if song:
+        song_info = {
+            'song_id': song.song_id,
+            'artist_id': song.artist_id,
+            'album_id': song.album_id,
+            'song_name': song.song_name,
+            'picture': song.picture,
+            'rate': song.rate,
+            'play_count': song.play_count,
+            'tempo': song.tempo,
+            'popularity': song.popularity,
+            'valence': song.valence,
+            'duration': song.duration,
+            'energy': song.energy,
+            'danceability': song.danceability,
+            'genre': song.genre,
+            'release_date': song.release_date,
+            'date_added': song.date_added
+        }
+        return jsonify(song_info)
+    else:
+        return jsonify({"message": "Song not found"})
 
 @main.route('/get_user_playlists')
 def get_user_playlists():
@@ -85,4 +105,22 @@ def get_user_playlists():
         }
         for playlist in user_playlists['items']
     ]
+
+    # if playlist exists, update it; else create new
+    for playlist_data in formatted_playlists:
+        existing_playlist = Playlist.query.filter_by(playlist_id=playlist_data['playlistID']).first()
+
+        if existing_playlist:
+            existing_playlist.playlist_name = playlist_data['name']
+            existing_playlist.picture = playlist_data["playlistPic"]
+            existing_playlist.song_number = playlist_data['songNumber']
+        else:
+            new_playlist = Playlist(
+                playlist_id=playlist_data['playlistID'],
+                playlist_name=playlist_data['name'],
+                picture=playlist_data["playlistPic"],
+                song_number=playlist_data['songNumber']
+            )
+            db.session.add(new_playlist)
+
     return jsonify(formatted_playlists) 

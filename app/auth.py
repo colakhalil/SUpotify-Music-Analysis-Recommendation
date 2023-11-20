@@ -1,27 +1,15 @@
 from flask import Blueprint, Flask, request, url_for, session, jsonify, redirect
-from flask_mysqldb import MySQL
 from flask_cors import CORS, cross_origin
 from spotipy.oauth2 import SpotifyOAuth 
 import spotipy
 import requests
 import time 
 import json  
-from . import db 
+from . import db
+from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist, Song, User
 
 
 auth = Blueprint('auth', __name__) 
-
-user_table_query = """
-CREATE TABLE IF NOT EXISTS `User` (
-  `user_id` varchar(45) NOT NULL,
-  `password` varchar(16) NOT NULL,
-  `country` varchar(5) DEFAULT NULL,
-  `spotifyid` varchar(45) DEFAULT NULL,
-  `last_sid` varchar(45) DEFAULT NULL,
-  `email` varchar(50) NOT NULL,
-  `profile_pic` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
-)"""
 
 
 TOKEN_INFO = "token_info" 
@@ -43,29 +31,23 @@ def create_spotify_outh():
 def sign_up():
     if request.method == "POST":
         data = request.get_json()
+
+        existing_user = User.query.filter_by(user_id=data['user_id']).first()
+        if existing_user:
+            return jsonify({'message': False})
+
+        new_user = User(user_id=data['user_id'], password=data['password'], email=data['email'])
+        db.session.add(new_user)
+        db.session.commit()
         
-        cur = db.connection.cursor()
+        added_user = User.query.filter_by(user_id=data['user_id']).first()
         
-        # Create the User table if it doesn't exist
-        cur.execute(user_table_query)
-        
-        query = """SELECT * FROM User WHERE user_id = %s"""
-        cur.execute(query, (data["user_id"],))
-        db_data = cur.fetchone()
-        
-        if db_data:
-            return jsonify({"message": False})
-        
-        # Insert user data into the User table
-        cur.execute("""
-            INSERT INTO `User` (`user_id`, `password`, `email`)
-            VALUES (%s, %s, %s)
-            """, (data["user_id"], data["password"], data["email"]))
-        
-        db.connection.commit()
-        
-        cur.close()
-        return jsonify({"message": True})
+        if added_user:
+            return jsonify({"message": True})
+        else:
+            return jsonify({"message": True})
+
+        #return jsonify({"message": True})
         
 
 @auth.route('/login', methods=['POST', 'GET'])
@@ -74,15 +56,13 @@ def login():
         
         data = request.get_json()
         email = data.get("email")
-        password = data.get("password")
+        entered_password = data.get("password")
         
-        cur = db.connection.cursor()
-        query = """SELECT password FROM User WHERE email = %s"""
-        cur.execute(query, (email,))
-        user_data = cur.fetchone()
-        cur.close()
-        if user_data:
-            if user_data["password"] == password:
+        user = User.query.filter_by(email=email).first()
+    
+        if user:
+            password_from_db = user.password
+            if password_from_db == entered_password:
                 return jsonify({"message": True})
             else:
                 return jsonify({"message": False})
@@ -95,6 +75,7 @@ def login_spotify():
     auth_url = create_spotify_outh().get_authorize_url()
     return redirect(auth_url)
  
+ 
 @auth.route("/redirect")
 def redirect_page():
     session.clear()
@@ -105,13 +86,13 @@ def redirect_page():
     spotify = spotipy.Spotify(auth=token_info['access_token'])
     user_data = spotify.current_user()
     
-    cur = db.connection.cursor()
-    
-    update_query = """
-        UPDATE `User`
-        SET `spotifyid` = %s, `country` = %s, `profile_pic` = %s
-        WHERE `email` = %s
-    """
-    cur.execute(update_query, (user_data["id"], user_data["country"], user_data["images"][0]["url"], user_data["email"]))
+    user = User.query.filter_by(email=user_data["email"]).first()
 
-    return redirect("http://localhost:3000/main") 
+    if user:
+        user.spotify_id = user_data["id"]
+        user.country = user_data["country"]
+        user.profile_pic = user_data["images"][0]["url"]
+
+        db.session.commit()
+    
+    return redirect("http://localhost:3000/main")

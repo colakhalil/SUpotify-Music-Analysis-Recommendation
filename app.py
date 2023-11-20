@@ -1,5 +1,4 @@
 from flask import Flask, request, url_for, redirect, session, jsonify
-from flask_mysqldb import MySQL
 from flask_cors import CORS, cross_origin
 from spotipy.oauth2 import SpotifyOAuth 
 import spotipy
