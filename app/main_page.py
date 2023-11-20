@@ -76,32 +76,32 @@ def get_recommendations_by_genre(genre):
 
     return jsonify(recommendations)
 
-@main.route('/get_song_info/<song_id>') 
+@main.route('/song_info/<song_id>') 
 def get_song_info(song_id):
-    
     song = Song.query.filter_by(song_id=song_id).first()
+    
+    prev_rate = RateSong.query.filter_by(song_id=song_id, user_id=session['user_id']).first()
+    
     if song:
         song_info = {
             'song_id': song.song_id,
-            'artist_id': song.artist_id,
-            'album_id': song.album_id,
-            'song_name': song.song_name,
-            'picture': song.picture,
-            'rate': song.rate,
-            'play_count': song.play_count,
-            'tempo': song.tempo,
+            'artists': song.artist_id.artist_name,
+            'title': song.song_name,
+            'thumbnail': song.picture,
+            'rateAvg': song.rate,
+            'playCount': song.play_count,
             'popularity': song.popularity,
             'valence': song.valence,
             'duration': song.duration,
-            'energy': song.energy,
-            'danceability': song.danceability,
             'genre': song.genre,
-            'release_date': song.release_date,
-            'date_added': song.date_added
+            'releaseYear': song.release_date,
+            'dateAdded': song.date_added,
+            'userPrevRating': prev_rate.rating if prev_rate else 0
         }
         return jsonify(song_info)
     else:
-        return jsonify({"message": "Song not found"})
+        return jsonify({"message": False})
+
 
 @main.route('/get_user_playlists')
 def get_user_playlists():
@@ -137,3 +137,57 @@ def get_user_playlists():
             db.session.add(new_playlist)
 
     return jsonify(formatted_playlists) 
+
+@main.route('/change_rating', methods=['GET', 'POST'])
+def change_rating():
+    if request.method == 'POST':
+        data = request.get_json()
+        prev_rate = RateSong.query.filter_by(song_id=data['song_id'], user_id=data['user_id']).first()
+        
+        if prev_rate:
+            RateSong.query.filter_by(song_id=data['song_id'], user_id=data['user_id']).update({'rating': data['rating']})
+        else:
+            new_rate = RateSong(
+                song_id=data['song_id'],
+                user_id=data['user_id'],
+                rating=data['rating']
+            )
+            db.session.add(new_rate)
+        
+        db.session.commit()
+        
+        return jsonify({'message': True})
+    
+    
+@main.route('/song_played', methods=['GET', 'POST'])
+def song_played():
+    if request.method == 'POST':
+        data = request.get_json()
+        song = Song.query.filter_by(song_id=data['song_id']).first()
+        user = User.query.filter_by(user_id=data['user_id']).first()
+        if song:
+            song.play_count += 1
+            user.last_sid = song.song_id
+            db.session.commit()
+            return jsonify({'message': True})
+        else:
+            return jsonify({'message': False})
+        
+        
+@main.route('/search/<query>', methods=['GET'])
+def search(query):
+    sp = spotipy.Spotify(auth=session['token_info']['access_token'])
+    search_result = sp.search(q=query, type = "", limit=10)
+    
+    formatted_result = [
+        {
+            'song_id': song['id'],
+            'artist': song['artists'][0]['name'],
+            'title': song['name'],
+            'thumbnail': song['album']['images'][0]['url'],
+            'popularity': song['popularity']
+        }
+        for song in search_result['tracks']['items']
+    ]
+    
+    return jsonify(formatted_result)

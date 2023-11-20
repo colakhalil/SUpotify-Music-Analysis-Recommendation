@@ -41,9 +41,29 @@ def user_page(email):
     friends = friends_query.all()
     
     return jsonify({
-        'user_id': user.user_id,
-        'profile_pic': user.profile_pic,
-        'last_sid': user.last_sid,
+        'username': user.user_id,
+        'profilePicture': user.profile_pic,
+        'lastListenedSong': user.last_sid,
         'friends': friends,
-        'friend_count': len(friends)
+        'friendsCount': len(friends)
     })
+
+@user.route('/friends_activity/<user_id>', methods=['GET'])
+def friends_activity(user_id):
+    
+    friends = Friendship.query.filter_by(user1_id=user_id).all()
+    friends2 = Friendship.query.filter_by(user2_id=user_id).all()
+    
+    all_friends = []
+    
+    for friend in friends:
+        all_friends.append(friend.user2_id)
+        
+    for friend in friends2:
+        all_friends.append(friend.user1_id)
+        
+    return jsonify({
+        'name': friend.user_id,
+        'lastListenedSong': friend.last_sid,
+        'profilePicture': friend.profile_pic
+    }for friend in all_friends)
