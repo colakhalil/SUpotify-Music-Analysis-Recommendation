@@ -137,7 +137,7 @@ def get_user_playlists():
                 song_number=playlist_data['songNumber']
             )
             db.session.add(new_playlist)
-
+    db.session.commit()
     return jsonify(formatted_playlists) 
 
 @main.route('/change_rating', methods=['GET', 'POST'])
