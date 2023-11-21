@@ -4,11 +4,15 @@
   align-items: center; /* Center vertically */
   height: 100%; /* Take up full container height */
   text-align: center;
-  overflow-y: auto; /* This will add scroll to the container */
   color: white;
   padding: 20px;
   margin-top: -50px; /* Adjust the value as needed */
   font-family: Arial, sans-serif;
+  .lyrics-container {
+    max-height: 500px; /* Adjust the max-height as needed */
+    overflow-y: auto; /* This will add a vertical scrollbar if the content overflows */
+    z-index: 1; /* Make sure the z-index is higher than the neighboring elements if they overlap */
+  }
 }
 .album-pic {
   width: 260px; /* Set the width as needed */
@@ -35,6 +39,8 @@
   max-height: 50vh; /* Adjust based on your design needs */
   overflow-y: auto; /* Enables scrolling */
   width: 100%;
+
+  word-wrap: break-word; /* This ensures that long strings of text will wrap and not extend outside the container */
 }
 
 .lyrics p {

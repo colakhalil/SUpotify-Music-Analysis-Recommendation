@@ -318,11 +318,11 @@
   font-size: 0.8em;
   color: #aaa;
 }
-
 .main-container {
   display: flex;
   overflow: hidden;
   height: 100vh; /* Full viewport height */
+  padding-right: 250px; /* width of the right bar */
 }
 
 .content-container {
@@ -330,8 +330,7 @@
   display: flex;
   flex-direction: column; /* Stack children vertically */
   overflow-y: auto;
-  margin-right: 15rem;
-  margin-bottom: 120px;
+  margin-bottom: 120px; /* This is for the bottom bar */
 }
 
 .last-played-title {
@@ -451,8 +450,7 @@
   /* Add more styling as required */
 }
 
-
-.add-song-btn{
+.add-song-btn {
   width: 15rem;
   background: transparent;
   border: 1px solid white;

@@ -138,53 +138,9 @@ const MainPage = () => {
   ];
 
   const song = {
-    title: "Beni Böyle Hatırla",
-    artist: "Çetin Dilşiz",
+    title: "Çingenem",
+    artist: "Ebru Gündeş",
     duration: "2:48",
-    lyrics: [
-      "Sessiz bir köşede her şeyden uzak",
-      "Meçhul yarınlara terk edilmişim",
-      "Dostluklar yalanmış sevgiler tuzakmış",
-      "Tuzak",
-      "Hayret yanılmışım yalnızım şimdi",
-      "Oysa mutluluğu hayal etmiştim",
-      "Gidenler unutmuş aşkları yalanmış",
-      "Yalan",
-      "Güneşin doğuşu batışı farksız",
-      "Nasıl yaşanırsa yaşadım ben aşksız",
-      "Güneşin doğuşu batışı farksız",
-      "Nasıl yaşanırsa yaşadım ben aşksız",
-      "Demir attım yalnızlığa",
-      "Bir hasret denizinde",
-      "Ve şimdi hayallerim o günlerin izinde",
-      "Yüreğimde duygular ümitlerim nerede",
-      "Demir attım yalnızlığa",
-      "Bir hasret denizinde",
-      "Ve şimdi hayallerim o günlerin izinde",
-      "Yüreğimde duygular ümitlerim nerede",
-      "Şöyle bir düşünüp her şeyi birden",
-      "Neden anıları bitirmeyişim",
-      "Yalanmış sevgiler kalbimden uzakmış",
-      "Uzak",
-      "Boşa beklemişim yollara bakıp",
-      "Kurak topraklara umutlar ekmişim",
-      "Arzular avuttu gördüğüm hayalmiş",
-      "Hayal",
-      "Güneşin doğuşu batışı farksız",
-      "Nasıl yaşanırsa yaşadım ben aşksız",
-      "Güneşin doğuşu batışı farksız",
-      "Nasıl yaşanırsa yaşadım ben aşksız",
-      "Demir attım yalnızlığa",
-      "Bir hasret denizinde",
-      "Ve şimdi hayallerim o günlerin izinde",
-      "Yüreğimde duygular ümitlerim nerede",
-      "Demir attım yalnızlığa",
-      "Bir hasret denizinde",
-      "Ve şimdi hayallerim o günlerin izinde",
-      "Yüreğimde duygular ümitlerim nerede",
-
-      // ... More lyrics lines
-    ],
     genre: "Pop, Dance",
     mood: "Uplifting",
     recordingType: "Studio",
@@ -252,9 +208,7 @@ const MainPage = () => {
             setCurrentPlace={setCurrentPlace}
           ></MainMiddle>
         )}
-        {currentPlace === "submit-form" && (
-          <SubmissionForm></SubmissionForm>
-        )}
+        {currentPlace === "submit-form" && <SubmissionForm></SubmissionForm>}
         {currentPlace === "profile" && (
           <ProfileMiddle
             lastPlaylists={lastPlaylists}
