@@ -45,9 +45,8 @@ def sign_up():
         if added_user:
             return jsonify({"message": True})
         else:
-            return jsonify({"message": True})
+            return jsonify({"message": False})
 
-        #return jsonify({"message": True})
         
 
 @auth.route('/login', methods=['POST', 'GET'])
