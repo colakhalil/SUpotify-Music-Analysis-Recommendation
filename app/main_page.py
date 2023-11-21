@@ -6,7 +6,6 @@ import spotipy
 import requests
 import time 
 import json
-from collections import namedtuple
 from datetime import datetime
 from . import db 
 from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist, Song, User
