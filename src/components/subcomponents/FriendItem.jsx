@@ -1,8 +1,19 @@
 import React from 'react';
 
-const FriendItem = ({ friend }) => {
+const FriendItem = ({ friend , setCurrentPlace}) => {
+  const handleFriendProfile = ({friend}) => {
+    console.log("You clicked on friend");
+    setCurrentPlace("friend");
+    // Implement your playlist click functionality here
+    console.log(friend)
+  };
   return (
-    <div className="friend" key={friend.name}>
+    <div 
+      className="friend" 
+      key={friend.name} 
+      onClick={() => handleFriendProfile(friend, setCurrentPlace)}
+      style={{ cursor: 'pointer' }} // Add cursor style for better UX
+    >
       <img
         src={friend.profilePicture}
         alt={`${friend.name}'s profile`}

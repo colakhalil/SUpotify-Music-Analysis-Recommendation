@@ -16,6 +16,10 @@ const ProfileMiddle = ({ lastPlaylists, userData, setCurrentPlace }) => {
     setCurrentPlace("submit-form");
     console.log("Button clicked");
   }
+  const handleButtonClickE = () => {
+    setCurrentPlace("submit-formE");
+    console.log("Button clicked");
+  }
   return (
     <>
       <div className="main-container">
@@ -24,6 +28,10 @@ const ProfileMiddle = ({ lastPlaylists, userData, setCurrentPlace }) => {
           <button 
           onClick={handleButtonClick}
           className="add-song-btn">Add song to the database</button>
+          <button 
+          onClick={handleButtonClickE}
+          className="add-song-btn">Delete song to the database</button>
+
           {/* UserPart bileşenini burada kullan */}
           <h2 className="last-played-title">Your Playlists </h2>
           

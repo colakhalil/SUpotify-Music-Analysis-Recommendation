@@ -1,0 +1,78 @@
+import React, { useState } from 'react';
+import "../pagesCSS/SubmissionForm.css";
+
+const SongExportForm = () => {
+  const [formData, setFormData] = useState({
+    songTitle: '',
+    artistName: '',
+    songDuration: '',
+    songReleaseYear: '',
+    songRating: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleExportSubmit = async () => {
+    const json = JSON.stringify(formData);
+    const blob = new Blob([json], { type: 'application/json' });
+    const href = await URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = "song_data.json";
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(href);
+  };
+
+  return (
+    <div className="song-export-form">
+      <input
+        type="text"
+        name="songTitle"
+        value={formData.songTitle}
+        onChange={handleChange}
+        placeholder="Song Title"
+      />
+      <input
+        type="text"
+        name="artistName"
+        value={formData.artistName}
+        onChange={handleChange}
+        placeholder="Artist's Name"
+      />
+      <input
+        type="text"
+        name="songDuration"
+        value={formData.songDuration}
+        onChange={handleChange}
+        placeholder="Song Duration"
+      />
+      <input
+        type="text"
+        name="songReleaseYear"
+        value={formData.songReleaseYear}
+        onChange={handleChange}
+        placeholder="Release Year"
+      />
+      <input
+        type="text"
+        name="songRating"
+        value={formData.songRating}
+        onChange={handleChange}
+        placeholder="Rating (0-5)"
+      />
+      <button onClick={handleExportSubmit}>Export</button>
+    </div>
+  );
+};
+
+export default SongExportForm;
