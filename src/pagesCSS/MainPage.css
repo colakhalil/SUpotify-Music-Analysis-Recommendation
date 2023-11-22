@@ -263,8 +263,6 @@
   width: 250px;
   height: 100vh;
   box-sizing: border-box;
-  overflow-y: auto;
-  flex-shrink: 0;
 }
 
 .left-bar-button,
@@ -320,11 +318,11 @@
   font-size: 0.8em;
   color: #aaa;
 }
+
 .main-container {
   display: flex;
   overflow: hidden;
   height: 100vh; /* Full viewport height */
-  padding-right: 250px; /* width of the right bar */
 }
 
 .content-container {
@@ -332,43 +330,28 @@
   display: flex;
   flex-direction: column; /* Stack children vertically */
   overflow-y: auto;
-  margin-bottom: 120px; /* This is for the bottom bar */
   margin-right: 15rem;
+  margin-bottom: 120px;
 }
 
-.header-line{
+.header-line {
   width: 100%; /* For horizontal line */
   height: 1px; /* For vertical line, switch width and height */
   background-color: white;
   margin-bottom: 1rem;
 }
 
-.subheader-line{
+.subheader-line {
   width: 100%; /* For horizontal line */
   height: 0.2px; /* For vertical line, switch width and height */
   background-color: grey;
-
 }
 
-.header-line{
-  width: 100%; /* For horizontal line */
-  height: 1px; /* For vertical line, switch width and height */
-  background-color: white;
-  margin-bottom: 1rem;
-}
-
-.subheader-line{
-  width: 100%; /* For horizontal line */
-  height: 0.2px; /* For vertical line, switch width and height */
-  background-color: grey;
-
-}
-
-.recommended-thumbnail{
+.recommended-thumbnail {
   width: 320px;
   height: 200px;
 }
-.recommended-name{
+.recommended-name {
   color: white;
   font-size: 22px;
   text-align-last: center;
@@ -388,44 +371,33 @@
 }
 
 .container {
-  display: grid; 
-  grid-template-columns: 0.2fr 0.2fr 0.2fr 0.2fr; 
-  grid-template-rows: 250px; 
-  gap: 13px 20px; 
-  grid-template-areas: 
-    "Playlist1 Playlist2 Playlist3 Playlist4"; 
-  justify-content: stretch; 
-  align-content: stretch; 
-  justify-items: stretch; 
-  align-items: stretch; 
+  display: grid;
+  grid-template-columns: 0.2fr 0.2fr 0.2fr 0.2fr;
+  grid-template-rows: 250px;
+  gap: 13px 20px;
+  grid-template-areas: "Playlist1 Playlist2 Playlist3 Playlist4";
+  justify-content: stretch;
+  align-content: stretch;
+  justify-items: stretch;
+  align-items: stretch;
 }
 
-.Playlist1 { 
+.Playlist1 {
   grid-area: Playlist1;
   margin-left: 15px;
-  cursor:pointer;
- }
+  cursor: pointer;
+}
 
-.Playlist2 { grid-area: Playlist2; }
+.Playlist2 {
+  grid-area: Playlist2;
+}
 
-.Playlist3 { grid-area: Playlist3; }
-.Playlist4 { grid-area: Playlist4; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.Playlist3 {
+  grid-area: Playlist3;
+}
+.Playlist4 {
+  grid-area: Playlist4;
+}
 
 .search-bar-container {
   align-self: flex-start; /* Align to the top-left */
@@ -477,8 +449,6 @@
 /* PLAYLIST */
 /* Playlist.css */
 
-
-
 .lastPlaylists-container-forPP {
   max-width: 1200px;
   width: 100%;
@@ -491,24 +461,13 @@
   padding-right: 100px;
 }
 
-
-
-.Playlist {  justify-content: stretch; 
-  width:0.3fr;
+.Playlist {
+  justify-content: stretch;
+  width: 0.3fr;
   height: 250px;
-}
-<<<<<<< HEAD
-.add-song-btn{
-=======
-.lastPlaylists-name {
-  color: white; /* Change the color as needed */
-  text-align: center;
-  font-size: 1rem;
-  /* Add more styling as required */
 }
 
 .add-song-btn {
->>>>>>> origin/halil-web
   width: 15rem;
   background: transparent;
   border: 1px solid white;
