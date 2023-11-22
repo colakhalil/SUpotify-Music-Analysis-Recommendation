@@ -1,10 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import NavigationButtons from "./subcomponents/NavigationButtons";
 import PlaylistCardLeftbar from "./subcomponents/PlaylistCardLeftbar";
 
-const LeftBar = ({ playlists, setCurrentPlace }) => {
-  const handleClick = (playlistName) => {
-    console.log(`You clicked on ${playlistName}`);
+const LeftBar = ({ setCurrentPlace }) => {
+  const [playlists, setPlaylists] = useState([]);
+
+  useEffect(() => {
+    // Fetch playlists from the API when the component mounts
+    const fetchPlaylists = async () => {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8008/get_user_playlists"
+        );
+        setPlaylists(response.data); // Update the state with the fetched playlists
+      } catch (error) {
+        console.error("Error fetching playlists:", error);
+      }
+    };
+
+    fetchPlaylists();
+  }, []);
+
+  const handleClick = (key) => {
+    console.log(`You clicked on ${key}`);
     setCurrentPlace("playlist");
     // Implement your playlist click functionality here
   };
@@ -20,11 +39,12 @@ const LeftBar = ({ playlists, setCurrentPlace }) => {
     // Implement your search click functionality here
   };
 
-  const handleProfile = (playlistName) => {
+  const handleProfile = () => {
     console.log("You clicked on profile");
     setCurrentPlace("profile");
-    // Implement your playlist click functionality here
+    // Implement your profile click functionality here
   };
+
   return (
     <div className="left-bar">
       <NavigationButtons

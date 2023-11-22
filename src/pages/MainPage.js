@@ -18,42 +18,36 @@ const MainPage = () => {
   // DUMMY DATALAR
   const [playlistPop, setPlaylistPop] = useState({ songs: [] });
   const [recommendedPop, setRecommendedPop] = useState({ songs: [] }); // Initialize an empty recommendedPop object
-  
+
   const fetchRecommendationsByGenre = (genre) => {
     fetch(`http://127.0.0.1:8008/recommendations/${genre}`)
-      .then(response => response.json())
-      .then(data => {
-        const formattedSongs = data.tracks.map(track => ({
+      .then((response) => response.json())
+      .then((data) => {
+        const formattedSongs = data.tracks.map((track) => ({
           songName: track.name,
-          artistName: track.artists.map(artist => artist.name).join(', '),
+          artistName: track.artists.map((artist) => artist.name).join(", "),
           songLength: track.duration_ms,
           releaseYear: new Date(track.album.release_date).getFullYear(),
           rating: track.popularity,
           album: track.album.name,
-          songPicture: track.album.images[0].url
+          songPicture: track.album.images[0].url,
         }));
 
         setPlaylistPop({ songs: formattedSongs });
-        
+
         // Create the recommendedPop object inside the .then() block
         const recommendations = formattedSongs; // Assuming you want to use the same data for recommendedPop
 
         setRecommendedPop({ songs: recommendations });
       })
-      .catch(error => console.error('Error fetching data:', error));
+      .catch((error) => console.error("Error fetching data:", error));
   };
-  
+
   useEffect(() => {
     fetchRecommendationsByGenre("pop");
   }, []);
 
   // Rest of your component code
-
-
-
-
-
-
 
   const playlistData = {
     playlistID: "playlist123",
@@ -135,57 +129,11 @@ const MainPage = () => {
 
     // Add more playlists as needed
   ];
-  
-  
 
   const song = {
-    title: "Beni Böyle Hatırla",
-    artist: "Çetin Dilşiz",
+    title: "Çingenem",
+    artist: "Ebru Gündeş",
     duration: "2:48",
-    lyrics: [
-      "Sessiz bir köşede her şeyden uzak",
-      "Meçhul yarınlara terk edilmişim",
-      "Dostluklar yalanmış sevgiler tuzakmış",
-      "Tuzak",
-      "Hayret yanılmışım yalnızım şimdi",
-      "Oysa mutluluğu hayal etmiştim",
-      "Gidenler unutmuş aşkları yalanmış",
-      "Yalan",
-      "Güneşin doğuşu batışı farksız",
-      "Nasıl yaşanırsa yaşadım ben aşksız",
-      "Güneşin doğuşu batışı farksız",
-      "Nasıl yaşanırsa yaşadım ben aşksız",
-      "Demir attım yalnızlığa",
-      "Bir hasret denizinde",
-      "Ve şimdi hayallerim o günlerin izinde",
-      "Yüreğimde duygular ümitlerim nerede",
-      "Demir attım yalnızlığa",
-      "Bir hasret denizinde",
-      "Ve şimdi hayallerim o günlerin izinde",
-      "Yüreğimde duygular ümitlerim nerede",
-      "Şöyle bir düşünüp her şeyi birden",
-      "Neden anıları bitirmeyişim",
-      "Yalanmış sevgiler kalbimden uzakmış",
-      "Uzak",
-      "Boşa beklemişim yollara bakıp",
-      "Kurak topraklara umutlar ekmişim",
-      "Arzular avuttu gördüğüm hayalmiş",
-      "Hayal",
-      "Güneşin doğuşu batışı farksız",
-      "Nasıl yaşanırsa yaşadım ben aşksız",
-      "Güneşin doğuşu batışı farksız",
-      "Nasıl yaşanırsa yaşadım ben aşksız",
-      "Demir attım yalnızlığa",
-      "Bir hasret denizinde",
-      "Ve şimdi hayallerim o günlerin izinde",
-      "Yüreğimde duygular ümitlerim nerede",
-      "Demir attım yalnızlığa",
-      "Bir hasret denizinde",
-      "Ve şimdi hayallerim o günlerin izinde",
-      "Yüreğimde duygular ümitlerim nerede",
-
-      // ... More lyrics lines
-    ],
     genre: "Pop, Dance",
     mood: "Uplifting",
     recordingType: "Studio",
@@ -247,13 +195,9 @@ const MainPage = () => {
         <LeftBar playlists={playlists} setCurrentPlace={setCurrentPlace} />
 
         {currentPlace === "main" && (
-          <MainMiddle
-            setCurrentPlace={setCurrentPlace}
-          ></MainMiddle>
+          <MainMiddle setCurrentPlace={setCurrentPlace}></MainMiddle>
         )}
-        {currentPlace === "submit-form" && (
-          <SubmissionForm></SubmissionForm>
-        )}
+        {currentPlace === "submit-form" && <SubmissionForm></SubmissionForm>}
         {currentPlace === "submit-formE" && (
           <SubmissionFormExport></SubmissionFormExport>
         )}
@@ -265,12 +209,17 @@ const MainPage = () => {
         )}
         {currentPlace === "lyrc" && <LyrcsMiddle song={song}></LyrcsMiddle>}
         {currentPlace === "playlist" && (
-          <PlaylistMiddle playlistData={playlistData} recommendedPop= {recommendedPop}></PlaylistMiddle>
+          <PlaylistMiddle
+            playlistData={playlistData}
+            recommendedPop={recommendedPop}
+          ></PlaylistMiddle>
         )}
-        <FriendActivity friendsData={friendsData} setCurrentPlace={setCurrentPlace}/>
+        <FriendActivity
+          friendsData={friendsData}
+          setCurrentPlace={setCurrentPlace}
+        />
         {currentPlace === "friend" && (
-          <FriendProfileMiddle
-          ></FriendProfileMiddle>
+          <FriendProfileMiddle></FriendProfileMiddle>
         )}
         <BottomBar song={song} setCurrentPlace={setCurrentPlace} />
       </div>

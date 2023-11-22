@@ -263,6 +263,8 @@
   width: 250px;
   height: 100vh;
   box-sizing: border-box;
+  overflow-y: auto;
+  flex-shrink: 0;
 }
 
 .left-bar-button,
@@ -318,11 +320,11 @@
   font-size: 0.8em;
   color: #aaa;
 }
-
 .main-container {
   display: flex;
   overflow: hidden;
   height: 100vh; /* Full viewport height */
+  padding-right: 250px; /* width of the right bar */
 }
 
 .content-container {
@@ -330,8 +332,22 @@
   display: flex;
   flex-direction: column; /* Stack children vertically */
   overflow-y: auto;
+  margin-bottom: 120px; /* This is for the bottom bar */
   margin-right: 15rem;
-  margin-bottom: 120px;
+}
+
+.header-line{
+  width: 100%; /* For horizontal line */
+  height: 1px; /* For vertical line, switch width and height */
+  background-color: white;
+  margin-bottom: 1rem;
+}
+
+.subheader-line{
+  width: 100%; /* For horizontal line */
+  height: 0.2px; /* For vertical line, switch width and height */
+  background-color: grey;
+
 }
 
 .header-line{
@@ -481,8 +497,18 @@
   width:0.3fr;
   height: 250px;
 }
-
+<<<<<<< HEAD
 .add-song-btn{
+=======
+.lastPlaylists-name {
+  color: white; /* Change the color as needed */
+  text-align: center;
+  font-size: 1rem;
+  /* Add more styling as required */
+}
+
+.add-song-btn {
+>>>>>>> origin/halil-web
   width: 15rem;
   background: transparent;
   border: 1px solid white;

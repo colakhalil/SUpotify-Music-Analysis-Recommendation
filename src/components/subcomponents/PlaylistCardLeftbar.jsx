@@ -1,12 +1,12 @@
-import React from 'react';
-import PlaylistItemLeftbar from './PlaylistItemLeftbar';
+import React from "react";
+import PlaylistItemLeftbar from "./PlaylistItemLeftbar";
 
 const PlaylistCardLeftbar = ({ playlists, onPlaylistClick }) => {
   return (
     <div className="playlists">
       {playlists.map((playlist, index) => (
         <PlaylistItemLeftbar
-          key={index}
+          key={playlist.playlistID}
           playlist={playlist}
           onClick={onPlaylistClick}
         />
