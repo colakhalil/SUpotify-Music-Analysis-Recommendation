@@ -14,6 +14,45 @@ const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
 
   // DUMMY DATALAR
+  const [playlistPop, setPlaylistPop] = useState({ songs: [] });
+  const [recommendedPop, setRecommendedPop] = useState({ songs: [] }); // Initialize an empty recommendedPop object
+
+  const fetchRecommendationsByGenre = (genre) => {
+    fetch(`http://127.0.0.1:8008/recommendations/${genre}`)
+      .then(response => response.json())
+      .then(data => {
+        const formattedSongs = data.tracks.map(track => ({
+          songName: track.name,
+          artistName: track.artists.map(artist => artist.name).join(', '),
+          songLength: track.duration_ms,
+          releaseYear: new Date(track.album.release_date).getFullYear(),
+          rating: track.popularity,
+          album: track.album.name,
+          songPicture: track.album.images[0].url
+        }));
+
+        setPlaylistPop({ songs: formattedSongs });
+        
+        // Create the recommendedPop object inside the .then() block
+        const recommendations = formattedSongs; // Assuming you want to use the same data for recommendedPop
+
+        setRecommendedPop({ songs: recommendations });
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  };
+  
+  useEffect(() => {
+    fetchRecommendationsByGenre("pop");
+  }, []);
+
+  // Rest of your component code
+
+
+
+
+
+
+
   const playlistData = {
     playlistID: "playlist123",
     playlistName: "Chill Vibes",
@@ -94,48 +133,8 @@ const MainPage = () => {
 
     // Add more playlists as needed
   ];
-  const recomendedPlaylists = [
-    {
-      name: "Mix 1",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-    {
-      name: "Mix 2",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-    {
-      name: "Mix 3",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-    {
-      name: "Mix 4",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-    {
-      name: "Mix 5",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-    {
-      name: "Mix 6",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-    {
-      name: "Mix 7",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-    {
-      name: "Mix 8",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-  ];
+  
+  
 
   const song = {
     title: "Beni Böyle Hatırla",
@@ -247,8 +246,6 @@ const MainPage = () => {
 
         {currentPlace === "main" && (
           <MainMiddle
-            lastPlaylists={lastPlaylists}
-            recomendedPlaylists={recomendedPlaylists}
             setCurrentPlace={setCurrentPlace}
           ></MainMiddle>
         )}
@@ -257,14 +254,13 @@ const MainPage = () => {
         )}
         {currentPlace === "profile" && (
           <ProfileMiddle
-            lastPlaylists={lastPlaylists}
             userData={userData}
             setCurrentPlace={setCurrentPlace}
           ></ProfileMiddle>
         )}
         {currentPlace === "lyrc" && <LyrcsMiddle song={song}></LyrcsMiddle>}
         {currentPlace === "playlist" && (
-          <PlaylistMiddle playlistData={playlistData}></PlaylistMiddle>
+          <PlaylistMiddle playlistData={playlistData} recommendedPop= {recommendedPop}></PlaylistMiddle>
         )}
         <FriendActivity friendsData={friendsData} />
         <BottomBar song={song} setCurrentPlace={setCurrentPlace} />

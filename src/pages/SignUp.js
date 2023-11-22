@@ -20,7 +20,7 @@ function SignUp() {
       user_id: username,
     };
     console.log(json);
-    let isRegister = true;
+    let isRegister = false;
     try {
       const response = await fetch("http://127.0.0.1:8008/sign_up", {
         method: "POST", // or 'PUT' if your backend requires

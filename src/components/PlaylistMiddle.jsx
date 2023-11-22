@@ -4,12 +4,12 @@ import PlaylistPicture from './PlaylistPicture';
 import PlaylistName from './subcomponents/PlaylistName';
 import PlaylistContainer from './subcomponents/PlaylistContainer';
 
-const PlaylistMiddle = ({ playlistData }) => {
+const PlaylistMiddle = ({ playlistData,recommendedPop }) => {
   return (
     <div className="playlist-middle">
       <PlaylistPicture imageUrl={playlistData.playlistPicture} />
       <PlaylistName name={playlistData.playlistName} />
-      <PlaylistContainer songs={playlistData.songs} />
+      <PlaylistContainer songs={recommendedPop.songs} />
     </div>
   );
 };

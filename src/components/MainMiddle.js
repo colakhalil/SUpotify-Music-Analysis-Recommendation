@@ -2,7 +2,7 @@ import React from "react";
 import SearchBar from "./subcomponents/SearchBar";
 import Playlist from "./subcomponents/Playlist";
 
-const MainMiddle = ({ lastPlaylists, recomendedPlaylists, setCurrentPlace }) => {
+const MainMiddle = ({ lastPlaylists, recomendedPlaylists, setCurrentPlace, recommendations }) => {
   const handleSearch = (searchTerm) => {
     console.log(`Search term submitted: ${searchTerm}`);
     // You can now do something with the search term,
@@ -18,29 +18,78 @@ const MainMiddle = ({ lastPlaylists, recomendedPlaylists, setCurrentPlace }) => 
   return (
     <div className="content-container">
       <SearchBar onSearch={handleSearch} />
-      <h2 className="last-played-title">Your last played Playlists </h2>
-      <div className="lastPlaylists-container">
-        {lastPlaylists.map((lastPlaylists, index) => (
-          <Playlist
-            key={index}
-            name={lastPlaylists.name}
-            thumbnail={lastPlaylists.thumbnail}
-            onClick={() => handlePlaylistClick(lastPlaylists.name, setCurrentPlace)}
+      <h2 className="recommended-title">Recommended Playlists Based on Genre</h2>
+      <div className="header-line"/>
+      <div class="container">
+        <div class="Playlist1">
+          <Playlist 
+          name = "Pop"
+          thumbnail={"https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"}
+          onClick={() => handlePlaylistClick("Pop", setCurrentPlace)}
           />
-        ))}
+
+        </div>
+        <div class="Playlist2">
+          <Playlist 
+            name = "Rock"
+            thumbnail={"https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"}
+            onClick={() => handlePlaylistClick("Rock", setCurrentPlace)}
+          />
+        </div>
+        <div class="Playlist3">
+        <Playlist 
+            name = "Rap"
+            thumbnail={"https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"}
+            onClick={() => handlePlaylistClick("Rap", setCurrentPlace)}
+          />
+        </div>
+        <div class="Playlist4">
+        <Playlist 
+            name = "Jazz"
+            thumbnail={"https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"}
+            onClick={() => handlePlaylistClick("Jazz", setCurrentPlace)}
+        />
+        </div>
+
       </div>
-      <h2 className="recommended-playlists">Recomended Playlists</h2>
-      <div className="recomended-playlists-container">
-        {recomendedPlaylists.map((recomendedPlaylists, index) => (
-          <Playlist
-            key={index}
-            name={recomendedPlaylists.name}
-            thumbnail={recomendedPlaylists.thumbnail}
-            onClick={() => handlePlaylistClick(recomendedPlaylists.name, setCurrentPlace)}
+      <h2 className="recommended-title">Recommended Playlists Based on Mood</h2>
+      <div className="header-line"/>
+      <div class="container">
+        <div class="Playlist1">
+          <Playlist 
+          name = "Happy"
+          thumbnail={"https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"}
+          onClick={() => handlePlaylistClick("Happy", setCurrentPlace)}
           />
-        ))}
+
+        </div>
+        <div class="Playlist2">
+          <Playlist 
+            name = "Rock"
+            thumbnail={"https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"}
+            onClick={() => handlePlaylistClick("Rock", setCurrentPlace)}
+          />
+        </div>
+        <div class="Playlist3">
+        <Playlist 
+            name = "Chill"
+            thumbnail={"https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"}
+            onClick={() => handlePlaylistClick("Chill", setCurrentPlace)}
+          />
+        </div>
+        <div class="Playlist4">
+        <Playlist 
+            name = "Jazz"
+            thumbnail={"https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"}
+            onClick={() => handlePlaylistClick("Jazz", setCurrentPlace)}
+        />
+        </div>
       </div>
     </div>
+
+
+
+
   );
 };
 

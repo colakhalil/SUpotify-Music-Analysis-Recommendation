@@ -298,7 +298,7 @@
 }
 
 .playlist-image {
-  width: 50px;
+  width: 30px;
   height: 50px;
   margin-right: 10px;
   object-fit: cover;
@@ -334,19 +334,82 @@
   margin-bottom: 120px;
 }
 
-.last-played-title {
+.header-line{
+  width: 100%; /* For horizontal line */
+  height: 1px; /* For vertical line, switch width and height */
+  background-color: white;
+  margin-bottom: 1rem;
+}
+
+.subheader-line{
+  width: 100%; /* For horizontal line */
+  height: 0.2px; /* For vertical line, switch width and height */
+  background-color: grey;
+
+}
+
+.recommended-thumbnail{
+  width: 320px;
+  height: 200px;
+}
+.recommended-name{
+  color: white;
+  font-size: 22px;
+  text-align-last: center;
+}
+
+.recommended-title {
   font-size: 30px;
+  margin-left: 1.5rem;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  color: white;
+}
+.recommended-genre-title {
+  font-size: 25px;
   margin-left: 1.5rem;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   color: rgb(194, 189, 189);
 }
 
-.recommended-playlists {
-  font-size: 30px;
-  margin-left: 1.5rem;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-  color: rgb(194, 189, 189);
+.container {
+  display: grid; 
+  grid-template-columns: 0.2fr 0.2fr 0.2fr 0.2fr; 
+  grid-template-rows: 250px; 
+  gap: 13px 20px; 
+  grid-template-areas: 
+    "Playlist1 Playlist2 Playlist3 Playlist4"; 
+  justify-content: stretch; 
+  align-content: stretch; 
+  justify-items: stretch; 
+  align-items: stretch; 
 }
+
+.Playlist1 { 
+  grid-area: Playlist1;
+  margin-left: 15px;
+  cursor:pointer;
+ }
+
+.Playlist2 { grid-area: Playlist2; }
+
+.Playlist3 { grid-area: Playlist3; }
+.Playlist4 { grid-area: Playlist4; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .search-bar-container {
   align-self: flex-start; /* Align to the top-left */
@@ -398,13 +461,7 @@
 /* PLAYLIST */
 /* Playlist.css */
 
-.lastPlaylists-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(410px, 1fr));
-  padding: 30px;
-  justify-content: center;
-  padding-left: 120px;
-}
+
 
 .lastPlaylists-container-forPP {
   max-width: 1200px;
@@ -418,39 +475,12 @@
   padding-right: 100px;
 }
 
-.recomended-playlists-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 5px;
-  padding: 10px;
-  padding-right: 3rem;
-  padding-left: 5rem;
-}
 
-.Playlist {
-  border: none;
-  cursor: pointer;
-  padding: 10px;
-  font-size: 30px;
-  margin: 10px;
-  width: calc((100% / 1) - 130px);
-  text-align: center;
-}
 
-.lastPlaylists-thumbnail {
-  width: 100%; /* ensures the image takes the full width of the grid column */
-  height: auto; /* maintains the aspect ratio of the image */
-  object-fit: cover; /* ensures the images are nicely cropped to fit the box */
-  border-radius: 8px; /* optional, for rounded corners */
+.Playlist {  justify-content: stretch; 
+  width:0.3fr;
+  height: 250px;
 }
-
-.lastPlaylists-name {
-  color: white; /* Change the color as needed */
-  text-align: center;
-  font-size: 1rem;
-  /* Add more styling as required */
-}
-
 
 .add-song-btn{
   width: 15rem;
