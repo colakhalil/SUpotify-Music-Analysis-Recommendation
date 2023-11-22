@@ -2,6 +2,7 @@ import { useState } from "react";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../pagesCSS/SignIN-UP.css";
+import globalVar from '../global';
 
 function SignIn() {
   const [email, setEmail] = useState("");
@@ -19,8 +20,9 @@ function SignIn() {
       email: email,
       password: password,
     };
+    globalVar.mail = email;
     console.log(json);
-    let isLogin = true;
+    let isLogin = false;
     try {
       const response = await fetch("http://127.0.0.1:8008/login", {
         method: "POST", // or 'PUT' if your backend requires

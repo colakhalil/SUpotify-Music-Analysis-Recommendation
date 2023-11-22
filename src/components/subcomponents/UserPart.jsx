@@ -1,23 +1,28 @@
-
 import React from 'react';
 import '../../pagesCSS/UserPart.css';
 
+
 const UserPart = ({ userData }) => {
-    return (
-      <div className="user-part-container">
-        <div className="user-profile">
-          <img
-            className="user-profile-picture"
-            src={userData.profilePicture}
-            alt={`${userData.username}'s profile`}
-          />
-          <div className="user-info">
-            <h1 className="user-username">{userData.username}</h1>
-            <p className="user-friend-count">{userData.friendCount} Friends</p>
-          </div>
+  if (!userData) return null;
+
+  const altText = `${userData.username}'s profile`;
+  const profilePicture = userData.profilePicture || "default-profile-pic-url.jpg"; // Add a default profile picture URL
+
+  return (
+    <div className="user-part-container">
+      <div className="user-profile">
+        <img className="user-profile-picture" src={profilePicture} alt={altText} />
+        <div className="user-info">
+          <h1 className="user-username">{userData.username}</h1>
+          {userData.friendsCount !== undefined && (
+            <p className="user-friend-count">
+              {userData.friendsCount} {userData.friendsCount === 1 ? 'Friend' : 'Friends'}
+            </p>
+          )}
         </div>
       </div>
-    );
-  };
-  
-  export default UserPart;
+    </div>
+  );
+};
+
+export default UserPart;

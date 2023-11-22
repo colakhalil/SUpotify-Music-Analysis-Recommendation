@@ -1,49 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
 import UserPart from "./subcomponents/UserPart";
 import Playlist from "./subcomponents/Playlist";
 import FavoriteSongs90s from "./subcomponents/FavoriteSongs90s";
 import FavoriteRecentSongs from "./subcomponents/FavoriteRecentSongs";
 import MonthlyAverageRatingsChart from "./subcomponents/MonthlyAverageRatingsChart";
 import SongsAddedByPerformerChart from "./subcomponents/SongsAddedByPerformerChart";
+import globalVar from '../global';
 
-const ProfileMiddle = ({ lastPlaylists, userData, setCurrentPlace }) => {
+
+const ProfileMiddle = ({ setCurrentPlace }) => {
+  const [userData, setUserData] = useState(null);
+  const [lastPlaylists, setLastPlaylists] = useState([]);
+  
+
+  useEffect(() => {
+    // Use your specific API endpoint
+
+    const apiEndpoint = "http://127.0.0.1:8008/user_data/" + globalVar.mail;
+console.log("globalmail " + globalVar.mail)
+    
+    axios.get(apiEndpoint)
+      .then(response => {
+        setUserData(response.data);
+        
+        // Assuming response.data contains lastPlaylists
+        setLastPlaylists(response.data.lastPlaylists);
+  
+        // Print the fetched data to the console
+        console.log("Fetched user data:", response.data);
+      })
+      .catch(error => {
+        console.error("API request error:", error);
+      });
+  }, []);
+  
+
   const handlePlaylistClick = (playlistName) => {
     setCurrentPlace("playlist");
     console.log(`Playlist clicked: ${playlistName}`);
-    // Here you would handle the click event, such as navigating to the playlist page.
   };
+
   const handleButtonClick = () => {
     setCurrentPlace("submit-form");
     console.log("Button clicked");
-  }
+  };
+
   const handleButtonClickE = () => {
     setCurrentPlace("submit-formE");
     console.log("Button clicked");
-  }
+  };
+
   return (
     <>
       <div className="main-container">
         <div className="content-container">
-          <UserPart userData={userData} />{" "}
-          <button 
-          onClick={handleButtonClick}
-          className="add-song-btn">Add song to the database</button>
-          <button 
-          onClick={handleButtonClickE}
-          className="add-song-btn">Delete song to the database</button>
+          {userData && <UserPart userData={userData} />}
+          <button onClick={handleButtonClick} className="add-song-btn">Add song to the database</button>
+          <button onClick={handleButtonClickE} className="add-song-btn">Delete song to the database</button>
 
-          {/* UserPart bileşenini burada kullan */}
-          <h2 className="last-played-title">Your Playlists </h2>
-          
+          <h2 className="last-played-title">Your Playlists</h2>
           <div className="lastPlaylists-container-forPP">
-            {lastPlaylists.map((lastPlaylists, index) => (
-              <Playlist
-                key={index}
-                name={lastPlaylists.name}
-                thumbnail={lastPlaylists.thumbnail}
-                onClick={() => handlePlaylistClick(lastPlaylists.name)}
-              />
-            ))}
+
           </div>
           <FavoriteSongs90s />
           <FavoriteRecentSongs />

@@ -4,6 +4,9 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
 import "../pagesCSS/SignIN-UP.css";
+import globalVar from '../global';
+
+
 function SignUp() {
   const [username, setUsernamen] = useState("");
   const [emailn, setEmailn] = useState("");
@@ -19,8 +22,9 @@ function SignUp() {
       password: passwordn,
       user_id: username,
     };
+    globalVar.mail = emailn;
     console.log(json);
-    let isRegister = true;
+    let isRegister = false;
     try {
       const response = await fetch("http://127.0.0.1:8008/sign_up", {
         method: "POST", // or 'PUT' if your backend requires
