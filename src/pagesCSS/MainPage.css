@@ -263,6 +263,8 @@
   width: 250px;
   height: 100vh;
   box-sizing: border-box;
+  overflow-y: auto;
+  flex-shrink: 0;
 }
 
 .left-bar-button,

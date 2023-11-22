@@ -46,5 +46,10 @@
 .lyrics p {
   overflow-y: auto; /* Scrollbar as needed */
   width: 100%; /* Full width of the container */
-  /* Removed overflow-y from here */
+  max-height: 300px; /* Adjust based on your layout */
+  overflow-y: auto;
+  padding: 1em; /* This adds space around the text */
+  line-height: 1.6; /* This increases space between lines */
+  white-space: pre-wrap; /* This will respect newlines and spaces in the text */
+  word-wrap: break-word; /* This will break long words to prevent horizontal scrolling */
 }

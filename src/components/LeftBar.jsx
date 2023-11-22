@@ -22,8 +22,8 @@ const LeftBar = ({ setCurrentPlace }) => {
     fetchPlaylists();
   }, []);
 
-  const handleClick = (playlistName) => {
-    console.log(`You clicked on ${playlistName}`);
+  const handleClick = (key) => {
+    console.log(`You clicked on ${key}`);
     setCurrentPlace("playlist");
     // Implement your playlist click functionality here
   };
