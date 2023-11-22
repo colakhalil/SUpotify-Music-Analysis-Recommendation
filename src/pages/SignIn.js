@@ -2,6 +2,7 @@ import { useState } from "react";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../pagesCSS/SignIN-UP.css";
+import globalVar from '../global';
 
 function SignIn() {
   const [email, setEmail] = useState("");
@@ -19,6 +20,7 @@ function SignIn() {
       email: email,
       password: password,
     };
+    globalVar.mail = email;
     console.log(json);
     let isLogin = false;
     try {

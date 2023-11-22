@@ -9,6 +9,8 @@ import MainMiddle from "../components/MainMiddle";
 import ProfileMiddle from "../components/ProfileMiddle";
 import PlaylistMiddle from "../components/PlaylistMiddle";
 import SubmissionForm from "../components/SubmissionForm";
+import SubmissionFormExport from "../components/SubmissionFormExport";
+import FriendProfileMiddle from "../components/FriendProfileMiddle";
 
 const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
@@ -252,6 +254,9 @@ const MainPage = () => {
         {currentPlace === "submit-form" && (
           <SubmissionForm></SubmissionForm>
         )}
+        {currentPlace === "submit-formE" && (
+          <SubmissionFormExport></SubmissionFormExport>
+        )}
         {currentPlace === "profile" && (
           <ProfileMiddle
             userData={userData}
@@ -262,7 +267,11 @@ const MainPage = () => {
         {currentPlace === "playlist" && (
           <PlaylistMiddle playlistData={playlistData} recommendedPop= {recommendedPop}></PlaylistMiddle>
         )}
-        <FriendActivity friendsData={friendsData} />
+        <FriendActivity friendsData={friendsData} setCurrentPlace={setCurrentPlace}/>
+        {currentPlace === "friend" && (
+          <FriendProfileMiddle
+          ></FriendProfileMiddle>
+        )}
         <BottomBar song={song} setCurrentPlace={setCurrentPlace} />
       </div>
     </>
