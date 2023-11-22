@@ -48,7 +48,9 @@
 .song-row:hover {
   background-color: #282828; /* Slight highlight on hover */
 }
-
+.song-name{
+  font-size: 25px;
+}
 /* Index, Name, Artist, and Duration Styling */
 .song-index,
 .song-name,

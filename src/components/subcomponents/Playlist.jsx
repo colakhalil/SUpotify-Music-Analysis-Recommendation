@@ -1,5 +1,5 @@
 import React from 'react';
-const Playlist = ({ name, thumbnail, onClick }) => {
+const Playlist = ({ name, thumbnail, onClick}) => {
   return (
     <div className="Playlist" onClick={onClick}>
 

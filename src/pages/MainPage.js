@@ -16,7 +16,7 @@ const MainPage = () => {
   // DUMMY DATALAR
   const [playlistPop, setPlaylistPop] = useState({ songs: [] });
   const [recommendedPop, setRecommendedPop] = useState({ songs: [] }); // Initialize an empty recommendedPop object
-
+  
   const fetchRecommendationsByGenre = (genre) => {
     fetch(`http://127.0.0.1:8008/recommendations/${genre}`)
       .then(response => response.json())

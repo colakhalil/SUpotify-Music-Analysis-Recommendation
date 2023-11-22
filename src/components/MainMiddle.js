@@ -2,7 +2,7 @@ import React from "react";
 import SearchBar from "./subcomponents/SearchBar";
 import Playlist from "./subcomponents/Playlist";
 
-const MainMiddle = ({ lastPlaylists, recomendedPlaylists, setCurrentPlace, recommendations }) => {
+const MainMiddle = ({ lastPlaylists, recomendedPlaylists, setCurrentPlace, recommendations, playlistPop, playlistRock, playlistJazz, playlistHiphop }) => {
   const handleSearch = (searchTerm) => {
     console.log(`Search term submitted: ${searchTerm}`);
     // You can now do something with the search term,
@@ -24,6 +24,7 @@ const MainMiddle = ({ lastPlaylists, recomendedPlaylists, setCurrentPlace, recom
         <div class="Playlist1">
           <Playlist 
           name = "Pop"
+          playlistPop= {playlistPop}
           thumbnail={"https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"}
           onClick={() => handlePlaylistClick("Pop", setCurrentPlace)}
           />
@@ -32,20 +33,23 @@ const MainMiddle = ({ lastPlaylists, recomendedPlaylists, setCurrentPlace, recom
         <div class="Playlist2">
           <Playlist 
             name = "Rock"
+            playlistRock = {playlistRock}
             thumbnail={"https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"}
             onClick={() => handlePlaylistClick("Rock", setCurrentPlace)}
           />
         </div>
         <div class="Playlist3">
         <Playlist 
-            name = "Rap"
+            name = "Jazz"
+            playlistJazz= {playlistJazz}
             thumbnail={"https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"}
             onClick={() => handlePlaylistClick("Rap", setCurrentPlace)}
           />
         </div>
         <div class="Playlist4">
         <Playlist 
-            name = "Jazz"
+            name = "Hip-hop"
+            playlistHiphop= {playlistHiphop}
             thumbnail={"https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"}
             onClick={() => handlePlaylistClick("Jazz", setCurrentPlace)}
         />
