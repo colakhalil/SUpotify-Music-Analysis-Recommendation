@@ -58,16 +58,6 @@ const ProfileMiddle = ({ setCurrentPlace }) => {
             Add song to the database
           </button>
           {/* UserPart bileşenini burada kullan */}
-          <h2 className="recommended-title">Your Playlists </h2>
-          <div className="lastPlaylists-container-forPP">
-            <Playlist
-              name="Jazz"
-              thumbnail={
-                "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
-              }
-              onClick={() => handlePlaylistClick("Jazz", setCurrentPlace)}
-            />
-          </div>
           <FavoriteSongs90s />
           <FavoriteRecentSongs />
           <MonthlyAverageRatingsChart />
