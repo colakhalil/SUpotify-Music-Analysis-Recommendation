@@ -35,26 +35,24 @@ def fetch_and_store_song_info(sp, song_id):
     
     audio_features = sp.audio_features(song_id)[0]
     
-    data = {
-        'song_id': track_info['id'],
-        'artist_id': track_info['artists'][0]['id'],
-        'album_id': track_info['album']['id'],
-        'song_name': track_info['name'],
-        'picture': track_info['album']['images'][0]['url'],
-        'rate': 0,
-        'play_count': 0,
-        'tempo': audio_features['tempo'],  
-        'popularity': track_info['popularity'],
-        'valence': audio_features['valence'],  
-        'duration': track_info['duration_ms'],
-        'energy': audio_features['energy'],  
-        'danceability': audio_features['danceability'],
-        'genre': track_info['atists'][0]['genres'],
-        'release_date': track_info['album']['release_date'],
-        'date_added': datetime.now().strftime("%Y-%m-%d")
-    }
-    # dict unpacking
-    new_song = Song(**data)
+    new_song = Song(
+                song_id = track_info['id'],
+                artist_id = track_info['artists'][0]['id'],
+                album_id = track_info['album']['id'],
+                song_name = track_info['name'],
+                picture = track_info['album']['images'][0]['url'],
+                rate = 0,
+                play_count = 0,
+                tempo = audio_features['tempo'],  
+                popularity = track_info['popularity'],
+                valence = audio_features['valence'],  
+                duration = track_info['duration_ms'],
+                energy = audio_features['energy'],  
+                danceability = audio_features['danceability'],
+                genre= ', '.join(track_info['atists'][0]['genres']),
+                release_date = track_info['album']['release_date'],
+                date_added = datetime.now()
+            )
 
     db.session.add(new_song)
     db.session.commit()
