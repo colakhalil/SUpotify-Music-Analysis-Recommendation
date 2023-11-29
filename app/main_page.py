@@ -17,23 +17,42 @@ TOKEN_INFO = "token_info"
 client_id = "e3bb122dc61347a6b496d5f15a036a68"
 client_secret = "e217a887698a43479bcbcc3698853677"
 
+token = ""
+
 GENIUS_API_KEY = "ELYRzAgCM0wR2jm42T8YVN3sJZMXH4Yss-hBIERYV4xFp2RJGiRbrfnuQh5gqJfg"
 
-@main.route("/lyrics/<artist_name>/<song_name>")
-def lyrics(artist_name, song_name):
-    
-    #DB check must be done here
-    
-    genius = lg.Genius(GENIUS_API_KEY)
-    song = genius.search_song(title = song_name, artist = artist_name)
-    
-    return jsonify(song.lyrics)
 
-def fetch_and_store_song_info(sp, song_id):
-
+def fetch_and_save_song(sp, song_id):
+    
     track_info = sp.track(song_id)
     
     audio_features = sp.audio_features(song_id)[0]
+    
+    artist = sp.artist(track_info['artists'][0]['id'])
+    
+    album = sp.album(track_info['album']['id'])
+    
+    genres = ', '.join(artist['genres'])
+    
+    if not Artist.query.filter_by(artist_id=artist['id']).first():
+        new_artist = Artist(
+            artist_id = artist['id'],
+            artist_name = artist['name'],
+            picture = artist['images'][0]['url'],
+            popularity = artist['popularity'],
+            genres = genres,
+            followers = artist['followers']['total']
+        )
+        db.session.add(new_artist)
+        
+    if not Album.query.filter_by(album_id=album['id']).first():
+        new_album = Album(
+            album_id = album['id'],
+            artist_id = artist['id'],
+            album_type = album['album_type'],
+            image = album['images'][0]['url']
+        )
+        db.session.add(new_album)
     
     new_song = Song(
                 song_id = track_info['id'],
@@ -49,42 +68,71 @@ def fetch_and_store_song_info(sp, song_id):
                 duration = track_info['duration_ms'],
                 energy = audio_features['energy'],  
                 danceability = audio_features['danceability'],
-                genre= ', '.join(track_info['atists'][0]['genres']),
+                genre = genres,
                 release_date = track_info['album']['release_date'],
                 date_added = datetime.now()
             )
-
+    
     db.session.add(new_song)
     db.session.commit()
     
-@main.route('/save_song/<songid>', methods=['GET, POST'])
-def save_song(songid):
-    if request.method == 'POST':
-        sp = spotipy.Spotify(auth=session['token_info']['access_token'])
-        fetch_and_store_song_info(sp, songid)
+
+@main.route('/token_add')
+def token_add():
+    global token
+    token = session['token_info']['access_token']
+    return jsonify({'message': 'success'})
+
+#WORKS
+@main.route("/lyrics/<artist_name>/<song_name>")
+def lyrics(artist_name, song_name):
+    
+    #DB check must be done here
+    
+    genius = lg.Genius(GENIUS_API_KEY)
+    song = genius.search_song(title = song_name, artist = artist_name)
+    
+    return jsonify(song.lyrics)
+    
+#WORKS
+@main.route('/save_song/<song_id>', methods=['GET', 'POST'])
+def save_song(song_id):
+    if request.method == 'GET':
         
-        return jsonify({'message': True})
+        sp = spotipy.Spotify(auth=session['token_info']['access_token'])     
+        
+        fetch_and_save_song(sp, song_id)
+        
+        song = Song.query.filter_by(song_id=song_id).first()
+        
+        return jsonify({
+            "name":song.song_name,
+            "artist_id":song.artist_id
+            })
 
-
+#WORKS
 @main.route('/recommendations/<genre>')
 def get_recommendations_by_genre(genre):
 
-    sp = spotipy.Spotify(auth=session[TOKEN_INFO]['access_token'])
+    sp = spotipy.Spotify(auth=token)
     recommendations = sp.recommendations(seed_genres=[genre], limit=10)
 
     return jsonify(recommendations)
 
+#WORKS
 @main.route('/song_info/<user_id>/<song_id>') 
-def get_song_info(song_id, user_id):
+def get_song_info(user_id, song_id):
     song = Song.query.filter_by(song_id=song_id).first()
     
     if song:
         
         prev_rate = RateSong.query.filter_by(song_id=song_id, user_id=user_id).first()
         
+        artist = Artist.query.filter_by(artist_id=song.artist_id).first()
+        
         song_info = {
             'song_id': song.song_id,
-            'artists': song.artist_id.artist_name,
+            'artists': artist.artist_name,
             'title': song.song_name,
             'thumbnail': song.picture,
             'rateAvg': song.rate,
@@ -101,11 +149,11 @@ def get_song_info(song_id, user_id):
     else:
         return jsonify({"message": False})
 
-
+#WORKS
 @main.route('/get_user_playlists')
 def get_user_playlists():
     
-    sp = spotipy.Spotify(auth=session['token_info']['access_token'])
+    sp = spotipy.Spotify(auth=token)
     user_playlists = sp.current_user_playlists()
 
     formatted_playlists = [
@@ -175,7 +223,7 @@ def song_played():
         
 @main.route('/search/<query>', methods=['GET'])
 def search(query):
-    sp = spotipy.Spotify(auth=session['token_info']['access_token'])
+    sp = spotipy.Spotify(auth=token)
     search_result = sp.search(q=query, type = "track", limit=10)
     
     formatted_result = [
@@ -193,7 +241,7 @@ def search(query):
 
 @main.route("/get_playlist_info/<playlist_id>")
 def get_playlist_info(playlist_id):
-    sp = spotipy.Spotify(auth=session['token_info']['access_token'])
+    sp = spotipy.Spotify(auth=token)
     playlist_info = sp.playlist(playlist_id)
     song_list = []
  

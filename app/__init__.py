@@ -21,11 +21,7 @@ def create_app():
     db.init_app(app)
     #migrate.init_app(app, db)
     
-    CORS(app, resources={
-        r"/sign_up": {"origins": "http://localhost:3000"},
-        r"/login": {"origins": "http://localhost:3000"},
-        r"/sauth": {"origins": "http://localhost:3000"}
-    })
+    CORS(app, supports_credentials=True)
 
     from .auth import auth
     from .main_page import main
@@ -54,7 +50,7 @@ def create_app():
 
         new_user = User(user_id='ATAKAN', password='PW', email='atakan.demirel@sabanciuniv.edu')
         new_user2 = User(user_id='EREN', password='PW', email='eren.akgun@sabanciuniv.edu')
-        new_user3 = User(user_id='BERÇİN', password='PW', email='bercin.idk@sabanciuniv.edu')
+        new_user3 = User(user_id='bercin', password='PW', email='bercin.idk@sabanciuniv.edu')
 
         db.session.add(new_user)
         db.session.add(new_user2)
@@ -62,10 +58,8 @@ def create_app():
         db.session.commit()
 
         friendship1 = Friendship(user1_id='ATAKAN', user2_id='EREN')
-        friendship2 = Friendship(user1_id='EREN', user2_id='BERÇİN')
 
         db.session.add(friendship1)
-        db.session.add(friendship2)
         db.session.commit()
 
         added_user = User.query.filter_by(user_id='ATAKAN').first()
@@ -122,24 +116,6 @@ def create_app():
 
         db.session.add(new_playlist)
         db.session.commit()
-
-        users = User.query.all()
-        songs = Song.query.all()
-        friendships = Friendship.query.all()
-
-        for user in users:
-            print(user.user_id)
-
-        for song in songs:
-            print(song.song_name)
-
-        for fs in friendships:
-            print('New Friendship')
-            print(fs.user1_id)
-            print(fs.user2_id)
-            print(fs.user1.user_id)
-            print(fs.user2.user_id)
-
         # Mock Ends Here
         
         

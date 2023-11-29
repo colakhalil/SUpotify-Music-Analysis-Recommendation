@@ -102,9 +102,10 @@ class Artist(db.Model):
     artist_id = db.Column(db.String(45), primary_key=True)
     popularity = db.Column(db.Integer)
     artist_name = db.Column(db.String(45))
-    genres = db.Column(db.JSON)
-    follower = db.Column(db.Integer)
+    genres = db.Column(db.String(100))
+    followers = db.Column(db.Integer)
     rate = db.Column(db.Float)
+    picture = db.Column(db.String(200))
 
     albums = db.relationship('Album', back_populates='artist', lazy='dynamic')
     songs = db.relationship('Song', back_populates='artist', lazy='dynamic')

@@ -17,6 +17,7 @@ TOKEN_INFO = "token_info"
 client_id = "e3bb122dc61347a6b496d5f15a036a68"
 client_secret = "e217a887698a43479bcbcc3698853677"
 
+#WORKS
 @user.route('/user_data/<email>', methods=['GET'])
 def user_page(email):
     
@@ -48,6 +49,8 @@ def user_page(email):
         'friendsCount': len(friends)
     })
 
+
+#WORKS
 @user.route('/friends_activity/<user_id>', methods=['GET'])
 def friends_activity(user_id):
     
@@ -56,14 +59,20 @@ def friends_activity(user_id):
     
     all_friends = []
     
+    to_be_returned = []
+    
     for friend in friends:
         all_friends.append(friend.user2_id)
         
     for friend in friends2:
         all_friends.append(friend.user1_id)
         
-    return jsonify({
-        'name': friend.user_id,
-        'lastListenedSong': friend.last_sid,
-        'profilePicture': friend.profile_pic
-    }for friend in all_friends)
+    for friend in all_friends:
+        user = User.query.filter_by(user_id=friend).first()
+        to_be_returned.append({
+            'name': user.user_id,
+            'profilePicture': user.profile_pic,
+            'lastListenedSong': user.last_sid
+        })
+        
+    return jsonify(to_be_returned)
