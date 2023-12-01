@@ -1,6 +1,7 @@
 import React from 'react';
 
 const PlaylistContainer = ({ songs }) => {
+  console.log(songs);
   return (
     <div className="playlist-container">
       {songs.map((song, index) => (
@@ -16,7 +17,9 @@ const PlaylistContainer = ({ songs }) => {
       ))}
     </div>
   );
+
 };
+
 
 // Helper function to format song duration from milliseconds to "mm:ss"
 const formatDuration = (durationMs) => {

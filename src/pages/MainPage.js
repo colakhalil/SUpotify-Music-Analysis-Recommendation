@@ -5,6 +5,7 @@ import FriendActivity from "../components/FriendActivity";
 import BottomBar from "../components/BottomBar";
 import LyrcsMiddle from "../components/LyrcsMiddle";
 
+
 import MainMiddle from "../components/MainMiddle";
 import ProfileMiddle from "../components/ProfileMiddle";
 import PlaylistMiddle from "../components/PlaylistMiddle";
@@ -14,38 +15,64 @@ import FriendProfileMiddle from "../components/FriendProfileMiddle";
 
 const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
+  const [currentPlaylistInfo, setCurrentPlaylistInfo] = useState(null);
 
   // DUMMY DATALAR
-  const [playlistPop, setPlaylistPop] = useState({ songs: [] });
-  const [recommendedPop, setRecommendedPop] = useState({ songs: [] }); // Initialize an empty recommendedPop object
+  const [popPlaylist, setPopPlaylist] = useState({ songs: [] });
+  const [rockPlaylist, setRockPlaylist] = useState({ songs: [] });
+  const [jazzPlaylist, setJazzPlaylist] = useState({ songs: [] });
+  const [housePlaylist, setHousePlaylist] = useState({ songs: [] });
 
-  const fetchRecommendationsByGenre = (genre) => {
-    fetch(`http://127.0.0.1:8008/recommendations/${genre}`)
-      .then((response) => response.json())
-      .then((data) => {
-        const formattedSongs = data.tracks.map((track) => ({
-          songName: track.name,
-          artistName: track.artists.map((artist) => artist.name).join(", "),
-          songLength: track.duration_ms,
-          releaseYear: new Date(track.album.release_date).getFullYear(),
-          rating: track.popularity,
-          album: track.album.name,
-          songPicture: track.album.images[0].url,
-        }));
+  const [happyPlaylist, setHappyPlaylist] = useState({ songs: [] });
+  const [sadPlaylist, setSadPlaylist] = useState({ songs: [] });
+  const [studyPlaylist, setStudyPlaylist] = useState({ songs: [] });
+  const [chillPlaylist, setChillPlaylist] = useState({ songs: [] });
 
-        setPlaylistPop({ songs: formattedSongs });
 
-        // Create the recommendedPop object inside the .then() block
-        const recommendations = formattedSongs; // Assuming you want to use the same data for recommendedPop
 
-        setRecommendedPop({ songs: recommendations });
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  };
+    
+      const getSongsByGenre = async (genre) => {
+        try {
+          const response = await fetch(`http://127.0.0.1:8008/recommendations/${genre}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log('Fetched data:', data); // Check the structure of the fetched data
+      
+          const formattedSongs = data.tracks.map((track) => ({
+            songName: track.name,
+            artistName: track.artists.map((artist) => artist.name).join(", "),
+            songLength: track.duration_ms,
+            releaseYear: new Date(track.album.release_date).getFullYear(),
+            rating: track.popularity,
+            album: track.album.name,
+            songPicture: track.album.images[0].url,
+          }));
+      
+          return formattedSongs;
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          return [];
+        }
+      };
+      
+    
+      
 
-  useEffect(() => {
-    fetchRecommendationsByGenre("pop");
-  }, []);
+      useEffect(() => {
+        getSongsByGenre('pop').then((songs) => setPopPlaylist({ songs }));
+        getSongsByGenre('rock').then((songs) => setRockPlaylist({ songs }));
+        getSongsByGenre('jazz').then((songs) => setJazzPlaylist({ songs }));
+        getSongsByGenre('house').then((songs) => setHousePlaylist({ songs }));
+        
+        getSongsByGenre('happy').then((songs) => setHappyPlaylist({ songs }));
+        getSongsByGenre('sad').then((songs) => setSadPlaylist({ songs }));
+        getSongsByGenre('study').then((songs) => setStudyPlaylist({ songs }));
+        getSongsByGenre('chill').then((songs) => setChillPlaylist({ songs }));
+      }, []);
+    
+
 
   // Rest of your component code
 
@@ -195,25 +222,29 @@ const MainPage = () => {
         <LeftBar playlists={playlists} setCurrentPlace={setCurrentPlace} />
 
         {currentPlace === "main" && (
-          <MainMiddle setCurrentPlace={setCurrentPlace}></MainMiddle>
+          <MainMiddle setCurrentPlace={setCurrentPlace}
+          popPlaylist={popPlaylist}
+          rockPlaylist={rockPlaylist}
+          jazzPlaylist={jazzPlaylist}
+          housePlaylist={housePlaylist}
+          happyPlaylist= {happyPlaylist}
+          sadPlaylist= {sadPlaylist}
+          studyPlaylist= {studyPlaylist}
+          chillPlaylist= {chillPlaylist}
+          setCurrentPlaylistInfo={setCurrentPlaylistInfo}
+          ></MainMiddle>
         )}
         {currentPlace === "submit-form" && <SubmissionForm></SubmissionForm>}
         {currentPlace === "submit-formE" && (
           <SubmissionFormExport></SubmissionFormExport>
         )}
-        {currentPlace === "profile" && (
-          <ProfileMiddle
-            userData={userData}
-            setCurrentPlace={setCurrentPlace}
-          ></ProfileMiddle>
-        )}
-        {currentPlace === "lyrc" && <LyrcsMiddle song={song}></LyrcsMiddle>}
         {currentPlace === "playlist" && (
           <PlaylistMiddle
-            playlistData={playlistData}
-            recommendedPop={recommendedPop}
-          ></PlaylistMiddle>
+            playlistInfo={currentPlaylistInfo}
+          />
         )}
+        {currentPlace === "lyrc" && <LyrcsMiddle song={song}></LyrcsMiddle>}
+   
         <FriendActivity
           friendsData={friendsData}
           setCurrentPlace={setCurrentPlace}
