@@ -54,6 +54,8 @@ def fetch_and_save_song(sp, song_id):
         )
         db.session.add(new_album)
     
+    release_year = int(track_info['album']['release_date'][:4])
+    
     new_song = Song(
                 song_id = track_info['id'],
                 artist_id = track_info['artists'][0]['id'],
@@ -69,7 +71,7 @@ def fetch_and_save_song(sp, song_id):
                 energy = audio_features['energy'],  
                 danceability = audio_features['danceability'],
                 genre = genres,
-                release_date = track_info['album']['release_date'],
+                release_date = release_year,
                 date_added = datetime.now()
             )
     
@@ -205,16 +207,15 @@ def change_rating():
         
         return jsonify({'message': True})
     
-    
+#Must Work
 @main.route('/song_played', methods=['GET', 'POST'])
 def song_played():
     if request.method == 'POST':
         data = request.get_json()
         song = Song.query.filter_by(song_id=data['song_id']).first()
-        user = User.query.filter_by(user_id=data['user_id']).first()
         if song:
-            song.play_count += 1
-            user.last_sid = song.song_id
+            User.query.filter_by(user_id=data['user_id']).update({'last_sid': song.song_id})
+            Song.query.filter_by(song_id=data['song_id']).update({'play_count': song.play_count + 1})
             db.session.commit()
             return jsonify({'message': True})
         else:
@@ -267,3 +268,27 @@ def get_playlist_info(playlist_id):
         }
     
     return jsonify(data)
+
+@main.route("/save_song_with_form", methods=['GET', 'POST'])
+def save_song_with_form():
+    if request.method == 'POST':
+        data = request.get_json()
+        sp = spotipy.Spotify(auth=token)
+        track = sp.search(q=f'track:{data["songTitle"]} artist:{data["artistName"]}', type='track')
+        
+        if track['tracks']['items']:
+            fetch_and_save_song(sp, track['tracks']['items'][0]['id'])
+        else:
+            new_song = Song(
+                    song_id = data['song_id'],
+                    artist_id = data['artist_id'],
+                    album_id = data['album_id'],
+                    song_name = data['songTitle'],
+                    rate = 0,
+                    play_count = 0,
+                    valence = data['valence'],  
+                    duration = data['songDuration'],
+                    genre = data['songGenre'],
+                    release_date = data['songReleaseYear']
+                )
+        return jsonify({'message': True})
