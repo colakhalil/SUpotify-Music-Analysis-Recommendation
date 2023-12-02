@@ -88,6 +88,7 @@ class Album(db.Model):
     __tablename__ = 'albums'
 
     album_id = db.Column(db.String(45), primary_key=True)
+    album_name = db.Column(db.String(100))
     artist_id = db.Column(db.String(45), db.ForeignKey('artists.artist_id'))
     rate = db.Column(db.Float)
     album_type = db.Column(db.String(15))

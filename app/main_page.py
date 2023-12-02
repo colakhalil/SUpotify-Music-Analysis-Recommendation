@@ -47,6 +47,7 @@ def fetch_and_save_song(sp, song_id):
         
     if not Album.query.filter_by(album_id=album['id']).first():
         new_album = Album(
+            album_name = album['name'],
             album_id = album['id'],
             artist_id = artist['id'],
             album_type = album['album_type'],
@@ -184,8 +185,44 @@ def get_user_playlists():
                 song_number=playlist_data['songNumber']
             )
             db.session.add(new_playlist)
+        if playlist_data['songNumber'] > 100:
+            playlist_tracks = sp.playlist_tracks(playlist_data['playlistID'])
+        
+    for track in playlist_tracks['items']:
+        track_info = track['track']
+
+        existing_track = Song.query.filter_by(song_id=track_info['id']).first()
+
+        if not existing_track:
+            fetch_and_save_song(sp, track_info['id'])
+        
     db.session.commit()
+
     return jsonify(formatted_playlists) 
+
+@main.route('/show_db')
+def show_db():
+    songs = Song.query.all()
+    albums = Album.query.all()
+    artists = Artist.query.all()
+    playlists = Playlist.query.all()
+    print("****SONGS****")
+    for song in songs:
+        print(song.song_name)
+    print("****SONGS****")
+    print("****ALBUMS****")
+    for album in albums:
+        print(album.album_name)
+    print("****ALBUMS****")
+    print("****ARTISTS****")
+    for artist in artists:
+        print(artist.artist_name)
+    print("****ARTISTS****")
+    print("****PLAYLISTS****")
+    for playlist in playlists:
+        print(playlist.playlist_name)
+    print("****PLAYLISTS****")
+    return jsonify({'message': True})
 
 @main.route('/change_rating', methods=['GET', 'POST'])
 def change_rating():
@@ -261,7 +298,7 @@ def get_playlist_info(playlist_id):
 
         song_list.append(song_1) 
     data = {
-        'playlisID': playlist_id,
+        'playlistID': playlist_id,
         'playlistName': playlist_info['name'],
         'playlistPicture': playlist_info['images'][0]['url'],
         'songs' : song_list
