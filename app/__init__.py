@@ -35,88 +35,80 @@ def create_app():
     from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist, Song, User
     
     with app.app_context():
-        db.drop_all()
         db.create_all()
-        
         # This part is for adding mock data to db
         # To run the app properly, make sure to comment out below
 
+        client_id_eren = "26136d6b22c945479934e5eac513a86b"
+        client_secret_eren = "24c7dc28107c4c1a8f72920e2c9b5845"
         client_id_Atakan = "e67f3a00be3044b89f2d3629f497b344"
         client_secret_Atakan = "2eaa1a9033d6460f84cdbb0fd17479d5"
 
-        client_credentials_manager = SpotifyClientCredentials(client_id=client_id_Atakan, client_secret=client_secret_Atakan)
+        client_credentials_manager = SpotifyClientCredentials(client_id=client_id_eren, client_secret=client_secret_eren)
         sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-
-        new_user = User(user_id='ATAKAN', password='PW', email='atakan.demirel@sabanciuniv.edu')
-        new_user2 = User(user_id='EREN', password='PW', email='eren.akgun@sabanciuniv.edu')
-        new_user3 = User(user_id='bercin', password='PW', email='bercin.idk@sabanciuniv.edu')
-
-        db.session.add(new_user)
-        db.session.add(new_user2)
-        db.session.add(new_user3)
-        db.session.commit()
-
-        friendship1 = Friendship(user1_id='ATAKAN', user2_id='EREN')
-
-        db.session.add(friendship1)
-        db.session.commit()
-
-        added_user = User.query.filter_by(user_id='ATAKAN').first()
-        if added_user:
-            print('ALL FINE')
-        else:
-            print('NOT SO FINE')
-
-        # Search for the playlist by name
-        playlist_name = 'Top 100 Artists (Monthly Listenership)'
-        results = sp.search(q=playlist_name, type='playlist')
-        playlist = results['playlists']['items'][0]
-        playlist_id = playlist['id']
-
-        playlist_info = {
-            "playlist_name": playlist['name'],
-            "picture": playlist['images'][0]['url'] if playlist['images'] else None,
-            "song_number": playlist['tracks']['total'],
-            "playlist_id": playlist['id'],
-            "user_id": "ATAKAN"
-        }
-        
-        tracks = sp.playlist_tracks(playlist_id, limit=10)
-        for item in tracks['items']:
-            track_info = item['track']
-            song_id = track_info['id']
-            audio_features = sp.audio_features(song_id)[0]
-            new_song = Song(
-                song_id = track_info['id'],
-                artist_id = track_info['artists'][0]['id'],
-                album_id = track_info['album']['id'],
-                song_name = track_info['name'],
-                picture = track_info['album']['images'][0]['url'],
-                rate = 0,
-                play_count = 0,
-                tempo = audio_features['tempo'],  
-                popularity = track_info['popularity'],
-                valence = audio_features['valence'],  
-                duration = track_info['duration_ms'],
-                energy = audio_features['energy'],  
-                danceability = audio_features['danceability'],
-                genre= track_info['artists'][0].get('genres', 'Unknown Genre'),
-                release_date = track_info['album']['release_date'],
-                date_added = datetime.now()
-            )
-
-            song_rating = RateSong(song_id=track_info['id'], user_id='ATAKAN', rating = 3)
-            db.session.add(new_song)
-            db.session.add(song_rating)
+        if not User.query.first():
+            new_user = User(user_id='atakan', password='PW', email='atakan.demirel@sabanciuniv.edu')
+            new_user2 = User(user_id='umit', password='PW', email='umit.colak@sabanciuniv.edu')
+            new_user3 = User(user_id='bercin', password='PW', email='bercin.idk@sabanciuniv.edu')
+            new_user4 = User(user_id='furkan', password='PW', email='femre@sabanciuniv.edu')
+            new_user5 = User(user_id='ayca', password='PW', email='ayca@sabanciuniv.edu')
+            new_user6 = User(user_id='idil', password='PW', email='idil@sabanciuniv.edu')
+            new_user7 = User(user_id='halil', password='PW', email='halil@sabanciuniv.edu')
+            new_user8 = User(user_id='arda', password='PW', email='arda@sabanciuniv.edu')
+            new_user9 = User(user_id='ezgi', password='PW', email='ezgi@sabanciuniv.edu')
+            
+            db.session.add(new_user)
+            db.session.add(new_user2)
+            db.session.add(new_user3)
+            db.session.add(new_user4)
+            db.session.add(new_user5)
+            db.session.add(new_user6)
+            db.session.add(new_user7)
+            db.session.add(new_user8)
+            db.session.add(new_user9)
+            
             db.session.commit()
 
-        # dict unpacking
-        new_playlist = Playlist(**playlist_info)
+            friendship1 = Friendship(user1_id='atakan', user2_id='bercin')
+            friendship2 = Friendship(user1_id='atakan', user2_id='umit')
+            friendship3 = Friendship(user1_id='umit', user2_id='bercin')
+            friendship4 = Friendship(user1_id='umit', user2_id='furkan')
+            friendship5 = Friendship(user1_id='umit', user2_id='ayca')
+            friendship6 = Friendship(user1_id='umit', user2_id='idil')
+            friendship7 = Friendship(user1_id='umit', user2_id='halil')
+            friendship8 = Friendship(user1_id='umit', user2_id='arda')
+            friendship9 = Friendship(user1_id='umit', user2_id='ezgi')
+            friendship10 = Friendship(user1_id='bercin', user2_id='furkan')
+            friendship11 = Friendship(user1_id='bercin', user2_id='ayca')
+            friendship12 = Friendship(user1_id='bercin', user2_id='idil')
+            friendship13 = Friendship(user1_id='bercin', user2_id='halil')
+            friendship14 = Friendship(user1_id='bercin', user2_id='arda')
+            friendship15 = Friendship(user1_id='bercin', user2_id='ezgi')
+            friendship16 = Friendship(user1_id='furkan', user2_id='ayca')
+            friendship17 = Friendship(user1_id='furkan', user2_id='idil')
+            friendship18 = Friendship(user1_id='furkan', user2_id='halil')
+            
 
-        db.session.add(new_playlist)
-        db.session.commit()
-        # Mock Ends Here
+            db.session.add(friendship1)
+            db.session.add(friendship2)
+            db.session.add(friendship3)
+            db.session.add(friendship4)
+            db.session.add(friendship5)
+            db.session.add(friendship6)
+            db.session.add(friendship7)
+            db.session.add(friendship8)
+            db.session.add(friendship9)
+            db.session.add(friendship10)
+            db.session.add(friendship11)
+            db.session.add(friendship12)
+            db.session.add(friendship13)
+            db.session.add(friendship14)
+            db.session.add(friendship15)
+            db.session.add(friendship16)
+            db.session.add(friendship17)
+            db.session.add(friendship18)
+            db.session.commit()
         
         
     

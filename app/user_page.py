@@ -1,7 +1,7 @@
 from flask import Blueprint, Flask, request, url_for, session, jsonify, redirect
 from flask_cors import CORS, cross_origin
 from spotipy.oauth2 import SpotifyOAuth 
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from sqlalchemy.orm import aliased
 import spotipy
 import requests
@@ -76,3 +76,70 @@ def friends_activity(user_id):
         })
         
     return jsonify(to_be_returned)
+
+#WILL BE CHECKED AFTER DATABASE IS FILLED WITH RATING DATA
+@user.route('/<user_id>/monthly_average_rating', methods=['GET'])
+def get_user_monthly_average_rating(user_id):
+    try:
+        # Query to get the monthly average rating of songs by a user
+        monthly_average_ratings = (
+            db.session.query(
+                func.extract('year', RateSong.timestamp).label('year'),
+                func.extract('month', RateSong.timestamp).label('month'),
+                func.avg(RateSong.rating).label('average_rating')
+            )
+            .filter(
+                RateSong.user_id == user_id,
+            )
+            .group_by('year', 'month')
+            .order_by('year', 'month')
+            .all()
+        )
+
+        if not monthly_average_ratings:
+            return jsonify({'error': 'No monthly average ratings found for the user.'})
+
+        # Format the response
+        result = {
+            'user_id': user_id,
+            'monthly_average_ratings': [
+                {
+                    'year': rating.year,
+                    'month': rating.month,
+                    'average_rating': rating.average_rating,
+                }
+                for rating in monthly_average_ratings
+            ],
+        }
+
+        return jsonify(result)
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+
+@user.route('/add_friend/<user_id>', methods=['POST'])
+def add_friend(user_id):
+    friend_id = request.json.get('friend_id')
+
+    user = User.query.get(user_id)
+    friend = User.query.get(friend_id)
+
+    if not user:
+        return jsonify({'error': 'User not found'})
+
+    if not friend:
+        return jsonify({'error': 'Friend not found'})
+
+    if Friendship.query.filter(
+            ((Friendship.user1_id == user_id) & (Friendship.user2_id == friend_id)) |
+            ((Friendship.user1_id == friend_id) & (Friendship.user2_id == user_id))
+    ).first():
+        return jsonify({'error': 'Already friends'})
+
+    new_friendship = Friendship(user1_id=user_id, user2_id=friend_id)
+
+    db.session.add(new_friendship)
+    db.session.commit()
+
+    return jsonify({'message': 'Friend added successfully'})
