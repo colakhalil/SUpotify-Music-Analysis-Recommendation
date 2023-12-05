@@ -92,6 +92,7 @@ def fetch_and_save_song(sp, song_id):
     
 
 @main.route('/token_add')
+@cross_origin()
 def token_add():
     global token
     token = session['token_info']['access_token']
@@ -99,6 +100,7 @@ def token_add():
 
 #WORKS
 @main.route("/lyrics/<artist_name>/<song_name>")
+@cross_origin()
 def lyrics(artist_name, song_name):
     
     #DB check must be done here
@@ -110,6 +112,7 @@ def lyrics(artist_name, song_name):
     
 #WORKS
 @main.route('/save_song/<song_id>', methods=['GET', 'POST'])
+@cross_origin()
 def save_song(song_id):
     if request.method == 'GET':
         
@@ -126,6 +129,7 @@ def save_song(song_id):
 
 #WORKS
 @main.route('/recommendations/<genre>')
+@cross_origin()
 def get_recommendations_by_genre(genre):
 
     sp = spotipy.Spotify(auth=token)
@@ -135,6 +139,7 @@ def get_recommendations_by_genre(genre):
 
 #WORKS
 @main.route('/song_info/<user_id>/<song_id>') 
+@cross_origin()
 def get_song_info(user_id, song_id):
     song = Song.query.filter_by(song_id=song_id).first()
     
@@ -165,6 +170,7 @@ def get_song_info(user_id, song_id):
 
 #NOT FINISHED BUT WORKS FOR ADDING DUMMY
 @main.route('/fill_db/<playlist_id>')
+@cross_origin()
 def fill_db(playlist_id):
     sp = spotipy.Spotify(auth=token)
     playlist_added = sp.playlist_tracks(playlist_id)
@@ -221,6 +227,7 @@ def fill_db(playlist_id):
 
 #WORKS
 @main.route('/get_user_playlists')
+@cross_origin()
 def get_user_playlists():
     
     sp = spotipy.Spotify(auth=token)
@@ -255,6 +262,7 @@ def get_user_playlists():
 
 #WORKS
 @main.route('/change_rating_song', methods=['GET', 'POST'])
+@cross_origin()
 def change_rating():
     if request.method == 'POST':
         data = request.get_json()
@@ -280,6 +288,7 @@ def change_rating():
     
 #WORKS
 @main.route('/song_played', methods=['GET', 'POST'])
+@cross_origin()
 def song_played():
     if request.method == 'POST':
         data = request.get_json()
@@ -294,6 +303,7 @@ def song_played():
         
 #WORKS
 @main.route("/get_playlist_info/<user_id>/<playlist_id>")
+@cross_origin()
 def get_playlist_info(user_id,playlist_id):
     sp = spotipy.Spotify(auth=token)
     playlist_info = sp.playlist(playlist_id)
@@ -324,6 +334,7 @@ def get_playlist_info(user_id,playlist_id):
 
 #WORKS
 @main.route("/save_song_with_form", methods=['GET', 'POST'])
+@cross_origin()
 def save_song_with_form():
     if request.method == 'POST':
         
@@ -385,6 +396,7 @@ def save_song_with_form():
     
 #WORKS
 @main.route('/<user_id>/90s', methods=['GET'])
+@cross_origin()
 def get_user_highly_rated_90s_songs(user_id):
     try:
         # Query to get all songs from the 90s
@@ -420,6 +432,7 @@ def get_user_highly_rated_90s_songs(user_id):
 
 #WORKS
 @main.route('/all_songs', methods=['GET'])
+@cross_origin()
 def get_all_songs():
     try:
         all_songs = Song.query.all()
@@ -453,6 +466,7 @@ def get_all_songs():
 
 #WORKS
 @main.route('/new_songs', methods=['GET'])
+@cross_origin()
 def get_user_new_songs():
     try:
         # Query to get songs released in the current year (2023)
@@ -484,6 +498,7 @@ def get_user_new_songs():
 
 #WORKS
 @main.route('/artist_song_count', methods=['GET'])
+@cross_origin()
 def artist_song_count():
     try:
         # Query to get the number of songs for each artist
@@ -514,6 +529,7 @@ def artist_song_count():
 
 #WORKS
 @main.route('/search_item/<search_term>', methods=['GET'])
+@cross_origin()
 def search_item(search_term):
     try:
         # Search for songs, albums, artists, and friends in the database based on the search term

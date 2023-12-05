@@ -19,6 +19,7 @@ client_secret = "e217a887698a43479bcbcc3698853677"
 
 #WORKS
 @user.route('/user_data/<user_id>', methods=['GET'])
+@cross_origin()
 def user_page(user_id):
     
     user = User.query.filter_by(user_id=user_id).first()
@@ -49,6 +50,7 @@ def user_page(user_id):
 
 #WORKS
 @user.route('/friends_activity/<user_id>', methods=['GET'])
+@cross_origin()
 def friends_activity(user_id):
     
     friends = Friendship.query.filter_by(user1_id=user_id).all()
@@ -76,6 +78,7 @@ def friends_activity(user_id):
 
 #WILL BE CHECKED AFTER DATABASE IS FILLED WITH RATING DATA
 @user.route('/<user_id>/monthly_average_rating', methods=['GET'])
+@cross_origin()
 def get_user_monthly_average_rating(user_id):
     try:
         # Query to get the monthly average rating of songs by a user
@@ -116,6 +119,7 @@ def get_user_monthly_average_rating(user_id):
 
 #WORKS
 @user.route('/add_friend/<user_id>', methods=['POST'])
+@cross_origin()
 def add_friend(user_id):
     friend_id = request.json.get('friend_id')
 
@@ -142,6 +146,7 @@ def add_friend(user_id):
     return jsonify({'message': 'Friend added successfully'})
 
 @user.route('/search_user/<search_term>', methods=['GET'])
+@cross_origin()
 def search_friends(search_term):
     users = User.query.filter(User.user_id.like(f'%{search_term}%')).all()
     if not users:
