@@ -1,7 +1,7 @@
 from flask import Blueprint, Flask, request, url_for, session, jsonify, redirect
 from flask_cors import CORS, cross_origin
 from spotipy.oauth2 import SpotifyOAuth 
-from sqlalchemy import func  
+from sqlalchemy import func, or_
 import lyricsgenius as lg
 import spotipy
 import requests
@@ -162,7 +162,7 @@ def get_song_info(user_id, song_id):
     else:
         return jsonify({"message": False})
 
-#NOT FINISHED BUT WORKS
+#NOT FINISHED BUT WORKS FOR ADDING DUMMY
 @main.route('/fill_db')
 def fill_db():
     sp = spotipy.Spotify(auth=token)
@@ -173,8 +173,9 @@ def fill_db():
         existing_playlist = Playlist.query.filter_by(playlist_id=playlist_data['id']).first()
 
         if not existing_playlist:
+            user = User.query.filter_by(user_id=session['user_id']).first()
             new_playlist = Playlist(
-                #user_id=session['user_id'], 
+                user_id=session['user_id'], 
                 playlist_id=playlist_data['id'],
                 playlist_name=playlist_data['name'],
                 picture=playlist_data["images"][0]["url"],
@@ -244,15 +245,6 @@ def get_user_playlists():
 
     return jsonify(formatted_playlists) 
 
-@main.route('/show_db')
-def show_db():
-    songs = Song.query.all()
-    print("****SONGS****")
-    for song in songs:
-        print(song.song_name, " ", song.release_date)
-    print("****SONGS****")
-    return jsonify({'message': True})
-
 #WORKS
 @main.route('/change_rating_song', methods=['GET', 'POST'])
 def change_rating():
@@ -319,28 +311,64 @@ def get_playlist_info(user_id,playlist_id):
     
     return jsonify(data)
 
+#WORKS
 @main.route("/save_song_with_form", methods=['GET', 'POST'])
 def save_song_with_form():
     if request.method == 'POST':
-        data = request.get_json()
-        sp = spotipy.Spotify(auth=token)
-        track = sp.search(q=f'track:{data["songTitle"]} artist:{data["artistName"]}', type='track')
         
-        if track['tracks']['items']:
-            fetch_and_save_song(sp, track['tracks']['items'][0]['id'])
-        else:
-            new_song = Song(
-                    song_id = data['song_id'],
-                    artist_id = data['artist_id'],
-                    album_id = data['album_id'],
-                    song_name = data['songTitle'],
-                    rate = 0,
-                    play_count = 0,
-                    valence = data['valence'],  
-                    duration = data['songDuration'],
-                    genre = data['songGenre'],
-                    release_date = data['songReleaseYear']
+        sp = spotipy.Spotify(auth=token)
+        
+        data = request.get_json()
+        
+        artist = Artist.query.filter_by(artist_name=data['artistName']).first()
+        
+        if not artist:
+            
+            sp_artist = sp.search(q='artist:' + data['artistName'], type='artist')
+            
+            if sp_artist['artists']['items']:
+                
+                artist = sp_artist['artists']['items'][0]
+                
+                genres = ', '.join(artist['genres'])
+                
+                artist = Artist(
+                    artist_id = artist['id'],
+                    artist_name = artist['name'],
+                    picture = artist['images'][0]['url'],
+                    popularity = artist['popularity'],
+                    genres = genres,
+                    followers = artist['followers']['total']
                 )
+                db.session.add(artist)
+
+            
+            else:
+                artist = Artist(
+                    artist_id = data['artistName'],
+                    artist_name = data['artistName'],
+                    picture = "unknown",
+                    genres = data['songGenre']
+                )
+                db.session.add(artist)
+
+
+        new_song = Song(
+                song_id = f"{data['artistName']}-{data['songTitle']}",
+                artist_id = artist.artist_id,
+                album_id = "unknown",
+                song_name = data['songTitle'],
+                rate = 0,
+                play_count = 0,
+                duration = data['songDuration'],
+                genre = data['songGenre'],
+                release_date = data['songReleaseYear'],
+                artist = artist
+            )
+        
+        db.session.add(new_song)
+        db.session.commit()
+        
         return jsonify({'message': True})
     
 #WORKS
@@ -440,7 +468,8 @@ def get_user_new_songs():
     except Exception as e:
         print("DEBUG: Exception:", str(e))
         return jsonify({'error': str(e)})
-    
+
+#WORKS
 @main.route('/artist_song_count', methods=['GET'])
 def artist_song_count():
     try:
@@ -464,6 +493,50 @@ def artist_song_count():
             }
             for artist_name, song_count in artist_song_counts
         ]
+
+        return jsonify(result)
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+#WORKS
+@main.route('/search_item/<search_term>', methods=['GET'])
+def search_item(search_term):
+    try:
+        # Search for songs, albums, artists, and friends in the database based on the search term
+        song_results = Song.query.filter(Song.song_name.ilike(f"%{search_term}%")).all()
+        album_results = Album.query.filter(Album.album_name.ilike(f"%{search_term}%")).all()
+        artist_results = Artist.query.filter(Artist.artist_name.ilike(f"%{search_term}%")).all()
+        
+        result = {
+            'songs': [
+                {
+                    'song_id': song.song_id,
+                    'song_name': song.song_name,
+                    'artist_id': song.artist_id,
+                    'release_date': song.release_date,
+                }
+                for song in song_results
+            ],
+            'albums': [
+                {
+                    'album_id': album.album_id,
+                    'album_name': album.album_name,
+                    'artist_id': album.artist_id,
+        
+                }
+                for album in album_results
+            ],
+            'artists': [
+                {
+                    'artist_id': artist.artist_id,
+                    'artist_name': artist.artist_name,
+                    'popularity': artist.popularity,
+                }
+                for artist in artist_results
+            ],
+     
+        }
 
         return jsonify(result)
 

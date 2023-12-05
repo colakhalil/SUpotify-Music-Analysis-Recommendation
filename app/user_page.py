@@ -140,3 +140,11 @@ def add_friend(user_id):
     db.session.commit()
 
     return jsonify({'message': 'Friend added successfully'})
+
+@user.route('/search_user/<search_term>', methods=['GET'])
+def search_friends(search_term):
+    users = User.query.filter(User.user_id.like(f'%{search_term}%')).all()
+    if not users:
+        return jsonify({'error': 'No users found'})
+
+    return jsonify([{'user_id': user.user_id, 'profile_pic': user.profile_pic} for user in users])
