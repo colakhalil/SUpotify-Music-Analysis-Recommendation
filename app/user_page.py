@@ -18,14 +18,16 @@ client_id = "e3bb122dc61347a6b496d5f15a036a68"
 client_secret = "e217a887698a43479bcbcc3698853677"
 
 #WORKS
-@user.route('/user_data/<user_id>', methods=['GET'])
+@user.route('/user_data/<email>', methods=['GET'])
 @cross_origin()
-def user_page(user_id):
+def user_page(email):
     
-    user = User.query.filter_by(user_id=user_id).first()
+    user = User.query.filter_by(email=email).first()
     if not user:
         return jsonify({'message': False})
 
+    user_id = user.user_id
+    
     friends1 = Friendship.query.filter_by(user1_id=user_id).all()
     
     friends2 = Friendship.query.filter_by(user2_id=user_id).all()
