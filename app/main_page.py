@@ -112,7 +112,7 @@ def lyrics(artist_name, song_name):
 def save_song(song_id):
     if request.method == 'GET':
         
-        sp = spotipy.Spotify(auth=session['token_info']['access_token'])     
+        sp = spotipy.Spotify(auth=token)     
         
         fetch_and_save_song(sp, song_id)
         
@@ -120,7 +120,7 @@ def save_song(song_id):
         
         return jsonify({
             "name":song.song_name,
-            "artist_id":song.artist_id
+            "artist_name":song.artist.artist_name
             })
 
 #WORKS
@@ -162,7 +162,7 @@ def get_song_info(user_id, song_id):
     else:
         return jsonify({"message": False})
 
-#NOT FINISHED
+#NOT FINISHED BUT WORKS
 @main.route('/fill_db')
 def fill_db():
     sp = spotipy.Spotify(auth=token)
@@ -253,12 +253,14 @@ def show_db():
     print("****SONGS****")
     return jsonify({'message': True})
 
-@main.route('/change_rating', methods=['GET', 'POST'])
+#WORKS
+@main.route('/change_rating_song', methods=['GET', 'POST'])
 def change_rating():
     if request.method == 'POST':
         data = request.get_json()
         prev_rate = RateSong.query.filter_by(song_id=data['song_id'], user_id=data['user_id']).first()
-        
+        if ((data['rating'] < 0) or (data['rating'] > 5)):
+            return jsonify({'message': False})
         if prev_rate:
             RateSong.query.filter_by(song_id=data['song_id'], user_id=data['user_id']).update({'rating': data['rating'], 'timestamp': datetime.now()})
         else:
@@ -273,7 +275,7 @@ def change_rating():
         
         return jsonify({'message': True})
     
-#Must Work
+#WORKS
 @main.route('/song_played', methods=['GET', 'POST'])
 def song_played():
     if request.method == 'POST':
@@ -340,26 +342,38 @@ def save_song_with_form():
                     release_date = data['songReleaseYear']
                 )
         return jsonify({'message': True})
-#must be handled
+    
+#WORKS
 @main.route('/<user_id>/90s', methods=['GET'])
-def get_user_most_liked_90s_songs(user_id):
+def get_user_highly_rated_90s_songs(user_id):
     try:
-        # Query to get the most liked songs from the 90s for a specific user
-        most_liked_songs_90s = Song.query.filter(Song.release_date >= 1990, Song.release_date < 2000).all()
-        #db.session.query(Song).filter(Song.release_date >= 2000).all()
+        # Query to get all songs from the 90s
+        songs_90s = Song.query.filter(Song.release_date >= 1990, Song.release_date < 2000).all()
+        
+        # Query to get the user-specific rate for each song
+        user_rates = RateSong.query.filter(RateSong.user_id == user_id).all()
+        user_rates_dict = {rate.song_id: rate.rating for rate in user_rates}
+        
+        # Filter songs with user ratings and sort them based on the rating
+        sorted_songs = sorted(
+            (song for song in songs_90s if song.song_id in user_rates_dict),
+            key=lambda song: user_rates_dict[song.song_id],
+            reverse=True
+        )
+        
         # Format the response
         result = {
             'user_id': user_id,
-            'most_liked_songs_90s': [
+            'highly_rated_90s_songs': [
                 {
                     'title': song.song_name,
                     'artist': song.artist.artist_name,
                     'releaseYear': song.release_date,
+                    'rate': user_rates_dict[song.song_id]
                 }
-                for song in most_liked_songs_90s
+                for song in sorted_songs
             ]
         }
-        print(most_liked_songs_90s)
         return jsonify(result)
     except Exception as e:
         print(e)
@@ -372,9 +386,9 @@ def get_all_songs():
 
         songs_returned = [
             {
-                'song_name': song.song_id,
+                'song_id': song.song_id,
                 'artist_name': song.artist.artist_name,
-                'album_id': song.album.album_name,
+                'album_name': song.album.album_name,
                 'song_name': song.song_name,
                 'picture': song.picture,
                 'rate': song.rate,
@@ -425,4 +439,33 @@ def get_user_new_songs():
 
     except Exception as e:
         print("DEBUG: Exception:", str(e))
+        return jsonify({'error': str(e)})
+    
+@main.route('/artist_song_count', methods=['GET'])
+def artist_song_count():
+    try:
+        # Query to get the number of songs for each artist
+        artist_song_counts = (
+            db.session.query(
+                Artist.artist_name,
+                func.count(Song.song_id).label('song_count')
+            )
+            .join(Song, Artist.artist_id == Song.artist_id)
+            .group_by(Artist.artist_name)
+            .order_by('song_count')
+            .all()
+        )
+
+        # Format the response
+        result = [
+            {
+                'artist_name': artist_name,
+                'song_count': song_count,
+            }
+            for artist_name, song_count in artist_song_counts
+        ]
+
+        return jsonify(result)
+
+    except Exception as e:
         return jsonify({'error': str(e)})

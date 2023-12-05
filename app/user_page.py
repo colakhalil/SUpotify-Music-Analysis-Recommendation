@@ -18,31 +18,28 @@ client_id = "e3bb122dc61347a6b496d5f15a036a68"
 client_secret = "e217a887698a43479bcbcc3698853677"
 
 #WORKS
-@user.route('/user_data/<email>', methods=['GET'])
-def user_page(email):
+@user.route('/user_data/<user_id>', methods=['GET'])
+def user_page(user_id):
     
-    user = User.query.filter_by(email=email).first()
-    if user:
-        user_info = {
-            'user_id': user.user_id,
-            'profile_pic': user.profile_pic,
-            'last_sid': user.last_sid
-        }
-    else:
+    user = User.query.filter_by(user_id=user_id).first()
+    if not user:
         return jsonify({'message': False})
+
+    friends1 = Friendship.query.filter_by(user1_id=user_id).all()
     
-    UserAlias = aliased(User)
-
-    friends_query = (
-        db.session.query(User.user_id)
-        .join(Friendship, or_(Friendship.user1_id == User.user_id, Friendship.user2_id == User.user_id))
-        .filter(or_(Friendship.user1_id == user_info['user_id'], Friendship.user2_id == user_info['user_id']))
-    )
-
-    friends = friends_query.all()
+    friends2 = Friendship.query.filter_by(user2_id=user_id).all()
+    
+    friends = []
+    
+    for friend in friends1:
+        friends.append(friend.user2_id)
+    
+    for friend in friends2:
+        friends.append(friend.user1_id)
+        
     
     return jsonify({
-        'username': user.user_id,
+        'username': user_id,
         'profilePicture': user.profile_pic,
         'lastListenedSong': user.last_sid,
         'friends': friends,
@@ -117,7 +114,7 @@ def get_user_monthly_average_rating(user_id):
     except Exception as e:
         return jsonify({'error': str(e)})
 
-
+#WORKS
 @user.route('/add_friend/<user_id>', methods=['POST'])
 def add_friend(user_id):
     friend_id = request.json.get('friend_id')
