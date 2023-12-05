@@ -10,6 +10,7 @@ import json
 from datetime import datetime
 from . import db 
 from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist, Song, User
+from datetime import datetime
 
 main = Blueprint('main', __name__)
 
@@ -70,8 +71,8 @@ def fetch_and_save_song(sp, song_id):
                 album_id = track_info['album']['id'],
                 song_name = track_info['name'],
                 picture = track_info['album']['images'][0]['url'],
-                rate = 0,
-                #rate_count = 0,
+                rate_total = 0,
+                rate_count = 0,
                 play_count = 0,
                 tempo = audio_features['tempo'],  
                 popularity = track_info['popularity'],
@@ -148,7 +149,7 @@ def get_song_info(user_id, song_id):
             'artists': artist.artist_name,
             'title': song.song_name,
             'thumbnail': song.picture,
-            'rateAvg': song.rate,
+            'rateAvg': song.rate_total / song.rate_count if song.rate_count else 0,
             'playCount': song.play_count,
             'popularity': song.popularity,
             'valence': song.valence,
@@ -163,28 +164,11 @@ def get_song_info(user_id, song_id):
         return jsonify({"message": False})
 
 #NOT FINISHED BUT WORKS FOR ADDING DUMMY
-@main.route('/fill_db')
-def fill_db():
+@main.route('/fill_db/<playlist_id>')
+def fill_db(playlist_id):
     sp = spotipy.Spotify(auth=token)
-    playlists = sp.current_user_playlists()
-    flg = 0
-    # if playlist exists, update it; else create new
-    for playlist_data in playlists['items']:
-        existing_playlist = Playlist.query.filter_by(playlist_id=playlist_data['id']).first()
-
-        if not existing_playlist:
-            user = User.query.filter_by(user_id=session['user_id']).first()
-            new_playlist = Playlist(
-                user_id=session['user_id'], 
-                playlist_id=playlist_data['id'],
-                playlist_name=playlist_data['name'],
-                picture=playlist_data["images"][0]["url"],
-                song_number=playlist_data['tracks']['total']
-            )
-            db.session.add(new_playlist)
-
-    playlist_added = sp.playlist_tracks("6GShyWHQIbWoXi4wsw3ykC")
-        
+    playlist_added = sp.playlist_tracks(playlist_id)
+    counter = 0
     for track in playlist_added['items']:
         track_info = track['track']
 
@@ -192,21 +176,45 @@ def fill_db():
 
         if not existing_track:
             fetch_and_save_song(sp, track_info['id'])
+
+        new_rate = RateSong(
+            song_id=track_info['id'],
+            user_id="bercin",
+            rating= counter % 5,
+            timestamp = datetime(2023, counter % 12 + 1, 1)
+        )
+        new_rate2 = RateSong(
+            song_id=track_info['id'],
+            user_id="arda",
+            rating= counter % 5,
+            timestamp = datetime(2023, counter % 12 + 1, 1)
+        )
+        new_rate3 = RateSong(
+            song_id=track_info['id'],
+            user_id="atakan",
+            rating= counter % 5,
+            timestamp = datetime(2023, counter % 12 + 1, 1)
+        )
         
-        """
-        new_rating = RateSong(
+        new_rate4 = RateSong(
             song_id=track_info['id'],
-            user_id="umit",
-            rating=4
+            user_id="ezgi",
+            rating= counter % 5,
+            timestamp = datetime(2023, counter % 12 + 1, 1)
         )
-        Song.query.filter_by(song_id=track_info['id']).update({'rate_count': Song.rate_count + 1})
-        Song.query.filter_by(song_id=track_info['id']).update({'rate': (Song.rate + new_rating.rating) / Song.rate_count})
-        new_rating2 = RateSong(
-            song_id=track_info['id'],
-            user_id="halil",
-            rating=5
-        )
-        """
+        
+        prev_rate = Song.query.filter_by(song_id=track_info['id']).first().rate_total
+        prev_count = Song.query.filter_by(song_id=track_info['id']).first().rate_count
+        
+        Song.query.filter_by(song_id=track_info['id']).update({'rate_total': prev_rate + 4*(counter % 5)})
+        Song.query.filter_by(song_id=track_info['id']).update({'rate_count': prev_count + 4})
+        
+        db.session.add(new_rate)
+        db.session.add(new_rate2)
+        db.session.add(new_rate3)
+        db.session.add(new_rate4)
+        counter += 1
+        
     db.session.commit()
 
     return jsonify({'message': "DB FILLED!"})
@@ -255,6 +263,7 @@ def change_rating():
             return jsonify({'message': False})
         if prev_rate:
             RateSong.query.filter_by(song_id=data['song_id'], user_id=data['user_id']).update({'rating': data['rating'], 'timestamp': datetime.now()})
+            Song.query.filter_by(song_id=data['song_id']).update({'rate_total': Song.query.filter_by(song_id=data['song_id']).first().rate_total + data['rating'] - prev_rate.rating})
         else:
             new_rate = RateSong(
                 song_id=data['song_id'],
@@ -262,6 +271,8 @@ def change_rating():
                 rating=data['rating']
             )
             db.session.add(new_rate)
+            Song.query.filter_by(song_id=data['song_id']).update({'rate_total': Song.query.filter_by(song_id=data['song_id']).first().rate_total + data['rating']})
+            Song.query.filter_by(song_id=data['song_id']).update({'rate_count': Song.query.filter_by(song_id=data['song_id']).first().rate_count + 1})
         
         db.session.commit()
         
@@ -298,7 +309,7 @@ def get_playlist_info(user_id,playlist_id):
             'duration' : playlist_info['tracks']['items'][i]['track']['duration_ms'],
             'release_year' : playlist_info['tracks']['items'][i]['track']['album']['release_date'],
             'artist' : playlist_info['tracks']['items'][i]['track']['artists'][0]['name'],
-            'song_rating' : s.rate if s else 0
+            'song_rating' : s.rating if s else 0
         }
 
         song_list.append(song_1) 
@@ -358,7 +369,8 @@ def save_song_with_form():
                 artist_id = artist.artist_id,
                 album_id = "unknown",
                 song_name = data['songTitle'],
-                rate = 0,
+                rate_total = 0,
+                rate_count = 0,
                 play_count = 0,
                 duration = data['songDuration'],
                 genre = data['songGenre'],
@@ -419,7 +431,7 @@ def get_all_songs():
                 'album_name': song.album.album_name,
                 'song_name': song.song_name,
                 'picture': song.picture,
-                'rate': song.rate,
+                'rate': song.rate_total / song.rate_count if song.rate_count else 0,
                 'tempo': song.tempo,
                 'popularity': song.popularity,
                 'valence': song.valence,
@@ -458,6 +470,7 @@ def get_user_new_songs():
                 'song_name': song.song_name,
                 'artist_name': song.artist.artist_name,
                 'release_date': song.release_date,
+                'rate': song.rate_total / song.rate_count if song.rate_count else 0
             }
             for song in current_year_songs
         ]
@@ -515,6 +528,7 @@ def search_item(search_term):
                     'song_name': song.song_name,
                     'artist_id': song.artist_id,
                     'release_date': song.release_date,
+                    'rate': song.rate_total / song.rate_count if song.rate_count else 0
                 }
                 for song in song_results
             ],
