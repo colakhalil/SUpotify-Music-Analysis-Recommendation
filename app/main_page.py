@@ -18,25 +18,10 @@ TOKEN_INFO = "token_info"
 
 client_id = "e3bb122dc61347a6b496d5f15a036a68"
 client_secret = "e217a887698a43479bcbcc3698853677"
-client_id_eren = "26136d6b22c945479934e5eac513a86b"
-client_secret_eren = "24c7dc28107c4c1a8f72920e2c9b5845"
 
 token = ""
 
 GENIUS_API_KEY = "ELYRzAgCM0wR2jm42T8YVN3sJZMXH4Yss-hBIERYV4xFp2RJGiRbrfnuQh5gqJfg"
-
-def get_spotify_access_token(refresh_token):
-
-    sp_oauth = SpotifyOAuth(
-        client_id=client_id,
-        client_secret=client_secret,
-        redirect_uri=url_for("auth.redirect_page", _external=True),
-        scope="user-read-recently-played playlist-read-private user-read-playback-state user-read-private user-read-email user-follow-read user-top-read",
-    )
-
-    token_info = sp_oauth.refresh_access_token(refresh_token)
-    access_token = token_info.get('access_token')
-    return access_token
 
 def fetch_and_save_song(sp, song_id):
     
@@ -238,17 +223,12 @@ def fill_db(playlist_id):
     return jsonify({'message': "DB FILLED!"})
 
 #WORKS
-@main.route('/<user_id>/get_user_playlists')
+@main.route('/get_user_playlists')
 @cross_origin()
-def get_user_playlists(user_id):
+def get_user_playlists():
     
-    refresh_token = User.query.filter_by(user_id=user_id).first().spotify_refresh_token
     
-    if refresh_token:
-        
-        access_token = get_spotify_access_token(refresh_token)
-    
-        sp = spotipy.Spotify(auth=access_token)
+        sp = spotipy.Spotify(auth=token)
         user_playlists = sp.current_user_playlists()
 
         formatted_playlists = [
@@ -324,13 +304,7 @@ def song_played():
 @cross_origin()
 def get_playlist_info(user_id,playlist_id):
     
-    refresh_token = User.query.filter_by(user_id=user_id).first().spotify_refresh_token
-    
-    if refresh_token:
-        
-        access_token = get_spotify_access_token(refresh_token)
-    
-        sp = spotipy.Spotify(auth=access_token)
+        sp = spotipy.Spotify(auth=token)
         playlist_info = sp.playlist(playlist_id)
         song_list = []
     
