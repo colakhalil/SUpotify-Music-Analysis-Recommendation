@@ -238,6 +238,13 @@ const MainPage = () => {
         {currentPlace === "submit-formE" && (
           <SubmissionFormExport></SubmissionFormExport>
         )}
+          {currentPlace === "profile" && (
+          <ProfileMiddle
+            userData={userData}
+            setCurrentPlace={setCurrentPlace}
+          ></ProfileMiddle>
+        )}
+
         {currentPlace === "playlist" && (
           <PlaylistMiddle
             playlistInfo={currentPlaylistInfo}
