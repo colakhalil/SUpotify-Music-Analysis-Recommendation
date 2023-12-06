@@ -1,6 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const PlaylistContainer = ({ songs }) => {
+  console.log(songs);
   return (
     <div className="playlist-container">
       {songs.map((song, index) => (
@@ -22,7 +23,7 @@ const PlaylistContainer = ({ songs }) => {
 const formatDuration = (durationMs) => {
   const minutes = Math.floor(durationMs / 60000);
   const seconds = ((durationMs % 60000) / 1000).toFixed(0);
-  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 };
 
 // Helper function to format song rating (e.g., out of 10)
