@@ -44,7 +44,7 @@ def create_app():
         client_id_Atakan = "e67f3a00be3044b89f2d3629f497b344"
         client_secret_Atakan = "2eaa1a9033d6460f84cdbb0fd17479d5"
 
-        client_credentials_manager = SpotifyClientCredentials(client_id=client_id_eren, client_secret=client_secret_eren)
+        client_credentials_manager = SpotifyClientCredentials(client_id=client_id_Atakan, client_secret=client_secret_Atakan)
         sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
         if not User.query.first():

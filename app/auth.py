@@ -22,8 +22,8 @@ client_secret = "e217a887698a43479bcbcc3698853677"
 # scope tanimi 
 def create_spotify_outh():
     return SpotifyOAuth(
-        client_id=client_id,
-        client_secret=client_secret,
+        client_id=client_id_eren,
+        client_secret=client_secret_eren,
         redirect_uri=url_for("auth.redirect_page", _external=True),  # Make sure this matches the registered redirect URI
         #scope="user-read-playback-state user-read-private user-read-email user-follow-read user-top-read",
         scope="user-read-recently-played playlist-read-private user-read-playback-state user-read-private user-read-email user-follow-read user-top-read",
@@ -75,8 +75,7 @@ def login():
 def login_spotify():
     auth_url = create_spotify_outh().get_authorize_url()
     return redirect(auth_url)
- 
- 
+
 @auth.route("/redirect")
 def redirect_page():
     session.clear()
