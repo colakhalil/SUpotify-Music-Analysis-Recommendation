@@ -1,5 +1,6 @@
 /* General Styles for the Playlist Middle */
 /* General Styles for the Playlist Middle */
+/* General Styles for the Playlist Middle */
 .playlist-middle {
   display: flex;
   flex-direction: column;
@@ -47,6 +48,18 @@
   color: #fff;
 }
 
+/* Playlist Container Styling */
+.playlist-container {
+  width: 100%;
+
+  overflow-y: auto; /* Enables scrolling */
+  margin-bottom: 20px; /* Space between the playlist name and the song list */
+}
+
+
+
+
+
 
 /* Song Row Styling */
 .song-row {
@@ -69,14 +82,15 @@
   font-size: 25px;
 }
 /* Index, Name, Artist, and Duration Styling */
-.song-duration{
-  margin-left: 10rem;
-}
 .song-index,
-.song-name,
+.song-title,
 .song-artist,
 .song-duration,
-.song-rating {
+.song-release-year-p,
+.song-rating-p
+{ 
+  font-size: 18px;
+  color:white;
   margin-right: 15px; /* Space between elements */
 }
 
@@ -93,9 +107,10 @@
   color: #b3b3b3; /* Slightly lighter color for the duration */
 }
 
-.song-rating {
+.song-rating-p {
   color: #1db954; /* Spotify's green color for the rating */
 }
+
 
 /* Responsive considerations */
 @media (max-width: 768px) {
@@ -112,79 +127,8 @@
   .song-artist,
   .song-duration,
   .song-rating {
-    display: none;
+    margin-right: 10px;
   }
-
- 
-.playlist-container {
-  grid-template-columns: 0.3fr 2.5fr 2.5fr 1fr;
-}
-
-.song-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* Adjusted for equal spacing */
-  padding: 10px;
-  color: #fff;
-}
-
-.song-row.header {
-  color: #ccc;
-  display:contents;
-  background-color: #333;
-  font-weight: bold;
-}
-
-.song-index-h,
-.song-name-h,
-.song-artist-h,
-.song-duration-h,
-.song-release-year-h,
-.song-rating-h {
-  background-color: #333;
-  color: #ccc;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  padding: 0 15px; 
-}
-
-
-.song-index,
-.song-name,
-.song-artist,
-.song-duration,
-.song-release-year,
-.song-rating {
-  flex-basis: 0;
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  text-align: left;
-  margin-right: 15px;
-}
-
-.song-index {
-  flex-grow: 0;
-  margin-right: 1rem; /* Fixed width */
-  width: 2rem;
-  text-align: center; /* Center the index */
-}
-
-.song-name {
-  flex-grow: 3; /* Allows more space for song names */
-}
-
-.song-artist {
-  flex-grow: 2; /* Allows more space for artist names */
-}
-
-.song-duration {
-  flex-grow: 1;
-}
-
-.song-release-year {
-  flex-grow: 1;
 }
 
 .song-rating {
