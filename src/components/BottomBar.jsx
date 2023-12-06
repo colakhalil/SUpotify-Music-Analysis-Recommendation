@@ -6,11 +6,107 @@ import SongOptions from "./subcomponents/SongOptions";
 import SongDetailsExtra from "./subcomponents/SongDetailsExtra";
 
 
+
+const RatingPopup = ({ isOpen, onClose, song, userRating, onRate }) => {
+  if (!isOpen) return null;
+
+  // You can add your rating logic here
+  const handleRating = (rating) => {
+    console.log('Rating given: ', rating);
+    onRate(rating);
+    onClose(); // Close the popup after rating
+  };
+
+  return (
+    <div className="popup-overlay">
+      <div className="popup-content">
+        <h3>Rate the Song</h3>
+        <SongRating song={song} userRating={userRating} onRatingChange={handleRating} />
+        <button onClick={onClose}>Close</button>
+      </div>
+    </div>
+  );
+};
+
+const RatingPopupAlbum = ({ isOpen, onClose, song, userRating, onRate }) => {
+  if (!isOpen) return null;
+
+  // You can add your rating logic here
+  const handleRating = (rating) => {
+    console.log('Rating given: ', rating);
+    onRate(rating);
+    onClose(); // Close the popup after rating
+  };
+
+  return (
+    <div className="popup-overlay">
+      <div className="popup-content">
+        <h3>Rate the Album</h3>
+        <SongRating song={song} userRating={userRating} onRatingChange={handleRating} />
+        <button onClick={onClose}>Close</button>
+      </div>
+    </div>
+  );
+};
+
+const RatingPopupArtist = ({ isOpen, onClose, song, userRating, onRate }) => {
+  if (!isOpen) return null;
+
+  // You can add your rating logic here
+  const handleRating = (rating) => {
+    console.log('Rating given: ', rating);
+    onRate(rating);
+    onClose(); // Close the popup after rating
+  };
+
+  return (
+    <div className="popup-overlay">
+      <div className="popup-content">
+        <h3>Rate the Artist</h3>
+        <SongRating song={song} userRating={userRating} onRatingChange={handleRating} />
+        <button onClick={onClose}>Close</button>
+      </div>
+    </div>
+  );
+};
+
 const BottomBar = ({ song, setCurrentPlace, currentPlace }) => {
   const [userRating, setUserRating] = useState(song.userPrevRating);
+  const [isSongRatePopupOpen, setIsSongRatePopupOpen] = useState(false); //songrate
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isAlbumRatePopupOpen, setIsAlbumRatePopupOpen] = useState(false);
+
+
+
+  const handleOpenPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+
+  const handleOpenSongRatePopup = () => {
+    setIsSongRatePopupOpen(true);
+  };
+
+  // Function to close song rating popup
+  const handleCloseSongRatePopup = () => {
+    setIsSongRatePopupOpen(false);
+  };
+
+  const handleOpenAlbumRatePopup = () => {
+    setIsAlbumRatePopupOpen(true);
+  };
+
+  // Function to close album rating popup
+  const handleCloseAlbumRatePopup = () => {
+    setIsAlbumRatePopupOpen(false);
+  };
+  
   
   const handleDelete = async () => {
     if (isDeleted) {
@@ -96,9 +192,17 @@ const BottomBar = ({ song, setCurrentPlace, currentPlace }) => {
         songDurationInSeconds={songDurationInSeconds}
         song={song}
         toggleLyrics={toggleLyrics}
-        userRating={userRating}
-        handleRatingChange={handleRatingChange}
       />
+
+      <button className="rate-btn" onClick={handleOpenSongRatePopup}>
+        Song Rate
+      </button>
+      <button className="rate-btn" onClick={handleOpenPopup}>
+        Artist Rate
+      </button>
+      <button className="rate-btn" onClick={handleOpenAlbumRatePopup}>
+        Album Rate
+      </button>
       <button 
         className="delete-btn" 
         onClick={handleDelete}
@@ -107,6 +211,26 @@ const BottomBar = ({ song, setCurrentPlace, currentPlace }) => {
         Delete
       </button>
       <SongDetailsExtra song={song} />
+      <RatingPopupArtist
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+        song={song}
+        userRating={userRating}
+        onRate={handleRatingChange}
+      />
+      <RatingPopup
+        isOpen={isSongRatePopupOpen}
+        onClose={handleCloseSongRatePopup}
+        song={song}
+        userRating={userRating}
+        onRate={handleRatingChange} // You can modify this if you have a different rating logic for songs
+      />
+      <RatingPopupAlbum
+        isOpen={isAlbumRatePopupOpen}
+        onClose={handleCloseAlbumRatePopup}
+        userRating={userRating}
+        onRate={handleRatingChange}
+      />
     </div>
   );
 };

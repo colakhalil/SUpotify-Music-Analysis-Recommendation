@@ -1,0 +1,76 @@
+/* UserPart.css */
+.user-part-container {
+    display: flex;
+    align-items: center;
+    color: #fff; /* Yazı rengi beyaz olarak ayarlandı */
+    padding: 20px;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-profile-picture {
+    width: 150px; /* İhtiyacınıza göre ayarlayın */
+    height: 150px; /* İhtiyacınıza göre ayarlayın */
+    border-radius: 50%;
+    margin-right: 20px; /* Profil resmi ve metin arasındaki mesafe */
+  }
+  
+  .user-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-username {
+    margin: 0;
+    font-size: 3rem; /* Kullanıcı adı font boyutu */
+  }
+  
+  .user-friend-count {
+    margin: 0;
+    margin-top: 50px;
+    margin-left: 5px;
+    font-size: 1rem; /* Arkadaş sayısı font boyutu */
+  }
+  
+
+  @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #050801;
+    font-family: 'Raleway', sans-serif;
+}
+
+button{
+  padding: 15px 18px;
+  background-color: #050801;
+  color: #ffffff;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  letter-spacing: 4px;
+  overflow: hidden;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+button:hover{
+    background: #ad7cea;
+    color: #050801;
+    box-shadow: 0 0 2px #3c1170,
+                0 0 10px #1a3915,
+                0 0 20px #7cef89,
+                0 0 80px #ab6ce2;
+     -webkit-box-reflect:below 1px linear-gradient(transparent, #0005);
+}
