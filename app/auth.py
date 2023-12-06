@@ -96,4 +96,4 @@ def redirect_page():
 
         db.session.commit()
     
-    return redirect(url_for('MainPageView'))
+    return "basarili"
