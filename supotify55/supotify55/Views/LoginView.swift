@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+
 struct LoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
-
+    
     var body: some View {
         ZStack {
             let startColor = Color(red: 13/255, green: 35/255, blue: 22/255)
@@ -67,7 +68,17 @@ struct LoginView: View {
                     .padding(.vertical, 15)
 
                 Button(action: {
-                    apicaller.LoginPostRequest(email: email, password: password)
+                    apicaller.loginPostRequest(email: email, password: password) { success in
+                        if success {
+                            // Handle successful login
+                            print("Login successful")
+                            // Navigate to the main screen or perform necessary actions
+                        } else {
+                            // Handle login failure
+                            print("Login failed")
+                            // Show an error message or perform actions for failed login
+                        }
+                    }
                 }) {
                     Text("Login")
                         .padding()
@@ -100,10 +111,10 @@ struct LoginView: View {
     }
 }
 
-struct SignInView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            LoginView()
-        }
-    }
-}
+//struct SignInView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            LoginView()
+//        }
+//    }
+//}

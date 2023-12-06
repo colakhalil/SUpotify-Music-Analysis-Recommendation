@@ -12,15 +12,15 @@ let navigator = Navigator.navigator
 
 class Navigator {
     static let navigator = Navigator()
-    func LoginToMain() {
+    func LoginToMain(email: String) {
         DispatchQueue.main.async {
             if let window = UIApplication.shared.windows.first {
-                window.rootViewController = UIHostingController(rootView: MainPageView())
+                let mainPageView = MainPageView(email: email) // Pass the email parameter here
+                window.rootViewController = UIHostingController(rootView: mainPageView)
                 window.makeKeyAndVisible()
             }
         }
     }
-    
     func LoginToSignup() {
         DispatchQueue.main.async {
             if let window = UIApplication.shared.windows.first {
@@ -53,5 +53,4 @@ class Navigator {
             }
         }
     }
-    
 }
