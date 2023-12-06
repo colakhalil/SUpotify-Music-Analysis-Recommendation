@@ -672,6 +672,51 @@ struct APICaller {
         // Start the task
         task.resume()
     }
+    
+    func getUserPlaylists2(completion: @escaping ([Playlist]) -> Void) {
+            guard let url = URL(string: "http://127.0.0.1:8008/get_user_playlists") else {
+                print("Invalid URL")
+                return
+            }
 
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
 
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error.localizedDescription)")
+                    return
+                }
+
+                guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                    print("Invalid response")
+                    return
+                }
+
+                if let data = data {
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
+                        var playlists = [Playlist]()
+
+                        if let jsonArray = json {
+                            for playlistData in jsonArray {
+                                let playlist = Playlist()
+                                playlist.name = playlistData["name"] as? String ?? "default"
+                                playlist.playlistID = playlistData["playlistID"] as? String ?? "default"
+                                if let picString = playlistData["playlistPic"] as? String, let picURL = URL(string: picString) {
+                                    playlist.playlistPic = picURL
+                                }
+                                playlist.songNumber = playlistData["songNumber"] as? Int ?? -1
+                                playlists.append(playlist)
+                            }
+                        }
+                        DispatchQueue.main.async {
+                            completion(playlists)
+                        }
+                    } catch {
+                        print("Error parsing JSON: \(error.localizedDescription)")
+                    }
+                }
+            }.resume()
+        }
 }
