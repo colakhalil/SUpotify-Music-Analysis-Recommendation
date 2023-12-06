@@ -35,6 +35,7 @@ def create_app():
     from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist, Song, User
     
     with app.app_context():
+        db.drop_all()
         db.create_all()
         # This part is for adding mock data to db
         # To run the app properly, make sure to comment out below
