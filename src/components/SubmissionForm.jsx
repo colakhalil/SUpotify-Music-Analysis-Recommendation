@@ -2,14 +2,21 @@ import React, { useState } from 'react';
 import "../pagesCSS/SubmissionForm.css";
 const SubmissionForm = () => {
   const [fileData, setFileData] = useState(null);
+  const [showWarning, setShowWarning] = useState(false);
   const [formData, setFormData] = useState({
     songTitle: '',
     artistName: '',
+    songGenre: '',
+    songMood: '',
     songDuration: '',
     songReleaseYear: '',
-    songRating: ''
-
   });
+
+  const isFormComplete = () => {
+    return formData.songTitle && formData.artistName && formData.songGenre 
+           && formData.songMood && formData.songDuration && formData.songReleaseYear;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -60,7 +67,7 @@ const SubmissionForm = () => {
   };
   const isValidData = (data) => {
     // Define the expected fields in order
-    const expectedFields = ['songTitle', 'artistName', 'songDuration', 'songReleaseYear', 'songRating'];
+    const expectedFields = ['songTitle', 'artistName', 'songGenre','songMood', 'songDuration', 'songReleaseYear' ];
   
     // Check if all required fields are present and in order
     return expectedFields.every((field, index) => {
@@ -69,6 +76,12 @@ const SubmissionForm = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isFormComplete()) {
+      setShowWarning(true); // Show warning pop-up
+      return; // Prevent further execution
+    }
+    setShowWarning(false);
     try {
       const response = await fetch('/your-api-endpoint', {
         method: 'POST',
@@ -109,10 +122,25 @@ const SubmissionForm = () => {
       />
       <input
         type="text"
+        name="songGenre"
+        value={formData.songGenre}
+        onChange={handleChange}
+        placeholder="Song's Genre"
+      />
+        <input
+        type="text"
+        name="songMood"
+        value={formData.songMood}
+        onChange={handleChange}
+        placeholder="Song's Mood"
+      />
+      
+      <input
+        type="text"
         name="songDuration"
         value={formData.songDuration}
         onChange={handleChange}
-        placeholder="Song's Duration in minutes(?)"
+        placeholder="Song's Duration in seconds"
       />
       <input
         type="text"
@@ -121,15 +149,12 @@ const SubmissionForm = () => {
         onChange={handleChange}
         placeholder="Song's Release Year"
       />
-      
-      <input
-        type="text"
-        name="songRating"
-        value={formData.songRating}
-        onChange={handleChange}
-        placeholder="Song Rating 0-5"
-      />
-      <button type="submit">Submit</button>
+      <button type="submit" disabled={!isFormComplete()}>Submit</button>
+      {showWarning  && (
+        <div className="warning-popup">
+          Please fill out all fields before submitting.
+        </div>
+      )}
       <input type= "file" accept='.json' onChange={handleFileChange}/>
       <button type='submit' onClick={handleImportSubmit}>Import</button>
 

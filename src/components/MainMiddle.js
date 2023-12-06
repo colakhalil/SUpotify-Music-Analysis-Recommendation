@@ -3,25 +3,43 @@ import SearchBar from "./subcomponents/SearchBar";
 import Playlist from "./subcomponents/Playlist";
 
 const MainMiddle = ({
-  lastPlaylists,
-  recomendedPlaylists,
   setCurrentPlace,
-  recommendations,
-  playlistPop,
-  playlistRock,
-  playlistJazz,
-  playlistHiphop,
+  popPlaylist,
+  rockPlaylist,
+  jazzPlaylist,
+  housePlaylist,
+  happyPlaylist,
+  sadPlaylist,
+  studyPlaylist,
+  chillPlaylist,
+  setCurrentPlaylistInfo,
 }) => {
   const handleSearch = (searchTerm) => {
     console.log(`Search term submitted: ${searchTerm}`);
     // You can now do something with the search term,
     // like making an API call to fetch search results
   };
+
   const handlePlaylistClick = (playlistName, setCurrentPlace) => {
     setCurrentPlace("playlist");
     console.log(`Playlist clicked: ${playlistName}`);
+
+    const playlists = {
+      pop: { ...popPlaylist, name: "Pop" },
+      rock: { ...rockPlaylist, name: "Rock" },
+      jazz: { ...jazzPlaylist, name: "Jazz" },
+      house: { ...housePlaylist, name: "House" },
+
+      happy: { ...happyPlaylist, name: "Happy" },
+      sad: { ...sadPlaylist, name: "Sad" },
+      study: { ...studyPlaylist, name: "Study" },
+      chill: { ...chillPlaylist, name: "Chill" },
+    };
+
+    setCurrentPlaylistInfo(playlists[playlistName.toLowerCase()]);
     // Here you would handle the click event, such as navigating to the playlist page.
   };
+
   // when song is updated this BottomBar also will be updated automatically
 
   return (
@@ -35,7 +53,7 @@ const MainMiddle = ({
         <div class="Playlist1">
           <Playlist
             name="Pop"
-            playlistPop={playlistPop}
+            playlistData={popPlaylist}
             thumbnail={
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
@@ -45,7 +63,7 @@ const MainMiddle = ({
         <div class="Playlist2">
           <Playlist
             name="Rock"
-            playlistRock={playlistRock}
+            playlistData={rockPlaylist}
             thumbnail={
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
@@ -55,21 +73,21 @@ const MainMiddle = ({
         <div class="Playlist3">
           <Playlist
             name="Jazz"
-            playlistJazz={playlistJazz}
-            thumbnail={
-              "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
-            }
-            onClick={() => handlePlaylistClick("Rap", setCurrentPlace)}
-          />
-        </div>
-        <div class="Playlist4">
-          <Playlist
-            name="Hip-hop"
-            playlistHiphop={playlistHiphop}
+            playlistData={jazzPlaylist}
             thumbnail={
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
             onClick={() => handlePlaylistClick("Jazz", setCurrentPlace)}
+          />
+        </div>
+        <div class="Playlist4">
+          <Playlist
+            name="House"
+            playlistData={housePlaylist}
+            thumbnail={
+              "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
+            }
+            onClick={() => handlePlaylistClick("House", setCurrentPlace)}
           />
         </div>
       </div>
@@ -79,37 +97,44 @@ const MainMiddle = ({
         <div class="Playlist1">
           <Playlist
             name="Happy"
+            playlistData={popPlaylist}
             thumbnail={
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
             onClick={() => handlePlaylistClick("Happy", setCurrentPlace)}
           />
         </div>
+
         <div class="Playlist2">
           <Playlist
-            name="Rock"
+            name="Sad"
+            playlistData={popPlaylist}
             thumbnail={
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
-            onClick={() => handlePlaylistClick("Rock", setCurrentPlace)}
+            onClick={() => handlePlaylistClick("Sad", setCurrentPlace)}
           />
         </div>
+
         <div class="Playlist3">
           <Playlist
+            name="Study"
+            playlistData={popPlaylist}
+            thumbnail={
+              "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
+            }
+            onClick={() => handlePlaylistClick("Study", setCurrentPlace)}
+          />
+        </div>
+
+        <div class="Playlist4">
+          <Playlist
             name="Chill"
+            playlistData={popPlaylist}
             thumbnail={
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
             onClick={() => handlePlaylistClick("Chill", setCurrentPlace)}
-          />
-        </div>
-        <div class="Playlist4">
-          <Playlist
-            name="Jazz"
-            thumbnail={
-              "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
-            }
-            onClick={() => handlePlaylistClick("Jazz", setCurrentPlace)}
           />
         </div>
       </div>
