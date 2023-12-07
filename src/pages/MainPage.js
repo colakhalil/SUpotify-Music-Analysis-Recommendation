@@ -16,6 +16,31 @@ import FriendProfileMiddle from "../components/FriendProfileMiddle";
 const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
   const [currentPlaylistInfo, setCurrentPlaylistInfo] = useState(null);
+  const [currentBottomSong, setCurrentBottomSong] = useState({}); // Initialize with an empty object or initial song data
+
+  // ... [other functions and states]
+
+
+  const formatDuration = (durationMs) => {
+    const minutes = Math.floor(durationMs / 60000);
+    const seconds = ((durationMs % 60000) / 1000).toFixed(0);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
+  const setCurrentBottomSongState = (song) => {
+    const bottomSong = {
+      title: song.songName,
+      artist: song.artistName,
+      duration: formatDuration(song.songLength),
+      genre:  0,//The playlist name of the clicked song. If the song is in the Pop playlist. Genre should be Pop
+      UserPrevRating: 0,// Default as zero. 
+      releaseYear: song.releaseYear,
+      img: song.img,
+
+      
+    };
+    // Set the state
+    setCurrentBottomSong(bottomSong);
+  };
 
   // DUMMY DATALAR
   const [popPlaylist, setPopPlaylist] = useState({ songs: [] });
@@ -157,7 +182,7 @@ const MainPage = () => {
     // Add more playlists as needed
   ];
 
-  const song = {
+  const current_bottom_song = {
     title: "Çingenem",
     artist: "Ebru Gündeş",
     duration: "2:48",
@@ -223,6 +248,7 @@ const MainPage = () => {
 
         {currentPlace === "main" && (
           <MainMiddle setCurrentPlace={setCurrentPlace}
+          setCurrentBottomSong={setCurrentBottomSong}
           popPlaylist={popPlaylist}
           rockPlaylist={rockPlaylist}
           jazzPlaylist={jazzPlaylist}
@@ -247,10 +273,11 @@ const MainPage = () => {
 
         {currentPlace === "playlist" && (
           <PlaylistMiddle
+            setCurrentBottomSong= {setCurrentBottomSong}
             playlistInfo={currentPlaylistInfo}
           />
         )}
-        {currentPlace === "lyrc" && <LyrcsMiddle song={song}></LyrcsMiddle>}
+        {currentPlace === "lyrc" && <LyrcsMiddle song={current_bottom_song}></LyrcsMiddle>}
    
         <FriendActivity
           friendsData={friendsData}
@@ -259,7 +286,7 @@ const MainPage = () => {
         {currentPlace === "friend" && (
           <FriendProfileMiddle></FriendProfileMiddle>
         )}
-        <BottomBar song={song} setCurrentPlace={setCurrentPlace} />
+        <BottomBar song={current_bottom_song} setCurrentPlace={setCurrentPlace} />
       </div>
     </>
   );
