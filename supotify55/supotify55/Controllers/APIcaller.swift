@@ -378,6 +378,62 @@ struct APICaller {
         }
         task.resume()
     }
+    
+    func searchUsers(searchTerm: String, completion: @escaping (Result<[User], Error>) -> Void) {
+            guard let encodedTerm = searchTerm.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                  let url = URL(string: "http://127.0.0.1:8008/search_user/\(encodedTerm)") else {
+                return
+            }
 
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                if let error = error {
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                    return
+                }
 
+                guard let data = data else { return }
+
+                do {
+                    let users = try JSONDecoder().decode([User].self, from: data)
+                    DispatchQueue.main.async {
+                        completion(.success(users))
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                }
+            }.resume()
+        }
+
+        func searchItems(searchTerm: String, completion: @escaping (Result<SearchResult, Error>) -> Void) {
+            guard let encodedTerm = searchTerm.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                  let url = URL(string: "http://127.0.0.1:8008/search_item/\(encodedTerm)") else {
+                return
+            }
+
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                if let error = error {
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                    return
+                }
+
+                guard let data = data else { return }
+
+                do {
+                    let items = try JSONDecoder().decode(SearchResult.self, from: data)
+                    DispatchQueue.main.async {
+                        completion(.success(items))
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                }
+            }.resume()
+        }
 }

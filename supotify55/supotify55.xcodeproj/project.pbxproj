@@ -32,6 +32,7 @@
 		2C63F1DA2B06D8570030A6BC /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C63F1D92B06D8570030A6BC /* AlbumView.swift */; };
 		2C63F1DC2B06DA940030A6BC /* SpotifyWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C63F1DB2B06DA940030A6BC /* SpotifyWebView.swift */; };
 		2C80E4582B20D933006DCE4F /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C80E4572B20D933006DCE4F /* SearchView.swift */; };
+		8E4EE0132B21DA1300CC3586 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4EE0122B21DA1300CC3586 /* Search.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,7 @@
 		2C63F1D92B06D8570030A6BC /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
 		2C63F1DB2B06DA940030A6BC /* SpotifyWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyWebView.swift; sourceTree = "<group>"; };
 		2C80E4572B20D933006DCE4F /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		8E4EE0122B21DA1300CC3586 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 				2C63F1C82B06D3C90030A6BC /* User.swift */,
 				2C63F1CA2B06D3D70030A6BC /* Playlist.swift */,
 				1C60D1E52B082F9F00D98DBB /* Friend.swift */,
+				8E4EE0122B21DA1300CC3586 /* Search.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 				2C63F1DC2B06DA940030A6BC /* SpotifyWebView.swift in Sources */,
 				2C63F1D42B06D81A0030A6BC /* SongView.swift in Sources */,
 				2C63F1C92B06D3C90030A6BC /* User.swift in Sources */,
+				8E4EE0132B21DA1300CC3586 /* Search.swift in Sources */,
 				2C63F1D82B06D83F0030A6BC /* PlaylistView.swift in Sources */,
 				2C63F1CB2B06D3D70030A6BC /* Playlist.swift in Sources */,
 			);

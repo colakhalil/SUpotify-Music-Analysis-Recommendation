@@ -103,7 +103,6 @@ struct StarRatingView: View {
                     .foregroundColor(index <= rating ? .yellow : .gray)
                     .onTapGesture {
                         rating = index // Update the rating when a star is tapped
-                        apicaller.postAlbumRating(albumID: albumID, rating: index)
                     }
             }
         }

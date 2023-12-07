@@ -199,7 +199,6 @@ struct MainPageView: View {
                 
             }.navigationBarBackButtonHidden(true)
             .onAppear {
-                apicaller.getRecommendations(for: "pop")
                 apicaller.getUserdata(email: email) { result in
                     switch result {
                     case .success(let userData):
