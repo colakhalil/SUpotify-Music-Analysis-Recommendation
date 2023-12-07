@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NavigationButtons from "./subcomponents/NavigationButtons";
 import PlaylistCardLeftbar from "./subcomponents/PlaylistCardLeftbar";
+import globalVar  from "../global";
 
 const LeftBar = ({ setCurrentPlace }) => {
   const [playlists, setPlaylists] = useState([]);
@@ -23,7 +24,7 @@ const LeftBar = ({ setCurrentPlace }) => {
   }, []);
 
   const handleClick = async (playlistId) => {
-    console.log("You clicked on playlist with ID: ${playlistId}");
+    console.log("You clicked on playlist with ID: " + playlistId);
 
     const url =
       "http://127.0.0.1:8008/get_playlist_info/" +
@@ -34,7 +35,7 @@ const LeftBar = ({ setCurrentPlace }) => {
     try {
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error('HTTP error! status: ${response.status}');
+        throw new Error('HTTP error! status: ' + response.status);
       }
       const data = await response.json(); // Parsing the JSON data
       console.log("Fetched data in leftbar: ", data); // Now you log the actual data
