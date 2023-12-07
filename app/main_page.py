@@ -20,6 +20,7 @@ token = ""
 
 GENIUS_API_KEY = "ELYRzAgCM0wR2jm42T8YVN3sJZMXH4Yss-hBIERYV4xFp2RJGiRbrfnuQh5gqJfg"
 
+
 def fetch_and_save_song(sp, song_id):
     
     track_info = sp.track(song_id)
@@ -224,36 +225,35 @@ def fill_db(playlist_id):
 @cross_origin()
 def get_user_playlists():
     
-    
-        sp = spotipy.Spotify(auth=token)
-        user_playlists = sp.current_user_playlists()
+    sp = spotipy.Spotify(auth=token)
+    user_playlists = sp.current_user_playlists()
 
-        formatted_playlists = [
-            {
-                "name": playlist['name'],
-                "playlistPic": playlist['images'][0]['url'] if playlist['images'] else None,
-                "songNumber": playlist['tracks']['total'],
-                "playlistID": playlist['id']
-            }
-            for playlist in user_playlists['items']
-        ]
+    formatted_playlists = [
+        {
+            "name": playlist['name'],
+            "playlistPic": playlist['images'][0]['url'] if playlist['images'] else None,
+            "songNumber": playlist['tracks']['total'],
+            "playlistID": playlist['id']
+        }
+        for playlist in user_playlists['items']
+    ]
 
-        # if playlist exists, update it; else create new
-        for playlist_data in formatted_playlists:
-            existing_playlist = Playlist.query.filter_by(playlist_id=playlist_data['playlistID']).first()
+    # if playlist exists, update it; else create new
+    for playlist_data in formatted_playlists:
+        existing_playlist = Playlist.query.filter_by(playlist_id=playlist_data['playlistID']).first()
 
-            if not existing_playlist:
-                new_playlist = Playlist(
-                    playlist_id=playlist_data['playlistID'],
-                    playlist_name=playlist_data['name'],
-                    picture=playlist_data["playlistPic"],
-                    song_number=playlist_data['songNumber']
-                )
-                db.session.add(new_playlist)
-                
-        db.session.commit()
+        if not existing_playlist:
+            new_playlist = Playlist(
+                playlist_id=playlist_data['playlistID'],
+                playlist_name=playlist_data['name'],
+                picture=playlist_data["playlistPic"],
+                song_number=playlist_data['songNumber']
+            )
+            db.session.add(new_playlist)
+            
+    db.session.commit()
 
-        return jsonify(formatted_playlists) 
+    return jsonify(formatted_playlists) 
 
 #WORKS
 @main.route('/change_rating_song', methods=['GET', 'POST'])
@@ -300,33 +300,32 @@ def song_played():
 @main.route("/get_playlist_info/<user_id>/<playlist_id>")
 @cross_origin()
 def get_playlist_info(user_id,playlist_id):
-    
-        sp = spotipy.Spotify(auth=token)
-        playlist_info = sp.playlist(playlist_id)
-        song_list = []
-    
-        for i in range(len(playlist_info['tracks']['items'])):  
-            
-            s = RateSong.query.filter_by(song_id=playlist_info['tracks']['items'][i]['track']['id']).filter_by(user_id=user_id).first()
-            
-            song_1 = {
-                'song_id' : playlist_info['tracks']['items'][i]['track']['id'],
-                'song_name' : playlist_info['tracks']['items'][i]['track']['name'],
-                'duration' : playlist_info['tracks']['items'][i]['track']['duration_ms'],
-                'release_year' : playlist_info['tracks']['items'][i]['track']['album']['release_date'],
-                'artist' : playlist_info['tracks']['items'][i]['track']['artists'][0]['name'],
-                'song_rating' : s.rating if s else 0
-            }
-
-            song_list.append(song_1) 
-        data = {
-            'playlistID': playlist_id,
-            'playlistName': playlist_info['name'],
-            'playlistPicture': playlist_info['images'][0]['url'],
-            'songs' : song_list
-            }
+    sp = spotipy.Spotify(auth=token)
+    playlist_info = sp.playlist(playlist_id)
+    song_list = []
+ 
+    for i in range(len(playlist_info['tracks']['items'])):  
         
-        return jsonify(data)
+        s = RateSong.query.filter_by(song_id=playlist_info['tracks']['items'][i]['track']['id']).filter_by(user_id=user_id).first()
+        
+        song_1 = {
+            'song_id' : playlist_info['tracks']['items'][i]['track']['id'],
+            'song_name' : playlist_info['tracks']['items'][i]['track']['name'],
+            'duration' : playlist_info['tracks']['items'][i]['track']['duration_ms'],
+            'release_year' : playlist_info['tracks']['items'][i]['track']['album']['release_date'],
+            'artist' : playlist_info['tracks']['items'][i]['track']['artists'][0]['name'],
+            'song_rating' : s.rating if s else 0
+        }
+
+        song_list.append(song_1) 
+    data = {
+        'playlistID': playlist_id,
+        'playlistName': playlist_info['name'],
+        'playlistPicture': playlist_info['images'][0]['url'],
+        'songs' : song_list
+        }
+    
+    return jsonify(data)
 
 #WORKS
 @main.route("/save_song_with_form", methods=['GET', 'POST'])
@@ -436,8 +435,8 @@ def get_all_songs():
         songs_returned = [
             {
                 'song_id': song.song_id,
-                'artist_name': song.artist.artist_name,
-                'album_name': song.album.album_name,
+                'artist_name': song.artist.artist_name if song.artist else None,
+                'album_name': song.album.album_name if song.album else None,
                 'song_name': song.song_name,
                 'picture': song.picture,
                 'rate': song.rate_total / song.rate_count if song.rate_count else 0,

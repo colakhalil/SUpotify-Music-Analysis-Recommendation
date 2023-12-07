@@ -76,22 +76,22 @@ def login_spotify():
 
 @auth.route("/redirect")
 def redirect_page():
+    
     session.clear()
     code = request.args.get("code")
     token_info = create_spotify_outh().get_access_token(code)
-    
     session[TOKEN_INFO] = token_info
     
     spotify = spotipy.Spotify(auth=token_info['access_token'])
     user_data = spotify.current_user()
     
     user = User.query.filter_by(email=user_data["email"]).first()
-    
+
     if user:
         user.spotify_id = user_data["id"]
         user.country = user_data["country"]
         user.profile_pic = user_data["images"][0]["url"]
-        user.spotify_refresh_token = token_info['refresh_token']
-        db.session.commit()
 
+        db.session.commit()
+    
     return redirect("http://localhost:3000/main")

@@ -12,7 +12,6 @@ class User(db.Model):
     last_sid = db.Column(db.String(45), db.ForeignKey('songs.song_id'))
     email = db.Column(db.String(150), nullable=False)
     profile_pic = db.Column(db.String(200))
-    spotify_refresh_token = db.Column(db.String(200))
     #token = db.Column(db.String(200))
     last_song = db.relationship('Song', foreign_keys=[last_sid])
     playlists = db.relationship('Playlist', back_populates='user', lazy='dynamic')

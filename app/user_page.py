@@ -13,7 +13,6 @@ from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist,
 user = Blueprint('user', __name__)
 
 TOKEN_INFO = "token_info" 
-
 #WORKS
 @user.route('/user_data/<email>', methods=['GET'])
 @cross_origin()
@@ -144,6 +143,15 @@ def add_friend(user_id):
 
     return jsonify({'message': 'Friend added successfully'})
 
+@user.route('/search_user/<search_term>', methods=['GET'])
+@cross_origin()
+def search_friends(search_term):
+    users = User.query.filter(User.user_id.like(f'%{search_term}%')).all()
+    if not users:
+        return jsonify({'error': 'No users found'})
+
+    return jsonify([{'user_id': user.user_id, 'profile_pic': user.profile_pic} for user in users])
+
 @user.route('/remove_friend/<user_id>', methods=['POST'])
 @cross_origin()
 def remove_friend(user_id):
@@ -170,12 +178,3 @@ def remove_friend(user_id):
     db.session.commit()
 
     return jsonify({'message': 'Friend removed successfully'})
-
-@user.route('/search_user/<search_term>', methods=['GET'])
-@cross_origin()
-def search_friends(search_term):
-    users = User.query.filter(User.user_id.like(f'%{search_term}%')).all()
-    if not users:
-        return jsonify({'error': 'No users found'})
-
-    return jsonify([{'user_id': user.user_id, 'profile_pic': user.profile_pic} for user in users])
