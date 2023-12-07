@@ -567,3 +567,50 @@ def search_item(search_term):
 
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+@main.route('/save_song_with_json', methods=['POST'])
+@cross_origin()
+def save_song_with_json():
+    try:
+        file = request.files['songs.json']
+        json_data = file.read()
+        data = json.loads(json_data)
+        songs = data.get('songs', [])
+        
+        for song in songs:
+            artist = Artist.query.filter_by(artist_name=song['artistName']).first()
+            
+            if not artist:
+                
+                artist = Artist(
+                    artist_id = data['artistName'],
+                    artist_name = data['artistName'],
+                    picture = "unknown",
+                    genres = data['songGenre']
+                )
+                db.session.add(artist)
+
+
+            new_song = Song(
+                    song_id = f"{data['artistName']}-{data['songTitle']}",
+                    artist_id = artist.artist_id,
+                    album_id = "unknown",
+                    song_name = data['songTitle'],
+                    rate_total = 0,
+                    rate_count = 0,
+                    play_count = 0,
+                    duration = data['songDuration'],
+                    genre = data['songGenre'],
+                    release_date = data['songReleaseYear'],
+                    artist = artist
+                )
+            
+            db.session.add(new_song)
+            
+        db.session.commit()
+            
+        return jsonify({'message': True})
+        
+    
+    except Exception as e:
+        return jsonify({'error': str(e)})
