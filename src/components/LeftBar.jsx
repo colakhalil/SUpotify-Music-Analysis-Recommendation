@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NavigationButtons from "./subcomponents/NavigationButtons";
 import PlaylistCardLeftbar from "./subcomponents/PlaylistCardLeftbar";
+import globalVar from "../global";
 
-const LeftBar = ({ setCurrentPlace }) => {
+const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
   const [playlists, setPlaylists] = useState([]);
 
   useEffect(() => {
@@ -22,12 +23,45 @@ const LeftBar = ({ setCurrentPlace }) => {
     fetchPlaylists();
   }, []);
 
-  const handleClick = (key) => {
-    console.log(`You clicked on ${key}`);
-    setCurrentPlace("playlist");
-    // Implement your playlist click functionality here
-  };
+  function transformJson(originalJson) {
+    return {
+      album: originalJson.artist + " Album", // You might need a better way to determine the album name
+      artistName: originalJson.artist,
+      rating: originalJson.song_rating,
+      releaseYear: originalJson.release_year.split("-")[0],
+      songLength: originalJson.duration,
+      songName: originalJson.song_name, // Placeholder, replace with actual logic to determine the picture URL
+    };
+  }
 
+  const handleClick = async (playlistId) => {
+    console.log(`You clicked on playlist with ID: ${playlistId}`);
+
+    const url =
+      "http://127.0.0.1:8008/get_playlist_info/" +
+      globalVar.username +
+      "/" +
+      playlistId;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json(); // Parsing the JSON data
+      console.log("Fetched data in leftbar: ", data); // Now you log the actual data
+
+      const transformedArray = data.songs.map(transformJson);
+      console.log("transformed array:", transformedArray);
+
+      setCurrentPlaylistInfo(transformedArray);
+      setCurrentPlace("playlist");
+
+      /* After getting data put this data to umit's playlist component*/
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   const handleMain = () => {
     console.log("Home clicked");
     setCurrentPlace("main");
