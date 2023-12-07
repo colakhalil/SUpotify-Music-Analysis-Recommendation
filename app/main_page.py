@@ -9,7 +9,7 @@ import time
 import json
 from datetime import datetime
 from . import db 
-from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist, Song, User
+from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist, Song, User, RateArtist, RateAlbum
 from datetime import datetime
 
 main = Blueprint('main', __name__)
@@ -567,3 +567,47 @@ def search_item(search_term):
 
     except Exception as e:
         return jsonify({'error': str(e)})
+
+#WORKS
+@main.route('/change_rating_artist', methods=['GET', 'POST'])
+@cross_origin()
+def change_rating_artist():
+    if request.method == 'POST':
+        data = request.get_json()
+        prev_rate = RateArtist.query.filter_by(artist_id=data['artist_id'], user_id=data['user_id']).first()
+        if ((data['rating'] < 0) or (data['rating'] > 5)):
+            return jsonify({'message': False})
+        if prev_rate:
+            RateArtist.query.filter_by(artist_id=data['artist_id'], user_id=data['user_id']).update({'rating': data['rating'], 'timestamp': datetime.now()})
+        else:
+            new_rate = RateArtist(
+                artist_id=data['artist_id'],
+                user_id=data['user_id'],
+                rating=data['rating']
+            )
+            db.session.add(new_rate)
+        db.session.commit()
+        
+        return jsonify({'message': True})
+    
+#WORKS
+@main.route('/change_rating_album', methods=['GET', 'POST'])
+@cross_origin()
+def change_rating_album():
+    if request.method == 'POST':
+        data = request.get_json()
+        prev_rate = RateAlbum.query.filter_by(album_id=data['album_id'], user_id=data['user_id']).first()
+        if ((data['rating'] < 0) or (data['rating'] > 5)):
+            return jsonify({'message': False})
+        if prev_rate:
+            RateAlbum.query.filter_by(album_id=data['album_id'], user_id=data['user_id']).update({'rating': data['rating'], 'timestamp': datetime.now()})
+        else:
+            new_rate = RateArtist(
+                album_id=data['album_id'],
+                user_id=data['user_id'],
+                rating=data['rating']
+            )
+            db.session.add(new_rate)
+        db.session.commit()
+        
+        return jsonify({'message': True})
