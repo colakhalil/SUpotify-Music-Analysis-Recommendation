@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "../pagesCSS/MainPage.css";
+import "../pagesCSS/LeftBar.css";
+import "../pagesCSS/FriendBar.css";
+import "../pagesCSS/BottomBar.css";
+
+
+
+
 import LeftBar from "../components/LeftBar";
 import FriendActivity from "../components/FriendActivity";
 import BottomBar from "../components/BottomBar";

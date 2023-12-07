@@ -1,0 +1,225 @@
+.song-bar {
+    width: 100%;
+    position: fixed; /* Fixed position to keep it at the bottom */
+    height: 100px;
+    bottom: 0; /* Align to the bottom */
+    background: #181818; /* Dark background */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0rem;
+    padding: 10px 20px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3); /* slight shadow on top */
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+@media (max-width: 768px) {
+    .song-bar {
+      flex-direction: column;
+      height: auto;
+    }
+    .song-info,
+    .song-controls,
+    .song-rating {
+      width: 100%; /* Full width on smaller screens */
+      margin: 0.5rem 0; /* Add some space between */
+    }
+}
+
+.song-info {
+    display: flex;
+    height: 95px;
+    width: 400px;
+    align-items: center;
+    margin-bottom: auto;
+    gap: 15px;
+}
+
+.album-cover {
+    width: 80px; /* Adjust as necessary */
+    height: 70px; /* Adjust as necessary */
+    object-fit: cover;
+    margin-right: 1rem;
+    border-radius: 4px;
+}
+
+
+.song-title,
+.song-artist {
+    margin: 0;
+    color: #fff;
+}
+
+
+
+.song-title,
+.song-artist {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.song-artist {
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+.song-like {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-left: 1rem;
+}
+
+
+.play-btn {
+    background-color: #1db954; /* Spotify green */
+    color: #fff;
+    border: none;
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+    border-radius: 500px; /* Rounded pill shape */
+    cursor: pointer;
+    margin-right: 1rem;
+}
+
+.song-progress {
+    display: flex;
+    align-items: center;
+}
+
+.firstInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 20px;
+}
+.secondInfo {
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 20px;
+    height: auto;
+    width: 180px;
+}
+
+.song-meta {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding: 5px;
+}
+
+.slider {
+    -webkit-appearance: none; /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Adjust as necessary */
+    height: 4px; /* Slider thickness */
+    background: #535353; /* Slider background */
+    outline: none;
+    opacity: 0.7; /* Slider opacity */
+    -webkit-transition: 0.2s; /* Transition for slider */
+    transition: opacity 0.2s;
+    border-radius: 2px;
+    margin-right: 1rem;
+    flex-grow: 1;
+}
+
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default CSS styles */
+    appearance: none;
+    width: 15px; /* Slider handle width */
+    height: 15px; /* Slider handle height */
+    background: #fff; /* Slider handle color */
+    cursor: pointer; /* Cursor on hover */
+    border-radius: 50%; /* Round shape */
+}
+
+.slider::-moz-range-thumb {
+    width: 12px; /* Slider handle width */
+    height: 12px; /* Slider handle height */
+    background: #fff; /* Slider handle color */
+    cursor: pointer; /* Cursor on hover */
+    border-radius: 50%; /* Round shape */
+}
+
+.song-timer {
+    font-size: 0.8rem;
+    white-space: nowrap;
+    color: #aaa;
+}
+
+.song-lyrics-btn {
+    background: transparent;
+    border: 1px solid white;
+    border-radius: 10px;
+    margin-right: 2rem;
+    color: white;
+    margin-left: 3rem;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.delete-btn {
+    background: transparent;
+    border: 1px solid white;
+    border-radius: 10px;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.delete-btn-disabled {
+    background: darkgray;
+    border: 1px solid gray;
+    color: white;
+    cursor: not-allowed;
+}
+
+
+/* This container will hold both the controls and the rating, spaced between */
+.song-controls-container {
+    display: flex;
+    justify-content: space-between; /* This will push the song controls and rating apart */
+    align-items: center;
+    margin-right: 3rem;
+    width: 50%; /* It should span the full width of its parent */
+}
+
+/* Styles for the song controls */
+.song-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    /* margin-right: 40rem; Remove this and let flexbox handle the spacing */
+    justify-content: flex-start;
+    /* width: auto; This can be removed since width will be controlled by the parent container */
+}
+
+/* Styles for the song rating */
+.song-rating {
+    order: 2;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5rem; /* Adjust or remove this as needed */
+}
+
+.song-rating-container {
+    margin-right: 15rem;
+}
+
+  /* Adjustments to the rating stars component if needed */
+.react-rating-stars-component {
+    line-height: 1;
+    margin-right: 5rem; /* Ensure this is not too large to push content off screen */
+}
+
+.song-details-extra {
+    display: flex;
+    flex-direction: column;
+    margin-right: 5rem;
+    height: auto;
+    width: auto;
+}

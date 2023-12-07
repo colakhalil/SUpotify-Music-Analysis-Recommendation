@@ -1,0 +1,32 @@
+
+.left-bar{
+    background-color: #000;
+    color: #fff;
+    padding: 20px;
+    width: 250px;
+    height: 100vh;
+    box-sizing: border-box;
+    overflow-y: auto;
+    position: fixed; /* Add this line if not present */
+    top: 0; /* Stick to the top */
+    left: 0; /* Stick to the left */
+    z-index: 100;
+}
+
+.left-bar-button{
+    background: none;
+    border: none;
+    color: #fff;
+    padding: 10px 0;
+    width: 100%;
+    text-align: left;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    cursor: pointer;
+    display: block;
+    text-align: left;
+}
+
+.left-bar-button:hover{
+    background-color: #333;
+}

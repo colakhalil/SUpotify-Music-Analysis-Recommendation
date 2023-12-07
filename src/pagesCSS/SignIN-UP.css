@@ -95,14 +95,14 @@ h1 {
   font-family: "Avantgarde Gothic", sans-serif;
   background-color: #c1cdc1;
   color: #363636;
-  padding: 1rem;
-  border-radius: 1rem;
-  margin-bottom: 1rem;
+  padding: 1.3rem;
+  border-radius: 2rem;
+  margin-bottom: 2rem;
   cursor: pointer;
-  width: 113%;
+  width: 110%;
   font-weight: bold;
   border: none;
-  font-size: 1rem;
+  font-size: 1.3rem;
 }
 
 .details-register-p {

@@ -1,0 +1,33 @@
+.friend-bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #2c2c2c;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.friend {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.friend-picture {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.friend-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.friend-name{
+    color: #ffffff;
+    margin: 0;
+}
