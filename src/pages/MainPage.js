@@ -54,9 +54,9 @@ const MainPage = () => {
     
       const getSongsByGenre = async (genre) => {
         try {
-          const response = await fetch(`http://127.0.0.1:8008/recommendations/${genre}`);
+          const response = await fetch(`http://127.0.0.1:8008/recommendationsSDAFASDF/${genre}`);
           if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! status:SIKINTI YOK LINK YANLIS ${response.status}`);
           }
           const data = await response.json();
           console.log('Fetched data:', data); // Check the structure of the fetched data

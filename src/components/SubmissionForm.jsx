@@ -3,6 +3,8 @@ import "../pagesCSS/SubmissionForm.css";
 
 const SubmissionForm = () => {
   const [fileData, setFileData] = useState(null);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [formData, setFormData] = useState({
     songTitle: '',
@@ -11,6 +13,12 @@ const SubmissionForm = () => {
     songDuration: '',
     songReleaseYear: '',
   });
+
+  const showPopupMessage = (message) => {
+    setPopupMessage(message);
+    setShowPopup(true);
+    setTimeout(() => setShowPopup(false), 1000); // Hide popup after 1 second
+  };
 
   const isFormComplete = () => {
     return formData.songTitle && formData.artistName && formData.songGenre 
@@ -63,9 +71,11 @@ const SubmissionForm = () => {
       });
 
       if (response.ok) {
+        showPopupMessage('Song data submitted successfully');
         console.log('Song data submitted successfully');
         // Optionally, you can handle further UI updates here
       } else {
+        showPopupMessage('Failed to submit song data');
         console.error('Failed to submit song data');
       }
     } catch (error) {
@@ -109,6 +119,7 @@ const SubmissionForm = () => {
       {/* File Import */}
       <input type="file" accept=".json" onChange={handleFileChange} />
       <button onClick={handleImportSubmit}>Import</button>
+      {showPopup && <div className="popup-message">{popupMessage}</div>}
     </form>
   );
 };
