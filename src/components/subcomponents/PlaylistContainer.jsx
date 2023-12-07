@@ -1,7 +1,6 @@
 import React from "react";
 
 const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
-  console.log("BURAYA GELEN SONGS", songs);
   const handleSongClick = (song) => {
     console.log("Song: " + song);
     setCurrentBottomSong(song);

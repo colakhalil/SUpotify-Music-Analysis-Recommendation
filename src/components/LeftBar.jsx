@@ -33,6 +33,14 @@ const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
       songName: originalJson.song_name, // Placeholder, replace with actual logic to determine the picture URL
     };
   }
+  function transformPlaylistJson(originalJson) {
+    return {
+      ...originalJson, // Spread the rest of the original object properties
+      name: originalJson.playlistName, // Rename playlistName to name
+      url: originalJson.playlistPicture, // Rename playlistPicture to imageUrl
+      // Remove the old properties if you no longer need them
+    };
+  }
 
   const handleClick = async (playlistId) => {
     console.log(`You clicked on playlist with ID: ${playlistId}`);
@@ -48,13 +56,23 @@ const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response.json(); // Parsing the JSON data
+      let data = await response.json(); // Parsing the JSON data
       console.log("Fetched data in leftbar: ", data); // Now you log the actual data
 
-      const transformedArray = data.songs.map(transformJson);
-      console.log("transformed array:", transformedArray);
+      // Assuming transformJson is a function that transforms each song
+      // For example:
+      // function transformJson(song) {
+      //   // transform logic here
+      //   return transformedSong;
+      // }
 
-      setCurrentPlaylistInfo(transformedArray);
+      const transformedArray = data.songs.map(transformJson);
+
+      data.songs = transformedArray;
+      data = transformPlaylistJson(data);
+      // Update the songs array in data with the transformed array
+
+      setCurrentPlaylistInfo(data);
       setCurrentPlace("playlist");
 
       /* After getting data put this data to umit's playlist component*/
@@ -62,6 +80,7 @@ const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
       console.error("Error fetching data:", error);
     }
   };
+
   const handleMain = () => {
     console.log("Home clicked");
     setCurrentPlace("main");
