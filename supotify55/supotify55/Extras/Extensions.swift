@@ -39,3 +39,9 @@ extension Color {
 extension Color {
     static var hex: (String) -> Color = { _ in .black }
 }
+
+extension Array {
+    static func repeating(element: Element, times: Int) -> [Element] {
+        return Array(repeating: element, count: times)
+    }
+}

@@ -91,8 +91,21 @@ struct SignUpView: View {
                 
                 Button(action: {
                     if password == confirmPassword {
-                        apicaller.SignupPostRequest(username: username, password: password, email: email)
-                    } else {
+                        apicaller.signupPostRequest(username: username, password: password, email: email) { success in
+                            if success {
+                                // Handle successful signup
+                                print("Signup successful")
+                                
+                                // Navigate to the web page after successful signup
+                                navigator.SignupToWeb()
+                                
+                                // Proceed with other actions if needed
+                            } else {
+                                // Handle failed signup
+                                print("Signup failed")
+                                // Show an error message or perform actions for failed signup
+                            }
+                        }                    } else {
                         //popup.showMessage("Passwords do not match")
                     }
                 }) {
@@ -130,10 +143,10 @@ struct SignUpView: View {
     
 }
 
-struct SignUpView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            SignUpView()
-        }
-    }
-}
+//struct SignUpView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            SignUpView()
+//        }
+//    }
+//}

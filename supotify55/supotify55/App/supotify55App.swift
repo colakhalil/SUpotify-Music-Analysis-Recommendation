@@ -14,6 +14,11 @@ struct supotify55App: App {
     var body: some Scene {
         WindowGroup {
             LoginView()
+            //PlaylistView(playlistID: "3HAdIN8wtU2UBo94fznOTm")
+            //AlbumView(albumID: "3HAdIN8wtU2UBo94fznOTm")
+            //SongRegistrationView()
         }
     }
 }
+
+

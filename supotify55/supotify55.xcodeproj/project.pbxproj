@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C5620422B1A874700418CA4 /* SongRegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5620412B1A874700418CA4 /* SongRegistrationView.swift */; };
+		1C60D1E62B082F9F00D98DBB /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C60D1E52B082F9F00D98DBB /* Friend.swift */; };
+		2C2A2D602B20B003003187A8 /* ImportExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2A2D5F2B20B003003187A8 /* ImportExportView.swift */; };
 		2C63F1A32B06B1920030A6BC /* supotify55App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C63F1A22B06B1920030A6BC /* supotify55App.swift */; };
 		2C63F1A72B06B1930030A6BC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C63F1A62B06B1930030A6BC /* Assets.xcassets */; };
 		2C63F1AA2B06B1930030A6BC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C63F1A92B06B1930030A6BC /* Preview Assets.xcassets */; };
@@ -28,9 +31,13 @@
 		2C63F1D82B06D83F0030A6BC /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C63F1D72B06D83F0030A6BC /* PlaylistView.swift */; };
 		2C63F1DA2B06D8570030A6BC /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C63F1D92B06D8570030A6BC /* AlbumView.swift */; };
 		2C63F1DC2B06DA940030A6BC /* SpotifyWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C63F1DB2B06DA940030A6BC /* SpotifyWebView.swift */; };
+		2C80E4582B20D933006DCE4F /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C80E4572B20D933006DCE4F /* SearchView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1C5620412B1A874700418CA4 /* SongRegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongRegistrationView.swift; sourceTree = "<group>"; };
+		1C60D1E52B082F9F00D98DBB /* Friend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
+		2C2A2D5F2B20B003003187A8 /* ImportExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportView.swift; sourceTree = "<group>"; };
 		2C63F19F2B06B1920030A6BC /* supotify55.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = supotify55.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C63F1A22B06B1920030A6BC /* supotify55App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = supotify55App.swift; sourceTree = "<group>"; };
 		2C63F1A62B06B1930030A6BC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -53,6 +60,7 @@
 		2C63F1D72B06D83F0030A6BC /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
 		2C63F1D92B06D8570030A6BC /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
 		2C63F1DB2B06DA940030A6BC /* SpotifyWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyWebView.swift; sourceTree = "<group>"; };
+		2C80E4572B20D933006DCE4F /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +121,7 @@
 				2C63F1C62B06D3B90030A6BC /* Song.swift */,
 				2C63F1C82B06D3C90030A6BC /* User.swift */,
 				2C63F1CA2B06D3D70030A6BC /* Playlist.swift */,
+				1C60D1E52B082F9F00D98DBB /* Friend.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -121,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				2C63F1B02B06B1E10030A6BC /* LoginView.swift */,
+				2C2A2D5F2B20B003003187A8 /* ImportExportView.swift */,
 				2C63F1B82B06B79C0030A6BC /* MainPageView.swift */,
 				2C63F1B62B06B78A0030A6BC /* SignUpView.swift */,
 				2C63F1D32B06D81A0030A6BC /* SongView.swift */,
@@ -128,6 +138,8 @@
 				2C63F1D72B06D83F0030A6BC /* PlaylistView.swift */,
 				2C63F1D92B06D8570030A6BC /* AlbumView.swift */,
 				2C63F1DB2B06DA940030A6BC /* SpotifyWebView.swift */,
+				1C5620412B1A874700418CA4 /* SongRegistrationView.swift */,
+				2C80E4572B20D933006DCE4F /* SearchView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -243,13 +255,17 @@
 				2C63F1B92B06B79C0030A6BC /* MainPageView.swift in Sources */,
 				2C63F1B12B06B1E10030A6BC /* LoginView.swift in Sources */,
 				2C63F1C72B06D3B90030A6BC /* Song.swift in Sources */,
+				1C60D1E62B082F9F00D98DBB /* Friend.swift in Sources */,
 				2C63F1A32B06B1920030A6BC /* supotify55App.swift in Sources */,
+				1C5620422B1A874700418CA4 /* SongRegistrationView.swift in Sources */,
 				2C63F1C52B06D3AB0030A6BC /* Album.swift in Sources */,
 				2C63F1B72B06B78A0030A6BC /* SignUpView.swift in Sources */,
 				2C63F1B32B06B28C0030A6BC /* APIcaller.swift in Sources */,
+				2C80E4582B20D933006DCE4F /* SearchView.swift in Sources */,
 				2C63F1CD2B06D3E90030A6BC /* Artist.swift in Sources */,
 				2C63F1DA2B06D8570030A6BC /* AlbumView.swift in Sources */,
 				2C63F1BD2B06CD4E0030A6BC /* PopUpCreater.swift in Sources */,
+				2C2A2D602B20B003003187A8 /* ImportExportView.swift in Sources */,
 				2C63F1DC2B06DA940030A6BC /* SpotifyWebView.swift in Sources */,
 				2C63F1D42B06D81A0030A6BC /* SongView.swift in Sources */,
 				2C63F1C92B06D3C90030A6BC /* User.swift in Sources */,
@@ -396,6 +412,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -425,6 +442,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

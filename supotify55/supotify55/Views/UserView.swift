@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct UserView: View {
+    @State private var jsonObject : [String : Any] = [:]
+    @ObservedObject var userData = UserData.sharedUser
+    
     // Sample Playlists
     let playlists: [Album] = [
         Album(AlbumName: "Summer Vibes", ArtistOfAlbum: "Sunny Beats", CoverPage: "https://example.com/summer_vibes.jpg"),
@@ -20,7 +23,7 @@ struct UserView: View {
                     .frame(width: 120, height: 120)
                     .foregroundColor(.white) // White color for user icon
                 
-                Text("Username")
+                Text(myUser.username)
                     .font(.title2)
                     .foregroundColor(.white) // White color for username
                 
@@ -98,8 +101,8 @@ struct UserView: View {
             Spacer(minLength: 100) // Gives space before the bottom icons
         }
         .background(Color.black) // Black background for the entire view
-        .foregroundColor(.white) // White color applied globally to text within this VStack
-    }
+        .foregroundColor(.white)
+   }
 }
 
 struct UserProfileView_Previews: PreviewProvider {
