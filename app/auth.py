@@ -45,9 +45,8 @@ def sign_up():
         if added_user:
             return jsonify({"message": True})
         else:
-            return jsonify({"message": True})
+            return jsonify({"message": False})
 
-        #return jsonify({"message": True})
         
 
 @auth.route('/login', methods=['POST', 'GET'])
@@ -55,10 +54,10 @@ def login():
     if request.method == 'POST':
         
         data = request.get_json()
-        user_id = data['user_id']
+        email = data['email']
         entered_password = data['password']
         
-        user = User.query.filter_by(user_id=user_id).first()
+        user = User.query.filter_by(email=email).first()
     
         if user:
             password_from_db = user.password
@@ -74,25 +73,25 @@ def login():
 def login_spotify():
     auth_url = create_spotify_outh().get_authorize_url()
     return redirect(auth_url)
- 
- 
+
 @auth.route("/redirect")
 def redirect_page():
     session.clear()
     code = request.args.get("code")
     token_info = create_spotify_outh().get_access_token(code)
+    
     session[TOKEN_INFO] = token_info
     
     spotify = spotipy.Spotify(auth=token_info['access_token'])
     user_data = spotify.current_user()
     
     user = User.query.filter_by(email=user_data["email"]).first()
-
+    
     if user:
         user.spotify_id = user_data["id"]
         user.country = user_data["country"]
         user.profile_pic = user_data["images"][0]["url"]
-
+        user.spotify_refresh_token = token_info['refresh_token']
         db.session.commit()
-    
+
     return redirect("http://localhost:3000/main")
