@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NavigationButtons from "./subcomponents/NavigationButtons";
 import PlaylistCardLeftbar from "./subcomponents/PlaylistCardLeftbar";
-import globalVar from "../global";
 
 const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
   const [playlists, setPlaylists] = useState([]);

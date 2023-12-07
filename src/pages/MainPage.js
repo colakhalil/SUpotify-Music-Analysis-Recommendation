@@ -49,35 +49,37 @@ const MainPage = () => {
   const [studyPlaylist, setStudyPlaylist] = useState({ songs: [] });
   const [chillPlaylist, setChillPlaylist] = useState({ songs: [] });
 
-  const getSongsByGenre = async (genre) => {
-    try {
-      const response = await fetch(
-        `http://127.0.0.1:8008/QWNRNQWLLNQWRKLQR/${genre}`
-      );
-      if (!response.ok) {
-        throw new Error(
-          `MERAK ETME BILEREK YAPTIM LINKI DUZELTHTTP error! status: ${response.status}`
-        );
-      }
-      const data = await response.json();
-      console.log("Fetched data:", data); // Check the structure of the fetched data
 
-      const formattedSongs = data.tracks.map((track) => ({
-        songName: track.name,
-        artistName: track.artists.map((artist) => artist.name).join(", "),
-        songLength: track.duration_ms,
-        releaseYear: new Date(track.album.release_date).getFullYear(),
-        rating: track.popularity,
-        album: track.album.name,
-        songPicture: track.album.images[0].url,
-      }));
-      console.log("ABI FORMATED SONG", formattedSongs);
-      return formattedSongs;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      return [];
-    }
-  };
+
+    
+      const getSongsByGenre = async (genre) => {
+        try {
+          const response = await fetch(`http://127.0.0.1:8008/recommendationsSDAFASDF/${genre}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status:SIKINTI YOK LINK YANLIS ${response.status}`);
+          }
+          const data = await response.json();
+          console.log('Fetched data:', data); // Check the structure of the fetched data
+      
+          const formattedSongs = data.tracks.map((track) => ({
+            songName: track.name,
+            artistName: track.artists.map((artist) => artist.name).join(", "),
+            songLength: track.duration_ms,
+            releaseYear: new Date(track.album.release_date).getFullYear(),
+            rating: track.popularity,
+            album: track.album.name,
+            songPicture: track.album.images[0].url,
+          }));
+      
+          return formattedSongs;
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          return [];
+        }
+      };
+      
+    
+      
 
   useEffect(() => {
     getSongsByGenre("pop").then((songs) => setPopPlaylist({ songs }));
