@@ -7,14 +7,13 @@ const SubmissionForm = () => {
     songTitle: '',
     artistName: '',
     songGenre: '',
-    songMood: '',
     songDuration: '',
     songReleaseYear: '',
   });
 
   const isFormComplete = () => {
     return formData.songTitle && formData.artistName && formData.songGenre 
-           && formData.songMood && formData.songDuration && formData.songReleaseYear;
+            && formData.songDuration && formData.songReleaseYear;
   };
 
   const handleChange = (e) => {
@@ -67,7 +66,7 @@ const SubmissionForm = () => {
   };
   const isValidData = (data) => {
     // Define the expected fields in order
-    const expectedFields = ['songTitle', 'artistName', 'songGenre','songMood', 'songDuration', 'songReleaseYear' ];
+    const expectedFields = ['songTitle', 'artistName', 'songGenre', 'songDuration', 'songReleaseYear' ];
   
     // Check if all required fields are present and in order
     return expectedFields.every((field, index) => {
@@ -127,13 +126,7 @@ const SubmissionForm = () => {
         onChange={handleChange}
         placeholder="Song's Genre"
       />
-        <input
-        type="text"
-        name="songMood"
-        value={formData.songMood}
-        onChange={handleChange}
-        placeholder="Song's Mood"
-      />
+
       
       <input
         type="text"
