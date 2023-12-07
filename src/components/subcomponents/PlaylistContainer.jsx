@@ -1,7 +1,13 @@
 import React from 'react';
 
 
-const PlaylistContainer = ({ songs }) => {
+const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
+
+  const handleSongClick = (song) => {
+    console.log("Song: " + song);
+    setCurrentBottomSong(song);
+  };
+
   // Helper function to format song duration from milliseconds to "mm:ss"
   const formatDuration = (durationMs) => {
     const minutes = Math.floor(durationMs / 60000);
@@ -25,11 +31,11 @@ const PlaylistContainer = ({ songs }) => {
         <div className="song-rating-h">Rating</div>
       </div>
       {songs.map((song, index) => (
-        <div className="song-row" key={song.id || index}>
+        <div className="song-row" key={song.id || index} onClick={() => handleSongClick(song)}>
           <div className="song-index">{index + 1}</div>
-          <div className="song-title">{song.songName}</div>
+          <div className="song-title-row">{song.songName}</div>
           <div className="song-artist">{song.artistName}</div>
-          <div className="song-duration">{formatDuration(song.duration)}</div>
+          <div className="song-duration">{formatDuration(song.songLength)}</div>
           <div className="song-release-year-p">{song.releaseYear}</div>
           <div className="song-rating-p">{formatRating(song.rating)}</div>
         </div>
