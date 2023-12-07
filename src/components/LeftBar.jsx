@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NavigationButtons from "./subcomponents/NavigationButtons";
 import PlaylistCardLeftbar from "./subcomponents/PlaylistCardLeftbar";
+import globalVar from "../global";
 
 const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
   const [playlists, setPlaylists] = useState([]);
@@ -97,12 +98,19 @@ const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
     // Implement your profile click functionality here
   };
 
+  const handleDatabaseClick = () => {
+    console.log("You clicked on databse");
+    setCurrentPlace("database");
+    // Implement your profile click functionality here
+  };
+
   return (
     <div className="left-bar">
       <NavigationButtons
         onHomeClick={handleMain}
         onSearchClick={handleSearch}
         onProfileClick={handleProfile}
+        onDatabaseClick= {handleDatabaseClick}
       />
       <PlaylistCardLeftbar
         playlists={playlists}

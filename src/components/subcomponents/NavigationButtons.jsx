@@ -1,6 +1,6 @@
 import React from "react";
 
-const NavigationButtons = ({ onHomeClick, onSearchClick, onProfileClick }) => {
+const NavigationButtons = ({ onHomeClick, onSearchClick, onProfileClick,onDatabaseClick }) => {
   return (
     <>
       <button className="left-bar-button" onClick={onHomeClick}>
@@ -9,7 +9,7 @@ const NavigationButtons = ({ onHomeClick, onSearchClick, onProfileClick }) => {
       <button className="left-bar-button" onClick={onProfileClick}>
         Profile
       </button>
-      <button className="left-bar-button">Library</button>
+      <button className="left-bar-button" onClick= {onDatabaseClick}>Database</button>
     </>
   );
 };

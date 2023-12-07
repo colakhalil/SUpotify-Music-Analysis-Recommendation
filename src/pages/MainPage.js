@@ -11,11 +11,25 @@ import PlaylistMiddle from "../components/PlaylistMiddle";
 import SubmissionForm from "../components/SubmissionForm";
 import SubmissionFormExport from "../components/SubmissionFormExport";
 import FriendProfileMiddle from "../components/FriendProfileMiddle";
+import DatabaseMiddle from "../components/DatabaseMiddle";
 
 const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
   const [currentPlaylistInfo, setCurrentPlaylistInfo] = useState(null);
-  const [currentBottomSong, setCurrentBottomSong] = useState({}); // Initialize with an empty object or initial song data
+  const [currentBottomSong, setCurrentBottomSong] = useState({
+    title: "Çingenem",
+    artist: "Ebru Gündeş",
+    duration: "2:48",
+    genre: "Pop, Dance",
+    mood: "Uplifting",
+    recordingType: "Studio",
+    instruments: "Guitar, Piano, Drums",
+    playCount: 100,
+    releaseYear: 2021,
+    dateAdded: "2023-04-15",
+    userPrevRating: 2,
+    img: "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
+  }); // Initialize with an empty object or initial song data
 
   // ... [other functions and states]
 
@@ -176,20 +190,6 @@ const MainPage = () => {
     // Add more playlists as needed
   ];
 
-  const current_bottom_song = {
-    title: "Çingenem",
-    artist: "Ebru Gündeş",
-    duration: "2:48",
-    genre: "Pop, Dance",
-    mood: "Uplifting",
-    recordingType: "Studio",
-    instruments: "Guitar, Piano, Drums",
-    playCount: 100,
-    releaseYear: 2021,
-    dateAdded: "2023-04-15",
-    userPrevRating: 2,
-    img: "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
-  };
 
   const friendsData = [
     {
@@ -270,6 +270,12 @@ const MainPage = () => {
           ></ProfileMiddle>
         )}
 
+        {currentPlace === "database" && (
+          <DatabaseMiddle
+          setCurrentBottomSong = {setCurrentBottomSong}
+          ></DatabaseMiddle>
+        )}
+
         {currentPlace === "playlist" && (
           <PlaylistMiddle
             setCurrentBottomSong={setCurrentBottomSong}
@@ -277,7 +283,7 @@ const MainPage = () => {
           />
         )}
         {currentPlace === "lyrc" && (
-          <LyrcsMiddle song={current_bottom_song}></LyrcsMiddle>
+          <LyrcsMiddle song={currentBottomSong}></LyrcsMiddle>
         )}
 
         <FriendActivity
@@ -288,7 +294,7 @@ const MainPage = () => {
           <FriendProfileMiddle></FriendProfileMiddle>
         )}
         <BottomBar
-          song={current_bottom_song}
+          song={currentBottomSong}
           setCurrentPlace={setCurrentPlace}
         />
       </div>
