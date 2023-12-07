@@ -94,4 +94,4 @@ def redirect_page():
 
         db.session.commit()
     
-    return "basarili"
+    return redirect("http://localhost:3000/main")
