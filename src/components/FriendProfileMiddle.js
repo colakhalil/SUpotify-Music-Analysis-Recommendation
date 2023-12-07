@@ -10,19 +10,9 @@ import "../pagesCSS/FriendProfile.css";
 
 // Updated dummy friend data with friendName
 const dummyFriendData = {
-  friendName: "Friend's Username",
+  friendName: "İdil Güler",
   profilePicture: "/path/to/friend/profile/picture.jpg", // replace with actual path
   numberOfFriends: 50,
-  favorite90sAlbums: [
-    { title: "title name 1", artist: "artist name 1", year: "1995" },
-    { title: "title name 2", artist: "artist name 2", year: "1999" },
-    // ... more albums
-  ],
-  recentSongs: [
-    { title: "title name 1", artist: "artist name 1", releaseDate: "01-2023" },
-    { title: "title name 2", artist: "artist name 2", releaseDate: "04-2023" },
-    // ... more songs
-  ],
 };
 
 const FriendProfileMiddle = ({ friendEmail, setCurrentPlace }) => {

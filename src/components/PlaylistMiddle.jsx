@@ -16,6 +16,6 @@ const PlaylistMiddle = ({setCurrentBottomSong ,playlistInfo}) => {
     
     
   );
-};
-
+}; 
 export default PlaylistMiddle;
+
