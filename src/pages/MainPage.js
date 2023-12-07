@@ -5,7 +5,6 @@ import FriendActivity from "../components/FriendActivity";
 import BottomBar from "../components/BottomBar";
 import LyrcsMiddle from "../components/LyrcsMiddle";
 
-
 import MainMiddle from "../components/MainMiddle";
 import ProfileMiddle from "../components/ProfileMiddle";
 import PlaylistMiddle from "../components/PlaylistMiddle";
@@ -20,23 +19,20 @@ const MainPage = () => {
 
   // ... [other functions and states]
 
-
   const formatDuration = (durationMs) => {
     const minutes = Math.floor(durationMs / 60000);
     const seconds = ((durationMs % 60000) / 1000).toFixed(0);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
   const setCurrentBottomSongState = (song) => {
     const bottomSong = {
       title: song.songName,
       artist: song.artistName,
       duration: formatDuration(song.songLength),
-      genre:  0,//The playlist name of the clicked song. If the song is in the Pop playlist. Genre should be Pop
-      UserPrevRating: 0,// Default as zero. 
+      genre: 0, //The playlist name of the clicked song. If the song is in the Pop playlist. Genre should be Pop
+      UserPrevRating: 0, // Default as zero.
       releaseYear: song.releaseYear,
       img: song.img,
-
-      
     };
     // Set the state
     setCurrentBottomSong(bottomSong);
@@ -58,9 +54,9 @@ const MainPage = () => {
     
       const getSongsByGenre = async (genre) => {
         try {
-          const response = await fetch(`http://127.0.0.1:8008/QWIRQWRQWRUQWRUQWRUQWRHUKQWR/${genre}`);
+          const response = await fetch(`http://127.0.0.1:8008/recommendations/${genre}`);
           if (!response.ok) {
-            throw new Error(`MERAK ETME LINK YANLISSSSHTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
           const data = await response.json();
           console.log('Fetched data:', data); // Check the structure of the fetched data
@@ -85,19 +81,17 @@ const MainPage = () => {
     
       
 
-      useEffect(() => {
-        getSongsByGenre('pop').then((songs) => setPopPlaylist({ songs }));
-        getSongsByGenre('rock').then((songs) => setRockPlaylist({ songs }));
-        getSongsByGenre('jazz').then((songs) => setJazzPlaylist({ songs }));
-        getSongsByGenre('house').then((songs) => setHousePlaylist({ songs }));
-        
-        getSongsByGenre('happy').then((songs) => setHappyPlaylist({ songs }));
-        getSongsByGenre('sad').then((songs) => setSadPlaylist({ songs }));
-        getSongsByGenre('study').then((songs) => setStudyPlaylist({ songs }));
-        getSongsByGenre('chill').then((songs) => setChillPlaylist({ songs }));
-      }, []);
-    
+  useEffect(() => {
+    getSongsByGenre("pop").then((songs) => setPopPlaylist({ songs }));
+    getSongsByGenre("rock").then((songs) => setRockPlaylist({ songs }));
+    getSongsByGenre("jazz").then((songs) => setJazzPlaylist({ songs }));
+    getSongsByGenre("house").then((songs) => setHousePlaylist({ songs }));
 
+    getSongsByGenre("happy").then((songs) => setHappyPlaylist({ songs }));
+    getSongsByGenre("sad").then((songs) => setSadPlaylist({ songs }));
+    getSongsByGenre("study").then((songs) => setStudyPlaylist({ songs }));
+    getSongsByGenre("chill").then((songs) => setChillPlaylist({ songs }));
+  }, []);
 
   // Rest of your component code
 
@@ -244,27 +238,32 @@ const MainPage = () => {
   return (
     <>
       <div className="main-container">
-        <LeftBar playlists={playlists} setCurrentPlace={setCurrentPlace} />
+        <LeftBar
+          playlists={playlists}
+          setCurrentPlaylistInfo={setCurrentPlaylistInfo}
+          setCurrentPlace={setCurrentPlace}
+        />
 
         {currentPlace === "main" && (
-          <MainMiddle setCurrentPlace={setCurrentPlace}
-          setCurrentBottomSong={setCurrentBottomSong}
-          popPlaylist={popPlaylist}
-          rockPlaylist={rockPlaylist}
-          jazzPlaylist={jazzPlaylist}
-          housePlaylist={housePlaylist}
-          happyPlaylist= {happyPlaylist}
-          sadPlaylist= {sadPlaylist}
-          studyPlaylist= {studyPlaylist}
-          chillPlaylist= {chillPlaylist}
-          setCurrentPlaylistInfo={setCurrentPlaylistInfo}
+          <MainMiddle
+            setCurrentPlace={setCurrentPlace}
+            setCurrentBottomSong={setCurrentBottomSong}
+            popPlaylist={popPlaylist}
+            rockPlaylist={rockPlaylist}
+            jazzPlaylist={jazzPlaylist}
+            housePlaylist={housePlaylist}
+            happyPlaylist={happyPlaylist}
+            sadPlaylist={sadPlaylist}
+            studyPlaylist={studyPlaylist}
+            chillPlaylist={chillPlaylist}
+            setCurrentPlaylistInfo={setCurrentPlaylistInfo}
           ></MainMiddle>
         )}
         {currentPlace === "submit-form" && <SubmissionForm></SubmissionForm>}
         {currentPlace === "submit-formE" && (
           <SubmissionFormExport></SubmissionFormExport>
         )}
-          {currentPlace === "profile" && (
+        {currentPlace === "profile" && (
           <ProfileMiddle
             userData={userData}
             setCurrentPlace={setCurrentPlace}
@@ -273,12 +272,14 @@ const MainPage = () => {
 
         {currentPlace === "playlist" && (
           <PlaylistMiddle
-            setCurrentBottomSong= {setCurrentBottomSong}
+            setCurrentBottomSong={setCurrentBottomSong}
             playlistInfo={currentPlaylistInfo}
           />
         )}
-        {currentPlace === "lyrc" && <LyrcsMiddle song={current_bottom_song}></LyrcsMiddle>}
-   
+        {currentPlace === "lyrc" && (
+          <LyrcsMiddle song={current_bottom_song}></LyrcsMiddle>
+        )}
+
         <FriendActivity
           friendsData={friendsData}
           setCurrentPlace={setCurrentPlace}
@@ -286,7 +287,10 @@ const MainPage = () => {
         {currentPlace === "friend" && (
           <FriendProfileMiddle></FriendProfileMiddle>
         )}
-        <BottomBar song={current_bottom_song} setCurrentPlace={setCurrentPlace} />
+        <BottomBar
+          song={current_bottom_song}
+          setCurrentPlace={setCurrentPlace}
+        />
       </div>
     </>
   );

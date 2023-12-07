@@ -1,8 +1,7 @@
-import React from 'react';
-
+import React from "react";
 
 const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
-
+  console.log("BURAYA GELEN SONGS", songs);
   const handleSongClick = (song) => {
     console.log("Song: " + song);
     setCurrentBottomSong(song);
@@ -12,7 +11,7 @@ const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
   const formatDuration = (durationMs) => {
     const minutes = Math.floor(durationMs / 60000);
     const seconds = ((durationMs % 60000) / 1000).toFixed(0);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
   // Helper function to format song rating (e.g., out of 10)
@@ -31,7 +30,11 @@ const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
         <div className="song-rating-h">Rating</div>
       </div>
       {songs.map((song, index) => (
-        <div className="song-row" key={song.id || index} onClick={() => handleSongClick(song)}>
+        <div
+          className="song-row"
+          key={song.id || index}
+          onClick={() => handleSongClick(song)}
+        >
           <div className="song-index">{index + 1}</div>
           <div className="song-title-row">{song.songName}</div>
           <div className="song-artist">{song.artistName}</div>

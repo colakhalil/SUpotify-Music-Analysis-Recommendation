@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NavigationButtons from "./subcomponents/NavigationButtons";
 import PlaylistCardLeftbar from "./subcomponents/PlaylistCardLeftbar";
-import globalVar  from "../global";
 
-const LeftBar = ({ setCurrentPlace }) => {
+const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
   const [playlists, setPlaylists] = useState([]);
 
   useEffect(() => {
@@ -23,29 +22,11 @@ const LeftBar = ({ setCurrentPlace }) => {
     fetchPlaylists();
   }, []);
 
-  const handleClick = async (playlistId) => {
-    console.log("You clicked on playlist with ID: " + playlistId);
-
-    const url =
-      "http://127.0.0.1:8008/get_playlist_info/" +
-      globalVar.username +
-      "/" +
-      playlistId;
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('HTTP error! status: ' + response.status);
-      }
-      const data = await response.json(); // Parsing the JSON data
-      console.log("Fetched data in leftbar: ", data); // Now you log the actual data
-
-      /* After getting data put this data to umit's playlist component*/
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+  const handleClick = (key) => {
+    console.log(`You clicked on ${key}`);
+    setCurrentPlace("playlist");
+    // Implement your playlist click functionality here
   };
-
   const handleMain = () => {
     console.log("Home clicked");
     setCurrentPlace("main");
