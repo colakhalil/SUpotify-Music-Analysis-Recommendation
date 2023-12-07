@@ -1,29 +1,29 @@
 /* General Styles for the Playlist Middle */
 /* General Styles for the Playlist Middle */
+/* General Styles for the Playlist Middle */
 .playlist-middle {
+
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start; /* Align content to the top */
+  align-items: left; /* Centers the content horizontally */
+  justify-content: center; /* Centers the content vertically if there's space */
   padding: 30px;
-  width: calc(100% - 250px - 200px); /* Adjust SidebarWidth and RightBarWidth */
-  height: calc(100vh - 100px); /* Adjust BottomBarHeight to the height of your BottomBar */
-  margin-left: 0px; /* Adjust SidebarWidth */
-  margin-right: 250px; /* Adjust RightBarWidth */
-  box-sizing: border-box; /* Include padding in the height calculation */
-  overflow: hidden; /* Ensures the component doesn't overflow */
+  width: 100%; /* Full width */
+  height: calc(100vh - 100px); /* Adjust based on header/footer heights */
+  overflow-y: auto; /* Allow vertical scrolling */
 }
 
 /* Playlist Container Styling */
 .playlist-container {
-  display: grid;
-  grid-template-columns: 0.3fr 1.9fr 1.9fr 0.6fr 0.6fr 0.9fr 0.8fr;
-  grid-auto-rows: minmax(50px,auto);
-  gap:20px 10px;
-  width: 100%;
-  overflow-y: auto;
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center children */
+  margin-left: 3rem;
+  width: 80%; /* Adjust width as necessary */
+  max-width: 1200px; /* Maximum width */
+  margin-bottom: 45px;
 }
+
 
 
 /* Playlist Picture Styling */
@@ -34,6 +34,8 @@
 }
 .playlist-picture img {
   max-width: 100%;
+  margin-top: 15rem;
+  margin-left: 32rem;
   max-height: 200px; /* Or any size you see fit */
   object-fit: contain;
 }
@@ -43,6 +45,7 @@
   font-size: 1em;
   margin-top:1em;
   margin-bottom: 0.5em;
+  margin-right: 13rem;
   text-align: center;
   color: #fff;
 }
@@ -66,20 +69,22 @@
 
 /* Song Row Styling */
 .song-row {
-  display: contents;
+  display: grid;
+  grid-template-columns: minmax(auto, 50px) minmax(auto, 4fr) minmax(auto, 2fr) minmax(auto, 3fr) minmax(auto, 1fr) minmax(auto, 50px);
+  gap: 10px;
   align-items: center;
-  justify-content: space-between; /* Adjusted for equal spacing */
-  padding: 10px;
+  padding: 15px; /* Increased padding for better spacing */
   color: #fff;
+  width: 100%; /* Full width of the container */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* subtle shadow for depth */
+  margin: 10px 0; /* Spacing between rows */
+  transition: transform 0.2s ease; /* Smooth transition for hover effect */
 }
-
-.song-row:nth-child(even){
-  background-color: #333;
-}
-
 
 .song-row:hover {
-  background-color: #404040; /* Slight highlight on hover */
+  transform: scale(1.02); /* Slight increase in size on hover */
+  background-color: rgba(255, 255, 255, 0.1); /* Highlight row on hover */
+  
 }
 .song-name{
   font-size: 25px;
@@ -90,34 +95,13 @@
 }
 
 .song-index,
-.song-title,
+.song-title-row,
 .song-artist,
-.song-duration,
+.song-album,
 .song-release-year-p,
-.song-rating-p
-{ 
-  font-size: 18px;
-  color:white;
-  margin-right: 15px; /* Space between elements */
-}
-
-.song-index {
-  color: #b3b3b3; /* Slightly lighter color for the index */
-}
-
-.song-name,
-.song-artist {
-  flex-grow: 1; /* Allows name and artist to fill the available space */
-}
-
-.song-duration {
-  color: #b3b3b3; /* Slightly lighter color for the duration */
-}
-
 .song-rating-p {
-  color: #1db954; /* Spotify's green color for the rating */
+  text-align: center; /* Center the text within each cell */
 }
-
 
 /* Responsive considerations */
 @media (max-width: 768px) {

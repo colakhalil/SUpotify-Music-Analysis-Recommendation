@@ -1,64 +1,62 @@
-import React from "react";
-import { useParams, useLocation } from 'react-router-dom';
-import FriendPart from "./subcomponents/FriendPart";
-import FriendPlaylists from "./subcomponents/FriendPlaylists";
-import FavoriteArtists from "./subcomponents/FavoriteArtists";
-import FavoriteGenres from "./subcomponents/FavoriteGenres";
-import FriendActivityChart from "./subcomponents/FriendActivityChart";
-import TopSongsChart from "./subcomponents/TopSongsChart";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+// Correct import for a default export
+import FriendUserPart from './subcomponents/FriendUserPart';
+import FriendFavoriteSongs from "./subcomponents/FavoriteSongs90s";
+import FriendRecentActivity from "./subcomponents/FavoriteRecentSongs";
+import globalVar from "../global";
+import "../pagesCSS/FriendProfile.css";
 
 
-const FriendProfileMiddle = ({ friendPlaylists = [], friendData}) => {
-  return(
-    <p>merhaba!</p>
+// Updated dummy friend data with friendName
+const dummyFriendData = {
+  friendName: "Friend's Username",
+  profilePicture: "/path/to/friend/profile/picture.jpg", // replace with actual path
+  numberOfFriends: 50,
+  favorite90sAlbums: [
+    { title: "title name 1", artist: "artist name 1", year: "1995" },
+    { title: "title name 2", artist: "artist name 2", year: "1999" },
+    // ... more albums
+  ],
+  recentSongs: [
+    { title: "title name 1", artist: "artist name 1", releaseDate: "01-2023" },
+    { title: "title name 2", artist: "artist name 2", releaseDate: "04-2023" },
+    // ... more songs
+  ],
+};
 
-  );
-  {/*
-  const { friendName } = useParams(); // get the friend name from the URL parameter
-  const location = useLocation();
-  const locationFriendData = location.state?.friendData;
+const FriendProfileMiddle = ({ friendEmail, setCurrentPlace }) => {
+  const [friendData, setFriendData] = useState(dummyFriendData); // Using dummy data
+  const [lastPlaylists, setLastPlaylists] = useState([]);
 
-  // Use locationFriendData if available, otherwise use friendData from props
-  const effectiveFriendData = locationFriendData || friendData;
+  // Simulate fetching friend's data
+  useEffect(() => {
+    // Simulate API call with a timeout
+    setTimeout(() => {
+      console.log("Simulated fetch of friend data:", dummyFriendData);
+      setFriendData(dummyFriendData);
+    }, 1000);
+  }, [friendEmail]);
+
+  // Ensure you have a profile picture URL, either from data or a placeholder
+  const profilePic = friendData.profilePicture || "path/to/default/profile.jpg";
 
   const handlePlaylistClick = (playlistName) => {
     setCurrentPlace("playlist");
     console.log(`Playlist clicked: ${playlistName}`);
-    // Handle the playlist click event, such as navigating to the playlist page.
   };
-
-  const handleArtistClick = (artistName) => {
-    setCurrentPlace("artist");
-    console.log(`Artist clicked: ${artistName}`);
-    // Handle the artist click event, such as navigating to the artist's page.
-  };
-  console.log("Friend playlists:", friendPlaylists);
 
   return (
-    <>
-      <div className="main-container">
-        <div className="content-container">
-          <FriendPart friendData={effectiveFriendData} />
-          <h2 className="friend-playlists-title">Friend's Playlists</h2>
-          <div className="friendPlaylists-container-forPP">
-          {Array.isArray(friendPlaylists) && friendPlaylists.map((playlist, index) => (
-            <FriendPlaylists
-                key={index}
-                name={playlist.name}
-                thumbnail={playlist.thumbnail}
-                onClick={() => handlePlaylistClick(playlist.name)}
-              />
-            ))}
-          </div>
-          <FavoriteArtists onArtistClick={handleArtistClick} />
-          <FavoriteGenres />
-          <FriendActivityChart />
-          <TopSongsChart />
-        </div>
+    <div className="main-container">
+      <div className="content-container">
+        <FriendUserPart friendData={friendData} />
+        <FriendFavoriteSongs albumsData={friendData.favorite90sAlbums} />
+        <FriendRecentActivity songsData={friendData.recentSongs} />
       </div>
-    </>
+    </div>
   );
-          */}
+  
 };
 
 export default FriendProfileMiddle;
+

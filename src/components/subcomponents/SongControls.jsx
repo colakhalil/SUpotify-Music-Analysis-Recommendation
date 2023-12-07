@@ -8,6 +8,7 @@ const SongControls = ({
   songDurationInSeconds,
   song,
   toggleLyrics,
+  
   userRating,
   handleRatingChange
 }) => {
@@ -32,9 +33,10 @@ const SongControls = ({
           {Math.floor(currentTime / 60)}:{String(currentTime % 60).padStart(2, "0")} / {song.duration}
         </div>
       </div>
+      {/*
       <div className='song-rating-container'>
-      <SongRating userRating={userRating} handleRatingChange={handleRatingChange} /> {/* Rating stars */}
-      </div>    
+      <SongRating userRating={userRating} handleRatingChange={handleRatingChange} /> 
+      </div> */}
     </div>
   );
 };

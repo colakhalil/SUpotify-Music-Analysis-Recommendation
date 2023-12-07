@@ -1,37 +1,36 @@
 /* UserPlaylists.css */
 .user-playlists-container {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .playlists {
-    display: flex;
-    justify-content: space-around;
-    padding: 20px;
-  }
-  
-  .playlist-card {
-    background-color: #cfe8fc; /* Örnek arka plan rengi */
-    border-radius: 10px;
-    padding: 10px;
-    width: 150px; /* İhtiyacınıza göre ayarlayın */
-    height: 200px; /* İhtiyacınıza göre ayarlayın */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .playlist-thumbnail {
-    width: 100%;
-    height: 120px; /* İhtiyacınıza göre ayarlayın */
-    background-size: cover;
-    background-position: center;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-  
-  .playlist-name {
-    color: #333; /* Yazı rengi */
-    font-size: 1rem;
-  }
-  
+  margin-top: 20px;
+  text-align: center;
+}
+
+.playlists {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.playlist-card {
+  background-color: #cfe8fc; /* Örnek arka plan rengi */
+  border-radius: 10px;
+  padding: 10px;
+  width: 150px; /* İhtiyacınıza göre ayarlayın */
+  height: 200px; /* İhtiyacınıza göre ayarlayın */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.playlist-thumbnail {
+  width: 100%;
+  height: 120px; /* İhtiyacınıza göre ayarlayın */
+  background-size: cover;
+  background-position: center;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.playlist-name {
+  color: #333; /* Yazı rengi */
+  font-size: 1rem;
+}
