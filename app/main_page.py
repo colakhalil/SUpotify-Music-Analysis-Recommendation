@@ -435,8 +435,8 @@ def get_all_songs():
         songs_returned = [
             {
                 'song_id': song.song_id,
-                'artist_name': song.artist.artist_name,
-                'album_name': song.album.album_name,
+                'artist_name': song.artist.artist_name if song.artist else None,
+                'album_name': song.album.album_name if song.album else None,
                 'song_name': song.song_name,
                 'picture': song.picture,
                 'rate': song.rate_total / song.rate_count if song.rate_count else 0,
