@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../pagesCSS/MainPage.css";
+
 import LeftBar from "../components/LeftBar";
 import FriendActivity from "../components/FriendActivity";
 import BottomBar from "../components/BottomBar";
@@ -15,7 +16,20 @@ import FriendProfileMiddle from "../components/FriendProfileMiddle";
 const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
   const [currentPlaylistInfo, setCurrentPlaylistInfo] = useState(null);
-  const [currentBottomSong, setCurrentBottomSong] = useState({}); // Initialize with an empty object or initial song data
+  const [currentBottomSong, setCurrentBottomSong] = useState({
+    title: "Çingenem",
+    artist: "Ebru Gündeş",
+    duration: "2:48",
+    genre: "Pop, Dance",
+    mood: "Uplifting",
+    recordingType: "Studio",
+    instruments: "Guitar, Piano, Drums",
+    playCount: 100,
+    releaseYear: 2021,
+    dateAdded: "2023-04-15",
+    userPrevRating: 2,
+    img: "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
+  }); // Initialize with an empty object or initial song data
 
   // ... [other functions and states]
 
@@ -49,37 +63,35 @@ const MainPage = () => {
   const [studyPlaylist, setStudyPlaylist] = useState({ songs: [] });
   const [chillPlaylist, setChillPlaylist] = useState({ songs: [] });
 
+  const getSongsByGenre = async (genre) => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8008/recommendationsSDAFASDF/${genre}`
+      );
+      if (!response.ok) {
+        throw new Error(
+          `HTTP error! status:SIKINTI YOK LINK YANLIS ${response.status}`
+        );
+      }
+      const data = await response.json();
+      console.log("Fetched data:", data); // Check the structure of the fetched data
 
+      const formattedSongs = data.tracks.map((track) => ({
+        songName: track.name,
+        artistName: track.artists.map((artist) => artist.name).join(", "),
+        songLength: track.duration_ms,
+        releaseYear: new Date(track.album.release_date).getFullYear(),
+        rating: track.popularity,
+        album: track.album.name,
+        songPicture: track.album.images[0].url,
+      }));
 
-    
-      const getSongsByGenre = async (genre) => {
-        try {
-          const response = await fetch(`http://127.0.0.1:8008/recommendationsSDAFASDF/${genre}`);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status:SIKINTI YOK LINK YANLIS ${response.status}`);
-          }
-          const data = await response.json();
-          console.log('Fetched data:', data); // Check the structure of the fetched data
-      
-          const formattedSongs = data.tracks.map((track) => ({
-            songName: track.name,
-            artistName: track.artists.map((artist) => artist.name).join(", "),
-            songLength: track.duration_ms,
-            releaseYear: new Date(track.album.release_date).getFullYear(),
-            rating: track.popularity,
-            album: track.album.name,
-            songPicture: track.album.images[0].url,
-          }));
-      
-          return formattedSongs;
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          return [];
-        }
-      };
-      
-    
-      
+      return formattedSongs;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return [];
+    }
+  };
 
   useEffect(() => {
     getSongsByGenre("pop").then((songs) => setPopPlaylist({ songs }));
@@ -176,21 +188,6 @@ const MainPage = () => {
     // Add more playlists as needed
   ];
 
-  const current_bottom_song = {
-    title: "Çingenem",
-    artist: "Ebru Gündeş",
-    duration: "2:48",
-    genre: "Pop, Dance",
-    mood: "Uplifting",
-    recordingType: "Studio",
-    instruments: "Guitar, Piano, Drums",
-    playCount: 100,
-    releaseYear: 2021,
-    dateAdded: "2023-04-15",
-    userPrevRating: 2,
-    img: "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
-  };
-
   const friendsData = [
     {
       name: "Idil Güler",
@@ -277,7 +274,7 @@ const MainPage = () => {
           />
         )}
         {currentPlace === "lyrc" && (
-          <LyrcsMiddle song={current_bottom_song}></LyrcsMiddle>
+          <LyrcsMiddle song={currentBottomSong}></LyrcsMiddle>
         )}
 
         <FriendActivity
@@ -287,10 +284,7 @@ const MainPage = () => {
         {currentPlace === "friend" && (
           <FriendProfileMiddle></FriendProfileMiddle>
         )}
-        <BottomBar
-          song={current_bottom_song}
-          setCurrentPlace={setCurrentPlace}
-        />
+        <BottomBar song={currentBottomSong} setCurrentPlace={setCurrentPlace} />
       </div>
     </>
   );

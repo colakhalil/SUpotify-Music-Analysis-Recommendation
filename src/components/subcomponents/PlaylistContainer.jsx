@@ -2,8 +2,11 @@ import React from "react";
 
 const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
   const handleSongClick = (song) => {
-    console.log("Song: " + song);
-    setCurrentBottomSong(song);
+    console.log("Song: " + song.id + " clicked");
+
+    //song bilgilerini backendden al ve gönder bottom bara ve mainPagedekine uygun formatla
+
+    // setCurrentBottomSong(song);
   };
 
   // Helper function to format song duration from milliseconds to "mm:ss"
