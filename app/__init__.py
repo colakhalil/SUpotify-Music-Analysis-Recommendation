@@ -39,14 +39,6 @@ def create_app():
         # This part is for adding mock data to db
         # To run the app properly, make sure to comment out below
 
-        client_id_eren = "26136d6b22c945479934e5eac513a86b"
-        client_secret_eren = "24c7dc28107c4c1a8f72920e2c9b5845"
-        client_id_Atakan = "e67f3a00be3044b89f2d3629f497b344"
-        client_secret_Atakan = "2eaa1a9033d6460f84cdbb0fd17479d5"
-
-        client_credentials_manager = SpotifyClientCredentials(client_id=client_id_eren, client_secret=client_secret_eren)
-        sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-
         if not User.query.first():
             new_user = User(user_id='atakan', password='PW', email='atakan.demirel@sabanciuniv.edu')
             new_user2 = User(user_id='umit', password='PW', email='umit.colak@sabanciuniv.edu')
