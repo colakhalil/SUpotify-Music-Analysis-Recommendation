@@ -7,10 +7,6 @@
     height: 100vh;
     box-sizing: border-box;
     overflow-y: auto;
-    position: fixed; /* Add this line if not present */
-    top: 0; /* Stick to the top */
-    left: 0; /* Stick to the left */
-    z-index: 100;
 }
 
 .left-bar-button{
