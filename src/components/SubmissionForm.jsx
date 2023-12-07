@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import "../pagesCSS/SubmissionForm.css";
+
 const SubmissionForm = () => {
   const [fileData, setFileData] = useState(null);
   const [showWarning, setShowWarning] = useState(false);
@@ -23,6 +24,7 @@ const SubmissionForm = () => {
       [name]: value
     }));
   };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type === "application/json") {
@@ -30,11 +32,10 @@ const SubmissionForm = () => {
       reader.onload = (e) => {
         try {
           const data = JSON.parse(e.target.result);
-          // Perform validation on data here
-          if (isValidData(data)) {
+          if (Array.isArray(data) && data.every(song => isValidData(song))) {
             setFileData(data);
           } else {
-            console.error('Invalid file format');
+            console.error('Invalid file format or file structure');
           }
         } catch (error) {
           console.error('Error parsing JSON:', error);
@@ -45,54 +46,25 @@ const SubmissionForm = () => {
       console.error('Please upload a valid JSON file');
     }
   };
-  const handleImportSubmit = async () => {
-    if (fileData) {
-      // Send fileData to the backend
-      try {
-        const response = await fetch('/your-api-endpoint', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(fileData)
-        });
-        // Handle response...
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    } else {
-      console.error('No valid data to submit');
-    }
-  };
-  const isValidData = (data) => {
-    // Define the expected fields in order
-    const expectedFields = ['songTitle', 'artistName', 'songGenre', 'songDuration', 'songReleaseYear' ];
-  
-    // Check if all required fields are present and in order
-    return expectedFields.every((field, index) => {
-      return Object.keys(data)[index] === field && data.hasOwnProperty(field);
-    });
-  };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    if (!isFormComplete()) {
-      setShowWarning(true); // Show warning pop-up
-      return; // Prevent further execution
-    }
-    setShowWarning(false);
+  const isValidData = (song) => {
+    const expectedFields = ['songTitle', 'artistName', 'songGenre', 'songDuration', 'songReleaseYear'];
+    return expectedFields.every(field => field in song);
+  };
+
+  const submitData = async (data) => {
     try {
-      const response = await fetch('/your-api-endpoint', {
+      const response = await fetch('http://127.0.0.1:8008/save_song_with_form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(data)
       });
 
       if (response.ok) {
         console.log('Song data submitted successfully');
-        // Handle successful submission, e.g., clearing the form or giving user feedback
+        // Optionally, you can handle further UI updates here
       } else {
         console.error('Failed to submit song data');
       }
@@ -101,58 +73,42 @@ const SubmissionForm = () => {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!isFormComplete()) {
+      setShowWarning(true);
+      return;
+    }
+    setShowWarning(false);
+    await submitData(formData);
+  };
+
+  const handleImportSubmit = async (e) => {
+    e.preventDefault();
+    if (fileData && fileData.length) {
+      for (const song of fileData) {
+        await submitData(song);
+      }
+    } else {
+      console.error('No valid data to submit');
+    }
+  };
+
   return (
-    <form className="submission-form" onSubmit={handleSubmit}>
+    <form className="submission-form">
       <h2>Add a song to the database</h2>
       <p>Please provide the details of the song you want to add</p>
-      <input
-        type="text"
-        name="songTitle"
-        value={formData.songTitle}
-        onChange={handleChange}
-        placeholder="Song Title"
-      />
-      <input
-        type="text"
-        name="artistName"
-        value={formData.artistName}
-        onChange={handleChange}
-        placeholder="Artist's Name"
-      />
-      <input
-        type="text"
-        name="songGenre"
-        value={formData.songGenre}
-        onChange={handleChange}
-        placeholder="Song's Genre"
-      />
-
-      
-      <input
-        type="text"
-        name="songDuration"
-        value={formData.songDuration}
-        onChange={handleChange}
-        placeholder="Song's Duration in seconds"
-      />
-      <input
-        type="text"
-        name="songReleaseYear"
-        value={formData.songReleaseYear}
-        onChange={handleChange}
-        placeholder="Song's Release Year"
-      />
-      <button type="submit" disabled={!isFormComplete()}>Submit</button>
-      {showWarning  && (
-        <div className="warning-popup">
-          Please fill out all fields before submitting.
-        </div>
-      )}
-      <input type= "file" accept='.json' onChange={handleFileChange}/>
-      <button type='submit' onClick={handleImportSubmit}>Import</button>
-
-
-      
+      {/* Form Fields */}
+      <input type="text" name="songTitle" value={formData.songTitle} onChange={handleChange} placeholder="Song Title" />
+      <input type="text" name="artistName" value={formData.artistName} onChange={handleChange} placeholder="Artist's Name" />
+      <input type="text" name="songGenre" value={formData.songGenre} onChange={handleChange} placeholder="Song's Genre" />
+      <input type="text" name="songDuration" value={formData.songDuration} onChange={handleChange} placeholder="Song's Duration in seconds" />
+      <input type="text" name="songReleaseYear" value={formData.songReleaseYear} onChange={handleChange} placeholder="Song's Release Year" />
+      <button type="submit" onClick={handleSubmit} disabled={!isFormComplete()}>Submit</button>
+      {showWarning && <div className="warning-popup">Please fill out all fields before submitting.</div>}
+      {/* File Import */}
+      <input type="file" accept=".json" onChange={handleFileChange} />
+      <button onClick={handleImportSubmit}>Import</button>
     </form>
   );
 };
