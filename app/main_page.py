@@ -1,7 +1,7 @@
 from flask import Blueprint, Flask, request, url_for, session, jsonify, redirect
 from flask_cors import CORS, cross_origin
 from spotipy.oauth2 import SpotifyOAuth 
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, desc
 import lyricsgenius as lg
 import spotipy
 import requests
@@ -66,8 +66,6 @@ def fetch_and_save_song(sp, song_id):
                 album_id = track_info['album']['id'],
                 song_name = track_info['name'],
                 picture = track_info['album']['images'][0]['url'],
-                rate_total = 0,
-                rate_count = 0,
                 play_count = 0,
                 tempo = audio_features['tempo'],  
                 popularity = track_info['popularity'],
@@ -91,7 +89,7 @@ def fetch_and_save_song(sp, song_id):
 def token_add():
     global token
     token = session['token_info']['access_token']
-    return jsonify({'message': 'success'})
+    return redirect("https://localhost:3000/main")
 
 #WORKS
 @main.route("/lyrics/<artist_name>/<song_name>")
@@ -129,41 +127,49 @@ def get_recommendations_by_genre(genre):
 
     sp = spotipy.Spotify(auth=token)
     recommendations = sp.recommendations(seed_genres=[genre], limit=10)
+    result = []
+    for track in recommendations['tracks']:
+        curr_track = {
+            'song_id': track['id'],
+            'song_name': track['name'],
+            'artist_name': [artist['name'] for artist in track['artists']],
+            'picture': track['album']['images'][0]['url']
+        }
+        result.append(curr_track)
 
-    return jsonify(recommendations)
+    return jsonify(result)
 
 #WORKS
-@main.route('/song_info/<user_id>/<song_id>') 
+@main.route('/get_song_info/<user_id>/<song_id>') 
 @cross_origin()
 def get_song_info(user_id, song_id):
     song = Song.query.filter_by(song_id=song_id).first()
-    
-    if song:
-        
-        prev_rate = RateSong.query.filter_by(song_id=song_id, user_id=user_id).first()
-        
-        artist = Artist.query.filter_by(artist_id=song.artist_id).first()
-        
-        song_info = {
-            'song_id': song.song_id,
-            'artists': artist.artist_name,
-            'title': song.song_name,
-            'thumbnail': song.picture,
-            'rateAvg': song.rate_total / song.rate_count if song.rate_count else 0,
-            'playCount': song.play_count,
-            'popularity': song.popularity,
-            'valence': song.valence,
-            'duration': song.duration,
-            'genre': song.genre,
-            'releaseYear': song.release_date,
-            'dateAdded': song.date_added,
-            'userPrevRating': prev_rate.rating if prev_rate else 0
-        }
-        return jsonify(song_info)
-    else:
-        return jsonify({"message": False})
 
-#NOT FINISHED BUT WORKS FOR ADDING DUMMY
+    if not song:
+        sp = spotipy.Spotify(auth=token) 
+        fetch_and_save_song(sp, song_id)
+        
+    song = Song.query.filter_by(song_id=song_id).first()
+    prev_rate = RateSong.query.filter_by(song_id=song_id, user_id=user_id).first()
+    artist = Artist.query.filter_by(artist_id=song.artist_id).first()
+    
+    song_info = {
+        'song_id': song.song_id,
+        'artists': artist.artist_name,
+        'title': song.song_name,
+        'thumbnail': song.picture,
+        'playCount': song.play_count,
+        'popularity': song.popularity,
+        'valence': song.valence,
+        'duration': song.duration,
+        'genre': song.genre,
+        'releaseYear': song.release_date,
+        'dateAdded': song.date_added,
+        'userPrevRating': prev_rate.rating if prev_rate else 0
+    }
+    return jsonify(song_info)
+
+
 @main.route('/fill_db/<playlist_id>')
 @cross_origin()
 def fill_db(playlist_id):
@@ -203,12 +209,6 @@ def fill_db(playlist_id):
             rating= counter % 5,
             timestamp = datetime(2023, counter % 12 + 1, 1)
         )
-        
-        prev_rate = Song.query.filter_by(song_id=track_info['id']).first().rate_total
-        prev_count = Song.query.filter_by(song_id=track_info['id']).first().rate_count
-        
-        Song.query.filter_by(song_id=track_info['id']).update({'rate_total': prev_rate + 4*(counter % 5)})
-        Song.query.filter_by(song_id=track_info['id']).update({'rate_count': prev_count + 4})
         
         db.session.add(new_rate)
         db.session.add(new_rate2)
@@ -266,7 +266,6 @@ def change_rating_song():
             return jsonify({'message': False})
         if prev_rate:
             RateSong.query.filter_by(song_id=data['song_id'], user_id=data['user_id']).update({'rating': data['rating'], 'timestamp': datetime.now()})
-            Song.query.filter_by(song_id=data['song_id']).update({'rate_total': Song.query.filter_by(song_id=data['song_id']).first().rate_total + data['rating'] - prev_rate.rating})
         else:
             new_rate = RateSong(
                 song_id=data['song_id'],
@@ -274,9 +273,7 @@ def change_rating_song():
                 rating=data['rating']
             )
             db.session.add(new_rate)
-            Song.query.filter_by(song_id=data['song_id']).update({'rate_total': Song.query.filter_by(song_id=data['song_id']).first().rate_total + data['rating']})
-            Song.query.filter_by(song_id=data['song_id']).update({'rate_count': Song.query.filter_by(song_id=data['song_id']).first().rate_count + 1})
-        
+     
         db.session.commit()
         
         return jsonify({'message': True})
@@ -375,8 +372,6 @@ def save_song_with_form():
                 artist_id = artist.artist_id,
                 album_id = "unknown",
                 song_name = data['songTitle'],
-                rate_total = 0,
-                rate_count = 0,
                 play_count = 0,
                 duration = data['songDuration'],
                 genre = data['songGenre'],
@@ -426,20 +421,24 @@ def get_user_highly_rated_90s_songs(user_id):
         print(e)
 
 #WORKS
-@main.route('/all_songs', methods=['GET'])
+@main.route('/<user_id>/all_songs', methods=['GET'])
 @cross_origin()
-def get_all_songs():
+def get_all_songs(user_id):
     try:
         all_songs = Song.query.all()
-
-        songs_returned = [
-            {
+        
+        songs_returned = []
+        
+        for song in all_songs:
+            rate = RateSong.query.filter_by(song_id=song.song_id, user_id=user_id).first()
+            
+            result = {
                 'song_id': song.song_id,
                 'artist_name': song.artist.artist_name if song.artist else None,
                 'album_name': song.album.album_name if song.album else None,
                 'song_name': song.song_name,
                 'picture': song.picture,
-                'rate': song.rate_total / song.rate_count if song.rate_count else 0,
+                'rate': rate.rating if rate else 0,
                 'tempo': song.tempo,
                 'popularity': song.popularity,
                 'valence': song.valence,
@@ -451,8 +450,8 @@ def get_all_songs():
                 'play_count': song.play_count,
                 'date_added': song.date_added.isoformat()
             }
-            for song in all_songs
-        ]
+            
+            songs_returned.append(result)
 
         return jsonify({'songs': songs_returned})
 
@@ -460,29 +459,29 @@ def get_all_songs():
         return jsonify({'error': str(e)})
 
 #WORKS
-@main.route('/new_songs', methods=['GET'])
+@main.route('/<user_id>/new_songs', methods=['GET'])
 @cross_origin()
-def get_user_new_songs():
+def get_user_new_songs(user_id):
     try:
         # Query to get songs released in the current year (2023)
         current_year_songs = Song.query.filter(Song.release_date == 2023).all()
-        
-        print("DEBUG: current_year_songs:", current_year_songs)
 
         if not current_year_songs:
             return jsonify({'error': 'No songs found for the current year.'})
 
-        # Format the response
-        result = [
-            {
+        result = []
+        
+        for song in current_year_songs:
+            rate = RateSong.query.filter_by(song_id=song.song_id, user_id=user_id).first()
+            curr_song = {
                 'song_id': song.song_id,
                 'song_name': song.song_name,
                 'artist_name': song.artist.artist_name,
                 'release_date': song.release_date,
-                'rate': song.rate_total / song.rate_count if song.rate_count else 0
+                'rate': rate.rating if rate else 0
             }
-            for song in current_year_songs
-        ]
+            result.append(curr_song)
+
         
 
         return jsonify(result)
@@ -492,30 +491,35 @@ def get_user_new_songs():
         return jsonify({'error': str(e)})
 
 #WORKS
-@main.route('/artist_song_count', methods=['GET'])
+@main.route('/<user_id>/artist_song_count', methods=['GET'])
 @cross_origin()
-def artist_song_count():
+def artist_song_count(user_id):
     try:
         # Query to get the number of songs for each artist
         artist_song_counts = (
             db.session.query(
+                Artist.artist_id,
                 Artist.artist_name,
                 func.count(Song.song_id).label('song_count')
             )
             .join(Song, Artist.artist_id == Song.artist_id)
             .group_by(Artist.artist_name)
-            .order_by('song_count')
+            .order_by(func.count(Song.song_id).desc())  # Order by song count in descending order
+            .limit(10)  # Limit the result to the first 10 artists
             .all()
         )
-
-        # Format the response
-        result = [
-            {
+        result = []
+        
+        for artist_id, artist_name, song_count in artist_song_counts:
+            rate = RateArtist.query.filter_by(artist_id=artist_id, user_id=user_id).first()
+            curr_artist = {
                 'artist_name': artist_name,
                 'song_count': song_count,
+                'rate': rate.rating if rate else 0
             }
-            for artist_name, song_count in artist_song_counts
-        ]
+            result.append(curr_artist)
+        # Format the response
+
 
         return jsonify(result)
 
@@ -523,9 +527,9 @@ def artist_song_count():
         return jsonify({'error': str(e)})
 
 #WORKS
-@main.route('/search_item/<search_term>', methods=['GET'])
+@main.route('/search_item/<user_id>/<search_term>', methods=['GET'])
 @cross_origin()
-def search_item(search_term):
+def search_item(user_id, search_term):
     try:
         # Search for songs, albums, artists, and friends in the database based on the search term
         song_results = Song.query.filter(Song.song_name.ilike(f"%{search_term}%")).all()
@@ -537,9 +541,10 @@ def search_item(search_term):
                 {
                     'song_id': song.song_id,
                     'song_name': song.song_name,
-                    'artist_id': song.artist_id,
+                    'artist_name': song.artist.artist_name,
+                    'picture': song.picture,
                     'release_date': song.release_date,
-                    'rate': song.rate_total / song.rate_count if song.rate_count else 0
+                    'rate': RateSong.query.filter_by(song_id=song.song_id, user_id=user_id).first().rating if RateSong.query.filter_by(song_id=song.song_id, user_id=user_id).first() else 0
                 }
                 for song in song_results
             ],
@@ -547,16 +552,19 @@ def search_item(search_term):
                 {
                     'album_id': album.album_id,
                     'album_name': album.album_name,
-                    'artist_id': album.artist_id,
-        
+                    'artist_name': Artist.query.filter_by(artist_id=album.artist_id).first().artist_name,
+                    'image': album.image,
+                    'rate': RateAlbum.query.filter_by(album_id=album.album_id, user_id=user_id).first().rating if RateAlbum.query.filter_by(album_id=album.album_id, user_id=user_id).first() else 0
                 }
                 for album in album_results
             ],
             'artists': [
                 {
                     'artist_id': artist.artist_id,
+                    'picture': artist.picture,
                     'artist_name': artist.artist_name,
                     'popularity': artist.popularity,
+                    'rate': RateArtist.query.filter_by(artist_id=artist.artist_id, user_id=user_id).first().rating if RateArtist.query.filter_by(artist_id=artist.artist_id, user_id=user_id).first() else 0,
                 }
                 for artist in artist_results
             ],
@@ -596,8 +604,6 @@ def save_song_with_json():
                     artist_id = artist.artist_id,
                     album_id = "unknown",
                     song_name = data['songTitle'],
-                    rate_total = 0,
-                    rate_count = 0,
                     play_count = 0,
                     duration = data['songDuration'],
                     genre = data['songGenre'],
@@ -658,3 +664,38 @@ def change_rating_album():
         db.session.commit()
         
         return jsonify({'message': True})
+    
+@main.route('<current_user_id>/friends_recommendations', methods=['GET'])
+def friends_recommendations(current_user_id):
+    # Fetch the user's friends with rate_sharing preference
+    friends = Friendship.query.filter(
+        (Friendship.user1_id == current_user_id) | (Friendship.user2_id == current_user_id)
+    ).all()
+
+    # Filter friends based on rate_sharing preference
+    friends_allowed_to_share_rate = [friend for friend in friends if friend.rate_sharing == 'public']
+
+    friend_ids = set()
+    for friend in friends_allowed_to_share_rate:
+        friend_ids.add(friend.user1_id)
+        friend_ids.add(friend.user2_id)
+
+    # Fetch the top 20 songs rated by friends who allow rate sharing
+    top_rated_songs = (
+        RateSong.query.filter(RateSong.user_id.in_(friend_ids))
+        .order_by(desc(RateSong.rating))
+        .limit(20)
+        .all()
+    )
+
+    # Get the details of the top-rated songs
+    recommendations = []
+    for rate_song in top_rated_songs:
+        song = Song.query.get(rate_song.song_id)
+        recommendations.append({
+            'song_name': song.song_name,
+            'artist_name': song.artist.artist_name,
+            'rating': rate_song.rating,
+        })
+
+    return jsonify({'recommendations': recommendations})

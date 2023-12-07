@@ -27,7 +27,8 @@ class Friendship(db.Model):
 
     user1_id = db.Column(db.String(45), db.ForeignKey('users.user_id'), primary_key=True)
     user2_id = db.Column(db.String(45), db.ForeignKey('users.user_id'), primary_key=True)
-
+    rate_sharing = db.Column(db.String(10), default='private')
+    
     user1 = db.relationship('User', foreign_keys=[user1_id], back_populates='friendships')
     user2 = db.relationship('User', foreign_keys=[user2_id])
 
@@ -71,8 +72,6 @@ class Song(db.Model):
     album_id = db.Column(db.String(45), db.ForeignKey('albums.album_id'))
     song_name = db.Column(db.String(100))
     picture = db.Column(db.Text)
-    rate_total = db.Column(db.Integer)
-    rate_count = db.Column(db.Integer)
     tempo = db.Column(db.Integer)
     popularity = db.Column(db.Integer)
     valence = db.Column(db.Float)
@@ -94,7 +93,6 @@ class Album(db.Model):
     album_id = db.Column(db.String(45), primary_key=True)
     album_name = db.Column(db.String(100))
     artist_id = db.Column(db.String(45), db.ForeignKey('artists.artist_id'))
-    rate = db.Column(db.Float)
     album_type = db.Column(db.String(15))
     image = db.Column(db.String(200))
 
@@ -109,7 +107,6 @@ class Artist(db.Model):
     artist_name = db.Column(db.String(45))
     genres = db.Column(db.String(100))
     followers = db.Column(db.Integer)
-    rate = db.Column(db.Float)
     picture = db.Column(db.String(200))
 
     albums = db.relationship('Album', back_populates='artist', lazy='dynamic')

@@ -14,8 +14,8 @@ auth = Blueprint('auth', __name__)
 
 TOKEN_INFO = "token_info" 
 
-client_id = "e3bb122dc61347a6b496d5f15a036a68"
-client_secret = "e217a887698a43479bcbcc3698853677"
+client_id = "26136d6b22c945479934e5eac513a86b"
+client_secret = "24c7dc28107c4c1a8f72920e2c9b5845"
 
 # scope tanimi 
 def create_spotify_outh():
@@ -94,4 +94,4 @@ def redirect_page():
 
         db.session.commit()
     
-    return redirect("http://localhost:3000/main")
+    return redirect("http://127.0.0.1:8008/token_add")

@@ -120,6 +120,7 @@ def get_user_monthly_average_rating(user_id):
 @cross_origin()
 def add_friend(user_id):
     friend_id = request.json.get('friend_id')
+    rate_sharing = request.json.get('rate_sharing', 'private')  # Default to 'private' if not provided
 
     user = User.query.get(user_id)
     friend = User.query.get(friend_id)
@@ -136,7 +137,7 @@ def add_friend(user_id):
     ).first():
         return jsonify({'error': 'Already friends'})
 
-    new_friendship = Friendship(user1_id=user_id, user2_id=friend_id)
+    new_friendship = Friendship(user1_id=user_id, user2_id=friend_id, rate_sharing=rate_sharing)
 
     db.session.add(new_friendship)
     db.session.commit()
