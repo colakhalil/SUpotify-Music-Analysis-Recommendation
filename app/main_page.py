@@ -16,9 +16,6 @@ main = Blueprint('main', __name__)
 
 TOKEN_INFO = "token_info" 
 
-client_id = "e3bb122dc61347a6b496d5f15a036a68"
-client_secret = "e217a887698a43479bcbcc3698853677"
-
 token = ""
 
 GENIUS_API_KEY = "ELYRzAgCM0wR2jm42T8YVN3sJZMXH4Yss-hBIERYV4xFp2RJGiRbrfnuQh5gqJfg"

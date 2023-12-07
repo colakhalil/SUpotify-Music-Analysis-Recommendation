@@ -14,9 +14,6 @@ user = Blueprint('user', __name__)
 
 TOKEN_INFO = "token_info" 
 
-client_id = "e3bb122dc61347a6b496d5f15a036a68"
-client_secret = "e217a887698a43479bcbcc3698853677"
-
 #WORKS
 @user.route('/user_data/<email>', methods=['GET'])
 @cross_origin()
@@ -146,6 +143,33 @@ def add_friend(user_id):
     db.session.commit()
 
     return jsonify({'message': 'Friend added successfully'})
+
+@user.route('/remove_friend/<user_id>', methods=['POST'])
+@cross_origin()
+def remove_friend(user_id):
+    friend_id = request.json.get('friend_id')
+
+    user = User.query.get(user_id)
+    friend = User.query.get(friend_id)
+
+    if not user:
+        return jsonify({'error': 'User not found'})
+
+    if not friend:
+        return jsonify({'error': 'Friend not found'})
+
+    existing_friendship = Friendship.query.filter(
+        ((Friendship.user1_id == user_id) and (Friendship.user2_id == friend_id)) or
+        ((Friendship.user1_id == friend_id) and (Friendship.user2_id == user_id))
+    ).first()
+
+    if not existing_friendship:
+        return jsonify({'error': 'Not friends'})
+
+    db.session.delete(existing_friendship)
+    db.session.commit()
+
+    return jsonify({'message': 'Friend removed successfully'})
 
 @user.route('/search_user/<search_term>', methods=['GET'])
 @cross_origin()
