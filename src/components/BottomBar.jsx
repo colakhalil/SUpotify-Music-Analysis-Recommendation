@@ -2,17 +2,15 @@ import React, { useState, useEffect } from "react";
 import SongDetails from "./subcomponents/SongDetails";
 import SongControls from "./subcomponents/SongControls";
 import SongRating from "./subcomponents/SongRating";
-import SongOptions from "./subcomponents/SongOptions";
+import globalVar from "../global.js";
+
 import SongDetailsExtra from "./subcomponents/SongDetailsExtra";
-
-
 
 const RatingPopup = ({ isOpen, onClose, song, userRating, onRate }) => {
   if (!isOpen) return null;
 
   // You can add your rating logic here
   const handleRating = (rating) => {
-    console.log('Rating given: ', rating);
     onRate(rating);
     onClose(); // Close the popup after rating
   };
@@ -21,7 +19,11 @@ const RatingPopup = ({ isOpen, onClose, song, userRating, onRate }) => {
     <div className="popup-overlay">
       <div className="popup-content">
         <h3>Rate the Song</h3>
-        <SongRating song={song} userRating={userRating} onRatingChange={handleRating} />
+        <SongRating
+          song={song}
+          userRating={userRating}
+          onRatingChange={handleRating}
+        />
         <button onClick={onClose}>Close</button>
       </div>
     </div>
@@ -33,7 +35,7 @@ const RatingPopupAlbum = ({ isOpen, onClose, song, userRating, onRate }) => {
 
   // You can add your rating logic here
   const handleRating = (rating) => {
-    console.log('Rating given: ', rating);
+    console.log("Rating given: ", rating);
     onRate(rating);
     onClose(); // Close the popup after rating
   };
@@ -42,7 +44,11 @@ const RatingPopupAlbum = ({ isOpen, onClose, song, userRating, onRate }) => {
     <div className="popup-overlay">
       <div className="popup-content">
         <h3>Rate the Album</h3>
-        <SongRating song={song} userRating={userRating} onRatingChange={handleRating} />
+        <SongRating
+          song={song}
+          userRating={userRating}
+          onRatingChange={handleRating}
+        />
         <button onClick={onClose}>Close</button>
       </div>
     </div>
@@ -54,7 +60,7 @@ const RatingPopupArtist = ({ isOpen, onClose, song, userRating, onRate }) => {
 
   // You can add your rating logic here
   const handleRating = (rating) => {
-    console.log('Rating given: ', rating);
+    console.log("Rating given: ", rating);
     onRate(rating);
     onClose(); // Close the popup after rating
   };
@@ -63,23 +69,25 @@ const RatingPopupArtist = ({ isOpen, onClose, song, userRating, onRate }) => {
     <div className="popup-overlay">
       <div className="popup-content">
         <h3>Rate the Artist</h3>
-        <SongRating song={song} userRating={userRating} onRatingChange={handleRating} />
+        <SongRating
+          song={song}
+          userRating={userRating}
+          onRatingChange={handleRating}
+        />
         <button onClick={onClose}>Close</button>
       </div>
     </div>
   );
 };
 
-const BottomBar = ({ song, setCurrentPlace, currentPlace }) => {
-  const [userRating, setUserRating] = useState(song.userPrevRating);
+const BottomBar = ({ song, setCurrentPlace, currentPlace, setSong }) => {
+  console.log("Song: ", song);
   const [isSongRatePopupOpen, setIsSongRatePopupOpen] = useState(false); //songrate
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isDeleted, setIsDeleted] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isAlbumRatePopupOpen, setIsAlbumRatePopupOpen] = useState(false);
-
-
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -106,36 +114,77 @@ const BottomBar = ({ song, setCurrentPlace, currentPlace }) => {
   const handleCloseAlbumRatePopup = () => {
     setIsAlbumRatePopupOpen(false);
   };
-  
-  
+
   const handleDelete = async () => {
     if (isDeleted) {
       return; // Prevent further action if already clicked
     }
 
     try {
-      const response = await fetch('/delete-song', {
-        method: 'POST',
+      const response = await fetch("/delete-song", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ song }),
       });
 
       if (response.ok) {
-        console.log('Song deleted successfully');
+        console.log("Song deleted successfully");
         setIsDeleted(true); // Update state to reflect deletion
       } else {
-        console.error('Failed to delete the song');
+        console.error("Failed to delete the song");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
-  const handleRatingChange = (newRating) => {
-    setUserRating(newRating);
-    console.log("NEW RATING: ", newRating);
+  const handleSong = async (newRating) => {
+    console.log("NEW RATING: song ", newRating);
+    setSong({ ...song, userPrevRating: newRating });
+
+    const myjson = {
+      song_id: song.id,
+      rating: newRating,
+      user_id: globalVar.username,
+    };
+    console.log("myjson: ", myjson);
+    try {
+      const response = await fetch("http://127.0.0.1:8008/change_rating_song", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(myjson),
+      });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        // Handle the response if the request was successful
+        console.log("Rating updated successfully", responseData);
+      } else {
+        // Handle errors if the request was unsuccessful
+        console.error("Error updating rating", responseData);
+      }
+    } catch (error) {
+      // Handle network errors
+      console.error("Network error:", error);
+    }
+
+    // Add additional logic for when the rating changes
+  };
+
+  const handleAlbum = (newRating) => {
+    console.log("NEW RATING: album ", newRating);
+    setSong({ ...song, userPrevRatingAlbum: newRating });
+    // Add additional logic for when the rating changes
+  };
+
+  const handleArtist = (newRating) => {
+    console.log("NEW RATING:artist ", newRating);
+    setSong({ ...song, userPrevRatingArtist: newRating });
     // Add additional logic for when the rating changes
   };
 
@@ -203,8 +252,8 @@ const BottomBar = ({ song, setCurrentPlace, currentPlace }) => {
       <button className="rate-btn" onClick={handleOpenAlbumRatePopup}>
         Album Rate
       </button>
-      <button 
-        className="delete-btn" 
+      <button
+        className="delete-btn"
         onClick={handleDelete}
         disabled={isDeleted}
       >
@@ -215,21 +264,21 @@ const BottomBar = ({ song, setCurrentPlace, currentPlace }) => {
         isOpen={isPopupOpen}
         onClose={handleClosePopup}
         song={song}
-        userRating={userRating}
-        onRate={handleRatingChange}
+        userRating={song.userPrevRatingArtist}
+        onRate={handleArtist}
       />
       <RatingPopup
         isOpen={isSongRatePopupOpen}
         onClose={handleCloseSongRatePopup}
         song={song}
-        userRating={userRating}
-        onRate={handleRatingChange} // You can modify this if you have a different rating logic for songs
+        userRating={song.userPrevRating}
+        onRate={handleSong} // You can modify this if you have a different rating logic for songs
       />
       <RatingPopupAlbum
         isOpen={isAlbumRatePopupOpen}
         onClose={handleCloseAlbumRatePopup}
-        userRating={userRating}
-        onRate={handleRatingChange}
+        userRating={song.userPrevRatingAlbum}
+        onRate={handleAlbum}
       />
     </div>
   );

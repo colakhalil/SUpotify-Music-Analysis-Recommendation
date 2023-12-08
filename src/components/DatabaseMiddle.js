@@ -23,8 +23,10 @@ const DatabaseMiddle = ({ setCurrentBottomSong }) => {
           releaseYear: song.release_date,
           rating: song.rate,
           id: song.song_id,
+
           // include other attributes if needed
         }));
+
         setSongs(formattedSongs);
       } catch (error) {
         console.error("Fetch error:", error);

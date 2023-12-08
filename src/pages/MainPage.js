@@ -32,7 +32,9 @@ const MainPage = () => {
     genre: "Pop, Dance",
     releaseYear: 2021,
     dateAdded: "2023-04-15",
-    userPrevRating: 2,
+    userPrevRating: 0,
+    userPrevRatingArtist: 0,
+    userPrevRatingAlbum: 0,
   }); // Initialize with an empty object or initial song data
 
   // ... [other functions and states]
@@ -41,19 +43,6 @@ const MainPage = () => {
     const minutes = Math.floor(durationMs / 60000);
     const seconds = ((durationMs % 60000) / 1000).toFixed(0);
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-  };
-  const setCurrentBottomSongState = (song) => {
-    const bottomSong = {
-      title: song.songName,
-      artist: song.artistName,
-      duration: formatDuration(song.songLength),
-      genre: 0, //The playlist name of the clicked song. If the song is in the Pop playlist. Genre should be Pop
-      UserPrevRating: 0, // Default as zero.
-      releaseYear: song.releaseYear,
-      img: song.img,
-    };
-    // Set the state
-    setCurrentBottomSong(bottomSong);
   };
 
   // DUMMY DATALAR
@@ -347,7 +336,11 @@ const MainPage = () => {
         {currentPlace === "searched" && (
           <Searched users={searchedarray} friendsData={friendsData}></Searched>
         )}
-        <BottomBar song={currentBottomSong} setCurrentPlace={setCurrentPlace} />
+        <BottomBar
+          song={currentBottomSong}
+          setSong={setCurrentBottomSong}
+          setCurrentPlace={setCurrentPlace}
+        />
       </div>
     </>
   );
