@@ -71,7 +71,7 @@ const MainPage = () => {
   const getSongsByGenre = async (genre) => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8008/rrecommendations/${genre}`
+        `http://127.0.0.1:8008/recommendations/${genre}`
       );
       if (!response.ok) {
         throw new Error(
@@ -81,7 +81,7 @@ const MainPage = () => {
       const data = await response.json();
       console.log("Fetched data:", data); // Check the structure of the fetched data
 
-      const formattedSongs = data.tracks.map((track) => ({
+      const formattedSongs = data.map((track) => ({
         songName: track.song_name,
         artistName: track.artist_name,
         songLength: track.songLength,
@@ -95,19 +95,66 @@ const MainPage = () => {
       return [];
     }
   };
+  const playlistUrl = (genre) => {
+    switch (genre) {
+      case "pop":
+        setPopPlaylist((prev) => ({ ...prev, url: prev.songs[0]?.url }));
+        break;
+      case "rock":
+        setRockPlaylist((prev) => ({ ...prev, url: prev.songs[0]?.url }));
+        break;
+      case "jazz":
+        setJazzPlaylist((prev) => ({ ...prev, url: prev.songs[0]?.url }));
+        break;
+      case "house":
+        setHousePlaylist((prev) => ({ ...prev, url: prev.songs[0]?.url }));
+        break;
+      case "happy":
+        setHappyPlaylist((prev) => ({ ...prev, url: prev.songs[0]?.url }));
+        break;
+      case "sad":
+        setSadPlaylist((prev) => ({ ...prev, url: prev.songs[0]?.url }));
+        break;
+      case "study":
+        setStudyPlaylist((prev) => ({ ...prev, url: prev.songs[0]?.url }));
+        break;
+      case "chill":
+        setChillPlaylist((prev) => ({ ...prev, url: prev.songs[0]?.url }));
+        break;
+      default:
+        console.log("Unknown genre:", genre);
+    }
+  };
 
   useEffect(() => {
-    getSongsByGenre("pop").then((songs) => setPopPlaylist({ songs }));
-    getSongsByGenre("rock").then((songs) => setRockPlaylist({ songs }));
-    getSongsByGenre("jazz").then((songs) => setJazzPlaylist({ songs }));
-    getSongsByGenre("house").then((songs) => setHousePlaylist({ songs }));
+    const genres = [
+      "pop",
+      "rock",
+      "jazz",
+      "house",
+      "happy",
+      "sad",
+      "study",
+      "chill",
+    ];
+    genres.forEach((genre) => {
+      getSongsByGenre(genre).then((songs) => {
+        const setStateFunc = {
+          pop: setPopPlaylist,
+          rock: setRockPlaylist,
+          jazz: setJazzPlaylist,
+          house: setHousePlaylist,
+          happy: setHappyPlaylist,
+          sad: setSadPlaylist,
+          study: setStudyPlaylist,
+          chill: setChillPlaylist,
+        }[genre];
 
-    getSongsByGenre("happy").then((songs) => setHappyPlaylist({ songs }));
-    getSongsByGenre("sad").then((songs) => setSadPlaylist({ songs }));
-    getSongsByGenre("study").then((songs) => setStudyPlaylist({ songs }));
-    getSongsByGenre("chill").then((songs) => setChillPlaylist({ songs }));
+        setStateFunc({ songs });
+        playlistUrl(genre);
+      });
+    });
   }, []);
-
   // Rest of your component code
 
   const playlistData = {
@@ -235,6 +282,7 @@ const MainPage = () => {
     // Add more playlists here...
   ];
   // DUMMY DATALAR
+
   return (
     <>
       <div className="main-container">
