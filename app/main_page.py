@@ -9,7 +9,7 @@ import time
 import json
 from datetime import datetime
 from . import db 
-from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist, Song, User, RateArtist, RateAlbum
+from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist, Song, User, RateArtist, RateAlbum, ArtistsOfSong
 from datetime import datetime
 
 main = Blueprint('main', __name__)
@@ -37,16 +37,21 @@ def fetch_and_save_song(sp, song_id):
     
     new_album = None
     
-    if not Artist.query.filter_by(artist_id=artist['id']).first():
-        new_artist = Artist(
-            artist_id = artist['id'],
-            artist_name = artist['name'],
-            picture = artist['images'][0]['url'],
-            popularity = artist['popularity'],
-            genres = genres,
-            followers = artist['followers']['total']
-        )
-        db.session.add(new_artist)
+    all_artists_list = track_info['artists']
+    for singer in all_artists_list:
+        artist_info = sp.artist(singer['id'])
+        if not Artist.query.filter_by(artist_id=singer['id']).first():
+            new_artist = Artist(
+                artist_id = singer['id'],
+                artist_name = singer['name'],
+                picture = artist_info['images'][0]['url'],
+                popularity = artist_info['popularity'],
+                genres = genres,
+                followers = artist_info['followers']['total']
+            )
+            db.session.add(new_artist)
+        new_song_artist = ArtistsOfSong(song_id=track_info['id'], artist_id=singer['id'])
+        db.session.add(new_song_artist)
         
     if not Album.query.filter_by(album_id=album['id']).first():
         new_album = Album(
@@ -115,9 +120,11 @@ def save_song(song_id):
         
         song = Song.query.filter_by(song_id=song_id).first()
         
+        artists = ArtistsOfSong.query.filter_by(song_id=song_id).all()
+        
         return jsonify({
             "name":song.song_name,
-            "artist_name":song.artist.artist_name
+            "artists":[Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists]
             })
 
 #WORKS
@@ -152,11 +159,11 @@ def get_song_info(user_id, song_id):
         
     song = Song.query.filter_by(song_id=song_id).first()
     prev_rate = RateSong.query.filter_by(song_id=song_id, user_id=user_id).first()
-    artist = Artist.query.filter_by(artist_id=song.artist_id).first()
+    artists = ArtistsOfSong.query.filter_by(song_id=song_id).all()
     
     song_info = {
         'song_id': song.song_id,
-        'artists': artist.artist_name,
+        'artists': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
         'title': song.song_name,
         'thumbnail': song.picture,
         'playCount': song.play_count,
@@ -388,7 +395,7 @@ def get_user_highly_rated_90s_songs(user_id):
             'highly_rated_90s_songs': [
                 {
                     'title': song.song_name,
-                    'artist': song.artist.artist_name,
+                    'artist': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in ArtistsOfSong.query.filter_by(song_id=song.song_id).all()],
                     'releaseYear': song.release_date,
                     'rate': user_rates_dict[song.song_id]
                 }
@@ -410,10 +417,10 @@ def get_all_songs(user_id):
         
         for song in all_songs:
             rate = RateSong.query.filter_by(song_id=song.song_id, user_id=user_id).first()
-            
+            artists = ArtistsOfSong.query.filter_by(song_id=song.song_id).all()
             result = {
                 'song_id': song.song_id,
-                'artist_name': song.artist.artist_name if song.artist else None,
+                'artist_name': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
                 'album_name': song.album.album_name if song.album else None,
                 'song_name': song.song_name,
                 'picture': song.picture,
@@ -452,10 +459,11 @@ def get_user_new_songs(user_id):
         
         for song in current_year_songs:
             rate = RateSong.query.filter_by(song_id=song.song_id, user_id=user_id).first()
+            artists = ArtistsOfSong.query.filter_by(song_id=song.song_id).all()
             curr_song = {
                 'song_id': song.song_id,
                 'song_name': song.song_name,
-                'artist_name': song.artist.artist_name,
+                'artist_name': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
                 'release_date': song.release_date,
                 'rate': rate.rating if rate else 0
             }
@@ -477,13 +485,13 @@ def artist_song_count(user_id):
         # Query to get the number of songs for each artist
         artist_song_counts = (
             db.session.query(
-                Artist.artist_id,
+                ArtistsOfSong.artist_id,
                 Artist.artist_name,
-                func.count(Song.song_id).label('song_count')
+                func.count(ArtistsOfSong.song_id).label('song_count')
             )
-            .join(Song, Artist.artist_id == Song.artist_id)
-            .group_by(Artist.artist_name)
-            .order_by(func.count(Song.song_id).desc())  # Order by song count in descending order
+            .join(Artist, ArtistsOfSong.artist_id == Artist.artist_id)
+            .group_by(ArtistsOfSong.artist_id, Artist.artist_name)
+            .order_by(func.count(ArtistsOfSong.song_id).desc())  # Order by song count in descending order
             .limit(10)  # Limit the result to the first 10 artists
             .all()
         )
@@ -520,7 +528,7 @@ def search_item(user_id, search_term):
                 {
                     'song_id': song.song_id,
                     'song_name': song.song_name,
-                    'artist_name': song.artist.artist_name,
+                    'artist_name': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in ArtistsOfSong.query.filter_by(song_id=song.song_id).all()],
                     'picture': song.picture,
                     'release_date': song.release_date,
                     'rate': RateSong.query.filter_by(song_id=song.song_id, user_id=user_id).first().rating if RateSong.query.filter_by(song_id=song.song_id, user_id=user_id).first() else 0
@@ -671,9 +679,10 @@ def friends_recommendations(current_user_id):
     recommendations = []
     for rate_song in top_rated_songs:
         song = Song.query.get(rate_song.song_id)
+        artists = ArtistsOfSong.query.filter_by(song_id=song.song_id).all()
         recommendations.append({
             'song_name': song.song_name,
-            'artist_name': song.artist.artist_name,
+            'artist_name': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
             'rating': rate_song.rating,
         })
 

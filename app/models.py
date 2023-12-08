@@ -131,3 +131,9 @@ class RateArtist(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.now)
     artist = db.relationship('Artist', foreign_keys=[artist_id])
     user = db.relationship('User', foreign_keys=[user_id], back_populates='rated_artists')
+    
+class ArtistsOfSong(db.Model):
+    tablename = 'song_artists'
+
+    song_id = db.Column(db.String(45), db.ForeignKey('songs.song_id'), primary_key=True)
+    artist_id = db.Column(db.String(45), db.ForeignKey('artists.artist_id'), primary_key=True)
