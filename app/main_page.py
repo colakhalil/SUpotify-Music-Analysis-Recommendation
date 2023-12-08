@@ -89,7 +89,7 @@ def fetch_and_save_song(sp, song_id):
 def token_add():
     global token
     token = session['token_info']['access_token']
-    return redirect("https://localhost:3000/main")
+    return redirect("http://localhost:3000/main")
 
 #WORKS
 @main.route("/lyrics/<artist_name>/<song_name>")
@@ -133,7 +133,8 @@ def get_recommendations_by_genre(genre):
             'song_id': track['id'],
             'song_name': track['name'],
             'artist_name': [artist['name'] for artist in track['artists']],
-            'picture': track['album']['images'][0]['url']
+            'picture': track['album']['images'][0]['url'],
+            'songLength': track['duration_ms'],
         }
         result.append(curr_track)
 
