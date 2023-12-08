@@ -54,20 +54,23 @@ const MainPage = () => {
   };
 
   // DUMMY DATALAR
-  const [popPlaylist, setPopPlaylist] = useState({ songs: [] });
-  const [rockPlaylist, setRockPlaylist] = useState({ songs: [] });
-  const [jazzPlaylist, setJazzPlaylist] = useState({ songs: [] });
-  const [housePlaylist, setHousePlaylist] = useState({ songs: [] });
+  const [popPlaylist, setPopPlaylist] = useState({
+    songs: [],
+    url: "",
+  });
+  const [rockPlaylist, setRockPlaylist] = useState({ songs: [], url: "" });
+  const [jazzPlaylist, setJazzPlaylist] = useState({ songs: [], url: "" });
+  const [housePlaylist, setHousePlaylist] = useState({ songs: [], url: "" });
 
-  const [happyPlaylist, setHappyPlaylist] = useState({ songs: [] });
-  const [sadPlaylist, setSadPlaylist] = useState({ songs: [] });
-  const [studyPlaylist, setStudyPlaylist] = useState({ songs: [] });
-  const [chillPlaylist, setChillPlaylist] = useState({ songs: [] });
+  const [happyPlaylist, setHappyPlaylist] = useState({ songs: [], url: "" });
+  const [sadPlaylist, setSadPlaylist] = useState({ songs: [], url: "" });
+  const [studyPlaylist, setStudyPlaylist] = useState({ songs: [], url: "" });
+  const [chillPlaylist, setChillPlaylist] = useState({ songs: [], url: "" });
 
   const getSongsByGenre = async (genre) => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8008/recommendationsSDAFASDF/${genre}`
+        `http://127.0.0.1:8008/rrecommendations/${genre}`
       );
       if (!response.ok) {
         throw new Error(
@@ -78,13 +81,11 @@ const MainPage = () => {
       console.log("Fetched data:", data); // Check the structure of the fetched data
 
       const formattedSongs = data.tracks.map((track) => ({
-        songName: track.name,
-        artistName: track.artists.map((artist) => artist.name).join(", "),
-        songLength: track.duration_ms,
-        releaseYear: new Date(track.album.release_date).getFullYear(),
-        rating: track.popularity,
-        album: track.album.name,
-        songPicture: track.album.images[0].url,
+        songName: track.song_name,
+        artistName: track.artist_name,
+        songLength: track.songLength,
+        id: track.song_id,
+        url: track.picture,
       }));
 
       return formattedSongs;
