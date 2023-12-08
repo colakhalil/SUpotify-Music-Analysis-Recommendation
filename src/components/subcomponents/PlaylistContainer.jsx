@@ -1,12 +1,30 @@
 import React from "react";
 
 const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
-  const handleSongClick = (song) => {
+  const handleSongClick = async (song) => {
     console.log("Song: " + song.id + " clicked");
 
-    //song bilgilerini backendden al ve gönder bottom bara ve mainPagedekine uygun formatla
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8008/get_song_info/Ezgi/${song.id}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      let songData = await response.json();
 
-    // setCurrentBottomSong(song);
+      // Format the duration
+      if (songData.duration) {
+        songData = {
+          ...songData,
+          duration: formatDuration(songData.duration),
+        };
+      }
+
+      setCurrentBottomSong(songData);
+    } catch (error) {
+      console.error("Error fetching song data:", error);
+    }
   };
 
   // Helper function to format song duration from milliseconds to "mm:ss"

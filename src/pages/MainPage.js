@@ -18,18 +18,19 @@ const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
   const [currentPlaylistInfo, setCurrentPlaylistInfo] = useState(null);
   const [currentBottomSong, setCurrentBottomSong] = useState({
+    id: "song_id",
+    artists: "Ebru Gündeş",
     title: "Çingenem",
-    artist: "Ebru Gündeş",
+    thumbnail:
+      "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
+    playCount: 100,
+    popularity: 0.5,
+    valence: 0.5,
     duration: "2:48",
     genre: "Pop, Dance",
-    mood: "Uplifting",
-    recordingType: "Studio",
-    instruments: "Guitar, Piano, Drums",
-    playCount: 100,
     releaseYear: 2021,
     dateAdded: "2023-04-15",
     userPrevRating: 2,
-    img: "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
   }); // Initialize with an empty object or initial song data
 
   // ... [other functions and states]
