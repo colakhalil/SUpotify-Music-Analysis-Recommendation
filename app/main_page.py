@@ -330,41 +330,19 @@ def get_playlist_info(user_id,playlist_id):
 def save_song_with_form():
     if request.method == 'POST':
         
-        sp = spotipy.Spotify(auth=token)
-        
         data = request.get_json()
         
         artist = Artist.query.filter_by(artist_name=data['artistName']).first()
         
         if not artist:
-            
-            sp_artist = sp.search(q='artist:' + data['artistName'], type='artist')
-            
-            if sp_artist['artists']['items']:
                 
-                artist = sp_artist['artists']['items'][0]
-                
-                genres = ', '.join(artist['genres'])
-                
-                artist = Artist(
-                    artist_id = artist['id'],
-                    artist_name = artist['name'],
-                    picture = artist['images'][0]['url'],
-                    popularity = artist['popularity'],
-                    genres = genres,
-                    followers = artist['followers']['total']
-                )
-                db.session.add(artist)
-
-            
-            else:
-                artist = Artist(
-                    artist_id = data['artistName'],
-                    artist_name = data['artistName'],
-                    picture = "unknown",
-                    genres = data['songGenre']
-                )
-                db.session.add(artist)
+            artist = Artist(
+                artist_id = data['artistName'],
+                artist_name = data['artistName'],
+                picture = "unknown",
+                genres = data['songGenre']
+            )
+            db.session.add(artist)
 
 
         new_song = Song(
