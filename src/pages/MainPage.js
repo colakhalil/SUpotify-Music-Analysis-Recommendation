@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../pagesCSS/MainPage.css";
+import Searched from "../components/Searched";
 
 import LeftBar from "../components/LeftBar";
 import FriendActivity from "../components/FriendActivity";
@@ -16,6 +17,7 @@ import DatabaseMiddle from "../components/DatabaseMiddle";
 
 const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
+  const [searchedarray, setSearchedArray] = useState({});
   const [currentPlaylistInfo, setCurrentPlaylistInfo] = useState(null);
   const [currentBottomSong, setCurrentBottomSong] = useState({
     id: "song_id",
@@ -71,7 +73,7 @@ const MainPage = () => {
   const getSongsByGenre = async (genre) => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8008/recommendations/${genre}`
+        `http://127.0.0.1:8008/rrecommendations/${genre}`
       );
       if (!response.ok) {
         throw new Error(
@@ -240,7 +242,7 @@ const MainPage = () => {
 
   const friendsData = [
     {
-      name: "Idil Güler",
+      name: "ezgi",
       lastListenedSong: "Song Name 1",
       profilePicture:
         "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
@@ -296,6 +298,7 @@ const MainPage = () => {
           <MainMiddle
             setCurrentPlace={setCurrentPlace}
             setCurrentBottomSong={setCurrentBottomSong}
+            setSearchedArray={setSearchedArray}
             popPlaylist={popPlaylist}
             rockPlaylist={rockPlaylist}
             jazzPlaylist={jazzPlaylist}
@@ -340,6 +343,9 @@ const MainPage = () => {
         />
         {currentPlace === "friend" && (
           <FriendProfileMiddle></FriendProfileMiddle>
+        )}
+        {currentPlace === "searched" && (
+          <Searched users={searchedarray} friendsData={friendsData}></Searched>
         )}
         <BottomBar song={currentBottomSong} setCurrentPlace={setCurrentPlace} />
       </div>

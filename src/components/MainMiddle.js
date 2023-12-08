@@ -13,13 +13,8 @@ const MainMiddle = ({
   studyPlaylist,
   chillPlaylist,
   setCurrentPlaylistInfo,
+  setSearchedArray,
 }) => {
-  const handleSearch = (searchTerm) => {
-    console.log(`Search term submitted: ${searchTerm}`);
-    // You can now do something with the search term,
-    // like making an API call to fetch search results
-  };
-
   const handlePlaylistClick = (playlistName, setCurrentPlace) => {
     setCurrentPlace("playlist");
     console.log(`Playlist clicked: ${playlistName}`);
@@ -44,7 +39,10 @@ const MainMiddle = ({
 
   return (
     <div className="content-container">
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar
+        setCurrentPlace={setCurrentPlace}
+        setSearchedArray={setSearchedArray}
+      />
       <h2 className="recommended-title">
         Recommended Playlists Based on Genre
       </h2>
