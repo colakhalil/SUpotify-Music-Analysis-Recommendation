@@ -160,8 +160,9 @@ def get_song_info(user_id, song_id):
         
     song = Song.query.filter_by(song_id=song_id).first()
     prev_rate = RateSong.query.filter_by(song_id=song_id, user_id=user_id).first()
+    prev_rate_album = RateAlbum.query.filter_by(album_id=song.album_id, user_id=user_id).first()
     artists = ArtistsOfSong.query.filter_by(song_id=song_id).all()
-    
+    prev_rate_artist = RateArtist.query.filter_by(artist_id=song.artist_id, user_id=user_id).first()
     song_info = {
         'song_id': song.song_id,
         'artists': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
@@ -174,7 +175,9 @@ def get_song_info(user_id, song_id):
         'genre': song.genre,
         'releaseYear': song.release_date,
         'dateAdded': song.date_added,
-        'userPrevRating': prev_rate.rating if prev_rate else 0
+        'userPrevRating': prev_rate.rating if prev_rate else 0,
+        'userPrevRatingAlbum': prev_rate_album.rating if prev_rate_album else 0,
+        'userPrevRatingArtist': prev_rate_artist.rating if prev_rate_artist else 0,
     }
     return jsonify(song_info)
 
