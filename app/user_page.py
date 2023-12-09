@@ -158,8 +158,8 @@ def search_friends(search_term):
 def remove_friend(user_id):
     friend_id = request.json.get('friend_id')
 
-    user = User.query.get(user_id)
-    friend = User.query.get(friend_id)
+    user = User.query.filter_by(user_id=user_id).first()
+    friend = User.query.filter_by(user_id=friend_id).first()
 
     if not user:
         return jsonify({'error': 'User not found'})
@@ -168,8 +168,8 @@ def remove_friend(user_id):
         return jsonify({'error': 'Friend not found'})
 
     existing_friendship = Friendship.query.filter(
-        ((Friendship.user1_id == user_id) and (Friendship.user2_id == friend_id)) or
-        ((Friendship.user1_id == friend_id) and (Friendship.user2_id == user_id))
+        ((Friendship.user1_id == user_id) & (Friendship.user2_id == friend_id)) |
+        ((Friendship.user1_id == friend_id) & (Friendship.user2_id == user_id))
     ).first()
 
     if not existing_friendship:
