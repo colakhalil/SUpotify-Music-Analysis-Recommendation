@@ -14,7 +14,8 @@ const FavoriteRecentSongs = () => {
       })
       .then((data) => {
         // Ensure the data structure matches the provided JSON format
-        const favorite90sSongs = data;
+        let favorite90sSongs = data;
+        favorite90sSongs = favorite90sSongs.filter((song) => song.rate >= 3);
         const first6Items =
           favorite90sSongs.length >= 6
             ? favorite90sSongs.slice(0, 6)
