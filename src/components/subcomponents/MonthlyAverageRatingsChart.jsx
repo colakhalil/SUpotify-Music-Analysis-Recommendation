@@ -10,15 +10,37 @@ import {
   Legend,
 } from "recharts";
 
+import globalVar from "../../global.js";
+
 const MonthlyAverageRatingsChart = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("../../../data/ratings.json")
-      .then((response) => response.json())
-      .then((data) => setData(data));
-  }, []);
+    // Fetch data from the provided URL
+    fetch("http://127.0.0.1:8008/colakhalil/monthly_average_rating")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Extract the monthly average ratings from the response
+        const monthlyRatings = data.monthly_average_ratings || [];
 
+        // Transform the data into the desired format
+        const transformed = monthlyRatings.map((rating) => ({
+          month: `${rating.year}-${String(rating.month).padStart(2, "0")}`,
+          averageRating: rating.average_rating.toFixed(1),
+        }));
+
+        // Set the transformed data in state
+        setData(transformed);
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
+  }, []);
   return (
     <>
       <h3 style={{ color: "white" }}> Monthly Average Rating</h3>
