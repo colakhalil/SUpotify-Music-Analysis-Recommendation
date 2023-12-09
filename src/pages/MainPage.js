@@ -36,6 +36,8 @@ const MainPage = () => {
     userPrevRating: 0,
     userPrevRatingArtist: 0,
     userPrevRatingAlbum: 0,
+    artist_id: "artist_id",
+    album_id: "album_id",
   }); // Initialize with an empty object or initial song data
 
   // ... [other functions and states]

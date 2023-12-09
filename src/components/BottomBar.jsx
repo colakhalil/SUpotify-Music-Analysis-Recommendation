@@ -177,15 +177,68 @@ const BottomBar = ({ song, setCurrentPlace, currentPlace, setSong }) => {
   };
 
   const handleAlbum = (newRating) => {
-    console.log("NEW RATING: album ", newRating);
+    console.log("NEW RATING: album", newRating);
+
+    // Assuming the albumId is a string and you need the first part
+    let albumId = song.album_id;
+    // Update the song state or other logic here
     setSong({ ...song, userPrevRatingAlbum: newRating });
-    // Add additional logic for when the rating changes
+
+    // Define the data to be sent
+    const data = {
+      album_id: albumId,
+      user_id: globalVar.username,
+      rating: newRating,
+    };
+
+    // Send the POST request
+    fetch("http://127.0.0.1:8008/change_rating_album", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const handleArtist = (newRating) => {
-    console.log("NEW RATING:artist ", newRating);
+    let userId = globalVar.username;
+    let artistId = song.artist_id;
+
+    console.log("NEW RATING: artist", newRating);
+
+    // Update the song state or other logic here
     setSong({ ...song, userPrevRatingArtist: newRating });
-    // Add additional logic for when the rating changes
+
+    // Define the data to be sent
+    const data = {
+      artist_id: artistId,
+      user_id: userId,
+      rating: newRating,
+    };
+
+    // Send the POST request
+    fetch("http://127.0.0.1:8008/change_rating_artist", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const togglePlay = () => {

@@ -47,8 +47,6 @@ const UserList = ({ users, friendsData, setFriendsUpdate, friendsUpdate }) => {
   };
 
   const onRemoveFriend = async (friendUserId) => {
-    console.log(`Remove friend: ${friendUserId}`);
-
     const userId = globalVar.username;
     // Check if userId is undefined or null
     if (!userId) {

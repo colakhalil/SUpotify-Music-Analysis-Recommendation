@@ -14,6 +14,8 @@ const SongDetails = ({ song }) => {
       </div>
       <div className="secondInfo">
         <p className="song-meta">Genre: {song.genre}</p>
+        <p className="album-id">AlbumID:</p>
+        <p>{song.album_id}</p>
       </div>
     </div>
   );

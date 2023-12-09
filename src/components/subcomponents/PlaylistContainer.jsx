@@ -61,6 +61,7 @@ const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
         <div className="song-title-h">Title</div>
         <div className="song-artist-h">Artist</div>
         <div className="song-duration-h">Duration</div>
+        <div className="song-duration-h">Album ID</div>
       </div>
       {songs.map((song, index) => (
         <div
