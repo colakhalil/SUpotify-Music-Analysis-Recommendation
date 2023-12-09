@@ -113,6 +113,7 @@ const RatingPopupAlbum = ({
       .catch((error) => {
         console.error("Error:", error);
       });
+    onClose(); // Close the popup after rating
   };
 
   return (

@@ -8,14 +8,32 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-
+import globalVar from "../../global.js";
 const SongsAddedByPerformerChart = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("../../../data/songsByPerformer.json")
-      .then((response) => response.json())
-      .then((data) => setData(data));
+    // Fetch data from the provided URL
+    fetch("http://127.0.0.1:8008/" + globalVar.username + "/artist_song_count")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Transform the fetched data into the desired format
+        const transformed = data.map((artist) => ({
+          performer: artist.artist_name,
+          songsAdded: artist.song_count,
+        }));
+
+        // Set the transformed data in state
+        setData(transformed);
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
   }, []);
 
   return (
