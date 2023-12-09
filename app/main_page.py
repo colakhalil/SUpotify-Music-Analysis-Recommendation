@@ -153,7 +153,7 @@ def get_recommendations_by_genre(genre):
 @cross_origin()
 def get_song_info(user_id, song_id):
     song = Song.query.filter_by(song_id=song_id).first()
-
+   
     if not song:
         sp = spotipy.Spotify(auth=token) 
         fetch_and_save_song(sp, song_id)
@@ -163,8 +163,12 @@ def get_song_info(user_id, song_id):
     prev_rate_album = RateAlbum.query.filter_by(album_id=song.album_id, user_id=user_id).first()
     artists = ArtistsOfSong.query.filter_by(song_id=song_id).all()
     prev_rate_artist = RateArtist.query.filter_by(artist_id=song.artist_id, user_id=user_id).first()
+
     song_info = {
         'song_id': song.song_id,
+
+        "artist_id": song.artist_id,
+        "album_id": song.album_id,
         'artists': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
         'title': song.song_name,
         'thumbnail': song.picture,
@@ -179,6 +183,8 @@ def get_song_info(user_id, song_id):
         'userPrevRatingAlbum': prev_rate_album.rating if prev_rate_album else 0,
         'userPrevRatingArtist': prev_rate_artist.rating if prev_rate_artist else 0,
     }
+
+
     return jsonify(song_info)
 
 
@@ -646,7 +652,7 @@ def change_rating_album():
         if prev_rate:
             RateAlbum.query.filter_by(album_id=data['album_id'], user_id=data['user_id']).update({'rating': data['rating'], 'timestamp': datetime.now()})
         else:
-            new_rate = RateArtist(
+            new_rate = RateAlbum(
                 album_id=data['album_id'],
                 user_id=data['user_id'],
                 rating=data['rating']
