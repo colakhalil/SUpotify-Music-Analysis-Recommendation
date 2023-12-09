@@ -1,3 +1,4 @@
+from collections import Counter
 from flask import Blueprint, Flask, request, url_for, session, jsonify, redirect
 from flask_cors import CORS, cross_origin
 from spotipy.oauth2 import SpotifyOAuth 
@@ -653,6 +654,7 @@ def change_rating_album():
         return jsonify({'message': True})
     
 @main.route('<current_user_id>/friends_recommendations', methods=['GET'])
+@cross_origin()
 def friends_recommendations(current_user_id):
     # Fetch the user's friends with rate_sharing preference
     friends = Friendship.query.filter(
@@ -684,6 +686,213 @@ def friends_recommendations(current_user_id):
             'song_name': song.song_name,
             'artist_name': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
             'rating': rate_song.rating,
+            'song_id': song.song_id,
+            'picture': song.picture,
+            'songLength': song.duration
         })
 
     return jsonify({'recommendations': recommendations})
+
+@main.route('/<current_user_id>/friend_artist_recommendations', methods=['GET'])
+@cross_origin()
+def friend_artist_recommendations(current_user_id):
+    # Fetch the user's friends
+    friends = Friendship.query.filter(
+        (Friendship.user1_id == current_user_id) | (Friendship.user2_id == current_user_id)
+    ).all()
+
+    friend_ids = set()
+    for friend in friends:
+        friend_ids.add(friend.user1_id)
+        friend_ids.add(friend.user2_id)
+
+    # Fetch the most recent highly-rated songs listened by friends
+    recent_highly_rated_songs = (
+        RateArtist.query
+        .filter(RateArtist.user_id.in_(friend_ids), RateArtist.rating >= 4)
+        .order_by(desc(RateArtist.timestamp))
+        .limit(20)
+        .all()
+    )
+
+    # Get the unique artists from the highly-rated songs
+    unique_artist_ids = set(song.artist_id for song in recent_highly_rated_songs)
+    
+    # Fetch the details of the unique artists
+    artist_recommendations = []
+    for artist_id in unique_artist_ids:
+        artist = Artist.query.get(artist_id)
+        artist_recommendations.append({
+            'artist_name': artist.artist_name,
+            'picture': artist.picture,
+            'timestamp': artist.date_added,
+            'popularity': artist.popularity,
+            'genres': artist.genres,
+            'followers': artist.followers
+        })
+
+    return jsonify({'recommendations': artist_recommendations})
+
+@main.route('/delete_song/<song_id>', methods=['POST'])
+@cross_origin()
+def delete_song(song_id):
+
+    song_to_delete = Song.query.filter_by(song_id=song_id).first()
+
+    # Check if a song was found
+    if song_to_delete:
+
+        db.session.delete(song_to_delete)
+
+        # Commit the changes to the database
+        db.session.commit()
+
+        return jsonify({"message": True})
+
+    else:
+
+        return jsonify({"message": False})
+
+@main.route('/delete_album/<album_id>', methods=['POST'])
+@cross_origin()
+def delete_album(album_id):
+
+    album_to_delete = Album.query.filter_by(aldum_id=album_id).first()
+
+    if album_to_delete:
+
+        songs_to_delete = Song.query.filter_by(album_id=album_id).all()
+        for song in songs_to_delete:
+            db.session.delete(song)
+
+        db.session.delete(album_to_delete)
+
+        db.session.commit()
+
+        return jsonify({"message": True})
+
+    else:
+
+        return jsonify({"message": False})
+
+
+@main.route('/delete_artist/<artist_id>', methods=['POST'])
+@cross_origin()
+def delete_artist(artist_id):
+
+        artist_to_delete = Artist.query.filter_by(artist_id=artist_id).first()
+
+        if artist_to_delete:
+            artist_id = artist_to_delete.artist_id
+            albums_to_delete = Album.query.filter_by(artist_id=artist_id).all()
+
+            for album in albums_to_delete:
+                db.session.delete(album)
+
+            featured_songs_to_delete = ArtistsOfSong.query.filter_by(artist_id=artist_id).all()
+
+            for song_artist in featured_songs_to_delete:
+                song_id = song_artist.song_id
+                song_to_delete = Song.query.filter_by(song_id=song_id).first()
+                if song_to_delete:
+                    db.session.delete(song_to_delete)
+                db.session.delete(song_artist)
+
+            db.session.delete(artist_to_delete)
+            db.session.commit()
+            return jsonify({"message": True})
+        else:
+            return jsonify({"message": False})
+
+@main.route('/<current_user_id>/recommended_artist_songs', methods=['GET'])
+def recommended_artist_songs(current_user_id):
+    # Fetch the most liked artist's ID using the find_most_liked_artist function
+    most_liked_artist_id = find_most_liked_artist(current_user_id)
+
+    if most_liked_artist_id:
+        # Get information about the most liked artist
+        most_liked_artist = Artist.query.get(most_liked_artist_id)
+
+        if most_liked_artist:
+            # Fetch songs of the most liked artist from Spotify
+            sp = spotipy.Spotify(auth=token)
+            results = sp.artist_top_tracks(most_liked_artist.artist_id, country='US')
+
+            # Extract relevant information from the Spotify API response
+            song_recommendations = []
+            for track in results['tracks']:
+                song_recommendations.append({
+                    'artist_name': [artist['name'] for artist in track['artists']],
+                    'song_name': track['name'],
+                    'song_id': track['id'],
+                    'picture': track['album']['images'][0]['url'],
+                    'songLength': track['duration_ms'],
+                })
+
+            return jsonify({'song_recommendations': song_recommendations})
+        else:
+            return jsonify({'error': 'Most liked artist not found'}), 404
+    else:
+        return jsonify({'error': 'Most liked artist ID not found'}), 404
+
+def find_most_liked_artist(user_id):
+    recent_highly_rated_songs = (
+        RateArtist.query
+        .filter(RateArtist.user_id == user_id, RateArtist.rating >= 4)
+        .limit(20)
+        .all()
+    )
+
+    # Get the count of each artist in highly-rated songs
+    artist_counter = Counter(song.artist_id for song in recent_highly_rated_songs)
+    if artist_counter:
+    # Find the most liked artist
+        most_liked_artist_id = artist_counter.most_common(1)[0][0]
+
+    return most_liked_artist_id
+
+@main.route('/<current_user_id>/newly_rating_recomendations', methods=['GET']) 
+@cross_origin()
+def get_newly_recommendations(current_user_id):    
+    recently_rated_song = (
+    RateSong.query
+    .filter_by(user_id=current_user_id)
+    .filter(RateSong.rating >= 4)  # Add this filter condition
+    .order_by(desc(RateSong.timestamp))
+    .first() 
+)
+
+    if recently_rated_song:
+         
+        return redirect(f"http://127.0.0.1:8008/recommendations_track/{recently_rated_song.song_id}")
+ 
+    else:
+        return jsonify({'recommendation': None})
+
+#spotify recomendations 
+@main.route('recommendations_track/<track_id>')
+@cross_origin()
+def get_recommendations_by_track(track_id):
+    sp = spotipy.Spotify(auth=token)
+    try:
+        recommendations = sp.recommendations(seed_tracks=[track_id], limit=10)
+        print("Recommendations API Response:", recommendations)  # Add this line for logging
+        result = format_recommendations(recommendations)
+        return jsonify(result)
+    except Exception as e:
+        print(f"Error during API request: {e}")
+        return jsonify({'error': str(e)}), 500
+
+def format_recommendations(recommendations):
+    result = []
+    for track in recommendations['tracks']:
+        curr_track = {
+            'song_id': track['id'],
+            'song_name': track['name'],
+            'artist_name': [artist['name'] for artist in track['artists']],
+            'picture': track['album']['images'][0]['url'],
+            'songLength': track['duration_ms'],
+        }
+        result.append(curr_track)
+    print("Formatted Recommendations:", result)  # Add this line for logging
+    return result
