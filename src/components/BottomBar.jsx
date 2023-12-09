@@ -6,12 +6,51 @@ import globalVar from "../global.js";
 
 import SongDetailsExtra from "./subcomponents/SongDetailsExtra";
 
-const RatingPopup = ({ isOpen, onClose, song, userRating, onRate }) => {
+const RatingPopup = ({
+  isOpen,
+  onClose,
+  song,
+  userRating,
+  onRate,
+  setDataBaseChanged,
+  dataBaseChanged,
+}) => {
   if (!isOpen) return null;
 
   // You can add your rating logic here
   const handleRating = (rating) => {
     onRate(rating);
+    onClose(); // Close the popup after rating
+  };
+
+  const deleteSong = (rating) => {
+    console.log("Song will be deleted: ", song.id);
+    let songId = song.id;
+
+    fetch(`http://127.0.0.1:8008/delete_song/${songId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === true) {
+          // Song was successfully deleted
+          console.log("Song deleted successfully");
+          // Call setDataBaseChanged after 1 second
+          setTimeout(() => {
+            setDataBaseChanged(!dataBaseChanged);
+          }, 1000); // 1000 milliseconds = 1 second
+        } else {
+          // Song was not found or could not be deleted
+          console.error("Failed to delete song");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
     onClose(); // Close the popup after rating
   };
 
@@ -25,12 +64,21 @@ const RatingPopup = ({ isOpen, onClose, song, userRating, onRate }) => {
           onRatingChange={handleRating}
         />
         <button onClick={onClose}>Close</button>
+        <button onClick={deleteSong}>Delete Song</button>
       </div>
     </div>
   );
 };
 
-const RatingPopupAlbum = ({ isOpen, onClose, song, userRating, onRate }) => {
+const RatingPopupAlbum = ({
+  isOpen,
+  onClose,
+  song,
+  userRating,
+  onRate,
+  setDataBaseChanged,
+  dataBaseChanged,
+}) => {
   if (!isOpen) return null;
 
   // You can add your rating logic here
@@ -38,6 +86,33 @@ const RatingPopupAlbum = ({ isOpen, onClose, song, userRating, onRate }) => {
     console.log("Rating given: ", rating);
     onRate(rating);
     onClose(); // Close the popup after rating
+  };
+
+  const deleteAlbum = () => {
+    let albumId = song.album_id;
+    // Make a DELETE request to the Flask endpoint
+    fetch(`http://127.0.0.1:8008/delete_album/${albumId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === true) {
+          // Album was successfully deleted
+          console.log("Album deleted successfully");
+          setTimeout(() => {
+            setDataBaseChanged(!dataBaseChanged);
+          }, 1000); // 1000 milliseconds = 1 second
+        } else {
+          // Album was not found or could not be deleted
+          console.error("Failed to delete album");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -50,18 +125,58 @@ const RatingPopupAlbum = ({ isOpen, onClose, song, userRating, onRate }) => {
           onRatingChange={handleRating}
         />
         <button onClick={onClose}>Close</button>
+        <button onClick={deleteAlbum}>Delete Album</button>
       </div>
     </div>
   );
 };
 
-const RatingPopupArtist = ({ isOpen, onClose, song, userRating, onRate }) => {
+const RatingPopupArtist = ({
+  isOpen,
+  onClose,
+  song,
+  userRating,
+  onRate,
+  setDataBaseChanged,
+  dataBaseChanged,
+}) => {
   if (!isOpen) return null;
 
   // You can add your rating logic here
   const handleRating = (rating) => {
     console.log("Rating given: ", rating);
     onRate(rating);
+    onClose(); // Close the popup after rating
+  };
+
+  const deleteArtist = () => {
+    let artistId = song.artist_id;
+    // Make a DELETE request to the Flask endpoint
+    fetch(`http://127.0.0.1:8008/delete_artist/${artistId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === true) {
+          // Artist was successfully deleted
+          console.log("Artist deleted successfully");
+
+          // Call setDataBaseChanged after 1 second
+          setTimeout(() => {
+            setDataBaseChanged(!dataBaseChanged);
+          }, 1000); // 1000 milliseconds = 1 second
+        } else {
+          // Artist was not found or could not be deleted
+          console.error("Failed to delete artist");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
     onClose(); // Close the popup after rating
   };
 
@@ -75,12 +190,20 @@ const RatingPopupArtist = ({ isOpen, onClose, song, userRating, onRate }) => {
           onRatingChange={handleRating}
         />
         <button onClick={onClose}>Close</button>
+        <button onClick={deleteArtist}>Delete Artist</button>
       </div>
     </div>
   );
 };
 
-const BottomBar = ({ song, setCurrentPlace, currentPlace, setSong }) => {
+const BottomBar = ({
+  song,
+  setCurrentPlace,
+  currentPlace,
+  setSong,
+  setDataBaseChanged,
+  dataBaseChanged,
+}) => {
   console.log("Song: ", song);
   const [isSongRatePopupOpen, setIsSongRatePopupOpen] = useState(false); //songrate
   const [isPlaying, setIsPlaying] = useState(false);
@@ -113,31 +236,6 @@ const BottomBar = ({ song, setCurrentPlace, currentPlace, setSong }) => {
   // Function to close album rating popup
   const handleCloseAlbumRatePopup = () => {
     setIsAlbumRatePopupOpen(false);
-  };
-
-  const handleDelete = async () => {
-    if (isDeleted) {
-      return; // Prevent further action if already clicked
-    }
-
-    try {
-      const response = await fetch("/delete-song", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ song }),
-      });
-
-      if (response.ok) {
-        console.log("Song deleted successfully");
-        setIsDeleted(true); // Update state to reflect deletion
-      } else {
-        console.error("Failed to delete the song");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
   };
 
   const handleSong = async (newRating) => {
@@ -305,13 +403,7 @@ const BottomBar = ({ song, setCurrentPlace, currentPlace, setSong }) => {
       <button className="rate-btn" onClick={handleOpenAlbumRatePopup}>
         Album Rate
       </button>
-      <button
-        className="delete-btn"
-        onClick={handleDelete}
-        disabled={isDeleted}
-      >
-        Delete
-      </button>
+
       <SongDetailsExtra song={song} />
       <RatingPopupArtist
         isOpen={isPopupOpen}
@@ -319,18 +411,25 @@ const BottomBar = ({ song, setCurrentPlace, currentPlace, setSong }) => {
         song={song}
         userRating={song.userPrevRatingArtist}
         onRate={handleArtist}
+        setDataBaseChanged={setDataBaseChanged}
+        dataBaseChanged={dataBaseChanged}
       />
       <RatingPopup
         isOpen={isSongRatePopupOpen}
         onClose={handleCloseSongRatePopup}
         song={song}
         userRating={song.userPrevRating}
+        setDataBaseChanged={setDataBaseChanged}
+        dataBaseChanged={dataBaseChanged}
         onRate={handleSong} // You can modify this if you have a different rating logic for songs
       />
       <RatingPopupAlbum
         isOpen={isAlbumRatePopupOpen}
         onClose={handleCloseAlbumRatePopup}
         userRating={song.userPrevRatingAlbum}
+        setDataBaseChanged={setDataBaseChanged}
+        dataBaseChanged={dataBaseChanged}
+        song={song}
         onRate={handleAlbum}
       />
     </div>

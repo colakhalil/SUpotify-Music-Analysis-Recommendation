@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PlaylistContainer from "./subcomponents/PlaylistContainer";
 import globalVar from "../global.js";
 
-const DatabaseMiddle = ({ setCurrentBottomSong }) => {
+const DatabaseMiddle = ({ setCurrentBottomSong, dataBaseChanged }) => {
   const [songs, setSongs] = useState([]);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const DatabaseMiddle = ({ setCurrentBottomSong }) => {
     };
 
     fetchSongs();
-  }, []);
+  }, [dataBaseChanged]);
 
   return (
     <div className="playlist-middle">

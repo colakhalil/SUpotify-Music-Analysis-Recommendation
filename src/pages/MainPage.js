@@ -20,6 +20,7 @@ const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
   const [searchedarray, setSearchedArray] = useState({});
   const [currentPlaylistInfo, setCurrentPlaylistInfo] = useState(null);
+  const [dataBaseChanged, setDataBaseChanged] = useState(false);
   const [currentBottomSong, setCurrentBottomSong] = useState({
     id: "song_id",
     artists: "Ebru Gündeş",
@@ -227,6 +228,7 @@ const MainPage = () => {
         {currentPlace === "database" && (
           <DatabaseMiddle
             setCurrentBottomSong={setCurrentBottomSong}
+            dataBaseChanged={dataBaseChanged}
           ></DatabaseMiddle>
         )}
 
@@ -259,6 +261,8 @@ const MainPage = () => {
           song={currentBottomSong}
           setSong={setCurrentBottomSong}
           setCurrentPlace={setCurrentPlace}
+          setDataBaseChanged={setDataBaseChanged}
+          dataBaseChanged={dataBaseChanged}
         />
       </div>
     </>
