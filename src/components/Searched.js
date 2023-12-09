@@ -1,19 +1,89 @@
 import React from "react";
 import globalVar from "../global.js";
 
-const UserList = ({ users, friendsData }) => {
+const UserList = ({ users, friendsData, setFriendsUpdate, friendsUpdate }) => {
   const checkIsFriend = (userId) => {
     return friendsData.some((friend) => friend.name === userId);
   };
 
-  const onAddFriend = (userId) => {
-    console.log(`Add friend: ${userId}`);
-    // Implement the logic to add a friend
+  const onAddFriend = async (friendUserId) => {
+    console.log(`Add friend: ${friendUserId}`);
+
+    const userId = globalVar.username;
+
+    if (!userId) {
+      console.error("User ID is undefined or null");
+      return; // Exit the function if userId is not defined
+    }
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8008/add_friend/${userId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            friend_id: friendUserId,
+          }),
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (responseData.message == "Friend added successfully") {
+        console.log("Friend added successfully", responseData);
+        setFriendsUpdate(!friendsUpdate);
+        // Additional logic after successfully adding a friend
+      } else {
+        console.error("Error adding friend", responseData);
+        // Additional logic in case of an error
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      // Additional logic in case of a network error
+    }
   };
 
-  const onRemoveFriend = (userId) => {
-    console.log(`Remove friend: ${userId}`);
-    // Implement the logic to remove a friend
+  const onRemoveFriend = async (friendUserId) => {
+    console.log(`Remove friend: ${friendUserId}`);
+
+    const userId = globalVar.username;
+    // Check if userId is undefined or null
+    if (!userId) {
+      console.error("User ID is undefined or null");
+      return; // Exit the function if userId is not defined
+    }
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8008/remove_friend/${userId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            friend_id: friendUserId,
+          }),
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (responseData.message == "Friend removed successfully") {
+        console.log("Friend removed successfully", responseData);
+        setFriendsUpdate(!friendsUpdate);
+        // Additional logic after successfully removing a friend
+      } else {
+        console.error("Error removing friend", responseData);
+        // Additional logic in case of an error
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      // Additional logic in case of a network error
+    }
   };
 
   return (

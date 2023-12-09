@@ -14,6 +14,7 @@ import SubmissionForm from "../components/SubmissionForm";
 import SubmissionFormExport from "../components/SubmissionFormExport";
 import FriendProfileMiddle from "../components/FriendProfileMiddle";
 import DatabaseMiddle from "../components/DatabaseMiddle";
+import globalVar from "../global";
 
 const MainPage = () => {
   const [currentPlace, setCurrentPlace] = useState("main");
@@ -147,89 +148,7 @@ const MainPage = () => {
     });
   }, []);
   // Rest of your component code
-
-  const playlistData = {
-    playlistID: "playlist123",
-    playlistName: "Chill Vibes",
-    playlistPicture:
-      "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    songs: [
-      {
-        songName: "Ocean Breeze",
-        duration: "3:45",
-        releaseYear: 2021,
-        artist: "Tropical Sound",
-        songRating: 4.5,
-      },
-      {
-        songName: "Mountain Serenity",
-        duration: "4:20",
-        releaseYear: 2020,
-        artist: "Nature Melody",
-        songRating: 4.7,
-      },
-      {
-        songName: "Urban Sunset",
-        duration: "5:00",
-        releaseYear: 2019,
-        artist: "City Lights",
-        songRating: 4.3,
-      },
-      {
-        songName: "Virginia Beach",
-        duration: "5:00",
-        releaseYear: 2023,
-        artist: "City Lights",
-        songRating: 4.3,
-      },
-      // Add more songs as needed
-    ],
-  };
-
-  const userData = {
-    username: "UserName",
-    profilePicture:
-      "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695", // Profil resminin yolunu güncelleyin
-    friendCount: 5, // Arkadaş sayısını güncelleyin
-  };
-
-  // Son calınan 4 playlıst
-  const lastPlaylists = [
-    {
-      name: "Playlist 1",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-    {
-      name: "Playlist 2",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-    {
-      name: "Playlist 3",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-    {
-      name: "Playlist 3",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-    {
-      name: "Playlist 3",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-    {
-      name: "Playlist 3",
-      thumbnail:
-        "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
-    },
-
-    // Add more playlists as needed
-  ];
-
-  const friendsData = [
+  const [friendsData, setFriendsData] = useState([
     {
       name: "ezgi",
       lastListenedSong: "Song Name 1",
@@ -249,36 +168,32 @@ const MainPage = () => {
         "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
     },
     // Add more friend objects
-  ];
-  // Dummy data for playlists
-  const playlists = [
-    {
-      playlist_name: "EFKARLI IKEN",
-      playlist_picture:
-        "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
-      song_number: "12949129412",
-    },
-    {
-      playlist_name: "GAZLAAAAAAA",
-      playlist_picture:
-        "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
-      song_number: "124124",
-    },
-    {
-      playlist_name: "HANIMI DUSUNURKEN",
-      playlist_picture:
-        "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1696331695",
-      song_number: "9999999999",
-    },
-    // Add more playlists here...
-  ];
+  ]);
+  const [friendsUpdate, setFriendsUpdate] = useState(false); // State to trigger friends data update
   // DUMMY DATALAR
+  useEffect(() => {
+    const fetchFriendsActivity = async () => {
+      try {
+        const response = await fetch(
+          `http://127.0.0.1:8008/friends_activity/${globalVar.username}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setFriendsData(data);
+      } catch (error) {
+        console.error("Error fetching friends activity:", error);
+      }
+    };
+
+    fetchFriendsActivity();
+  }, [friendsUpdate]); // Depend on friendsUpdate to refetch when it changes
 
   return (
     <>
       <div className="main-container">
         <LeftBar
-          playlists={playlists}
           setCurrentPlaylistInfo={setCurrentPlaylistInfo}
           setCurrentPlace={setCurrentPlace}
         />
@@ -304,10 +219,7 @@ const MainPage = () => {
           <SubmissionFormExport></SubmissionFormExport>
         )}
         {currentPlace === "profile" && (
-          <ProfileMiddle
-            userData={userData}
-            setCurrentPlace={setCurrentPlace}
-          ></ProfileMiddle>
+          <ProfileMiddle setCurrentPlace={setCurrentPlace}></ProfileMiddle>
         )}
 
         {currentPlace === "database" && (
@@ -334,7 +246,12 @@ const MainPage = () => {
           <FriendProfileMiddle></FriendProfileMiddle>
         )}
         {currentPlace === "searched" && (
-          <Searched users={searchedarray} friendsData={friendsData}></Searched>
+          <Searched
+            users={searchedarray}
+            setFriendsUpdate={setFriendsUpdate}
+            friendsUpdate={friendsUpdate}
+            friendsData={friendsData}
+          ></Searched>
         )}
         <BottomBar
           song={currentBottomSong}
