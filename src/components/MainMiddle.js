@@ -114,7 +114,7 @@ const MainMiddle = ({
                 : "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
           };
           console.log("Response data as JSON:", transformedData);
-          setRecommendedArtistSongs(transformedData);
+          setNewlyRatedRecommendation(transformedData);
         }
       })
       .catch((error) => {
