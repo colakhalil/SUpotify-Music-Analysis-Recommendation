@@ -166,7 +166,6 @@ def get_song_info(user_id, song_id):
 
     song_info = {
         'song_id': song.song_id,
-
         "artist_id": song.artist_id,
         "album_id": song.album_id,
         'artists': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
@@ -766,7 +765,7 @@ def delete_song(song_id):
 @cross_origin()
 def delete_album(album_id):
 
-    album_to_delete = Album.query.filter_by(aldum_id=album_id).first()
+    album_to_delete = Album.query.filter_by(album_id=album_id).first()
 
     if album_to_delete:
 
