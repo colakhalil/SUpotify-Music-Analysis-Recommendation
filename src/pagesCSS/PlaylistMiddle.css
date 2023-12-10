@@ -1,16 +1,32 @@
 /* General Styles for the Playlist Middle */
 /* General Styles for the Playlist Middle */
 /* General Styles for the Playlist Middle */
+/* General Styles for the Playlist Middle */
 .playlist-middle {
-
   display: flex;
   flex-direction: column;
-  align-items: left; /* Centers the content horizontally */
-  justify-content: center; /* Centers the content vertically if there's space */
+  align-items: center; /* Aligns children to the center horizontally */
+  justify-content: flex-start; /* Aligns children to the start vertically */
   padding: 30px;
-  width: 100%; /* Full width */
+  width: 100%;
   height: calc(100vh - 100px); /* Adjust based on header/footer heights */
   overflow-y: auto; /* Allow vertical scrolling */
+}
+
+/* Playlist Picture Styling */
+.playlist-picture {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Centers the image horizontally */
+  align-items: center; /* Centers the image vertically */
+  max-height: 200px; /* Adjust height as necessary */
+  margin-bottom: 20px; /* Spacing between image and song info */
+}
+
+.playlist-picture img {
+  max-width: 100%;
+  max-height: 100%; /* Image will be as tall as its container */
+  object-fit: contain; /* Ensures the image is scaled correctly without distortion */
 }
 
 /* Playlist Container Styling */
@@ -18,32 +34,17 @@
   display: flex;
   flex-direction: column;
   align-items: center; /* Center children */
-  margin-left: 3rem;
-  width: 80%; /* Adjust width as necessary */
+
   max-width: 1200px; /* Maximum width */
-  margin-bottom: 45px;
+  overflow-y: auto; /* Allow vertical scrolling */
 }
 
-
-
-/* Playlist Picture Styling */
-.playlist-picutre {
-  width: 100%;
-  display: flex;
-  justify-self: center;
-}
-.playlist-picture img {
-  max-width: 100%;
-  margin-top: 15rem;
-  margin-left: 32rem;
-  max-height: 200px; /* Or any size you see fit */
-  object-fit: contain;
-}
+/* Adjustments to song row and other elements as needed */
 
 /* Playlist Name Styling */
 .playlist-name {
   font-size: 1em;
-  margin-top:1em;
+  margin-top: 1em;
   margin-bottom: 0.5em;
   margin-right: 13rem;
   text-align: center;
@@ -55,28 +56,23 @@
 .song-artist-h,
 .song-duration-h,
 .song-release-year-h,
-.song-rating-h
-{
+.song-rating-h {
   font-size: 23px;
-  color:White;
-
+  color: White;
 }
-
-
-
-
-
 
 /* Song Row Styling */
 .song-row {
   display: grid;
-  grid-template-columns: minmax(auto, 50px) minmax(auto, 4fr) minmax(auto, 2fr) minmax(auto, 3fr) minmax(auto, 1fr) minmax(auto, 50px);
+  grid-template-columns:
+    minmax(auto, 50px) minmax(auto, 4fr) minmax(auto, 2fr) minmax(auto, 3fr)
+    minmax(auto, 1fr) minmax(auto, 50px);
   gap: 10px;
   align-items: center;
   padding: 15px; /* Increased padding for better spacing */
   color: #fff;
   width: 100%; /* Full width of the container */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* subtle shadow for depth */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* subtle shadow for depth */
   margin: 10px 0; /* Spacing between rows */
   transition: transform 0.2s ease; /* Smooth transition for hover effect */
 }
@@ -84,13 +80,12 @@
 .song-row:hover {
   transform: scale(1.02); /* Slight increase in size on hover */
   background-color: rgba(255, 255, 255, 0.1); /* Highlight row on hover */
-  
 }
-.song-name{
+.song-name {
   font-size: 25px;
 }
 /* Index, Name, Artist, and Duration Styling */
-.song-duration{
+.song-duration {
   margin-left: 10rem;
 }
 
@@ -121,7 +116,6 @@
     display: none;
   }
 
- 
   .playlist-container {
     grid-template-columns: 1fr; /* Display a single column on small screens */
   }
@@ -133,28 +127,26 @@
     padding: 10px;
     color: #fff;
   }
-.song-row.header {
-  color: #ccc;
-  display:contents;
-  background-color: #333;
-  font-weight: bold;
-}
+  .song-row.header {
+    color: #ccc;
+    display: contents;
+    background-color: #333;
+    font-weight: bold;
+  }
 
-.song-index-h,
-.song-name-h,
-.song-artist-h,
-.song-duration-h,
-.song-release-year-h,
-.song-rating-h {
-  background-color: #333;
-  color: #ccc;
-  font-weight: bold;
-  display: flex;
-  align-items:flex-start;
-  padding: 0 1px; 
-}
-
-
+  .song-index-h,
+  .song-name-h,
+  .song-artist-h,
+  .song-duration-h,
+  .song-release-year-h,
+  .song-rating-h {
+    background-color: #333;
+    color: #ccc;
+    font-weight: bold;
+    display: flex;
+    align-items: flex-start;
+    padding: 0 1px;
+  }
 
   .song-index {
     flex-grow: 0;
@@ -163,36 +155,25 @@
     text-align: center;
   }
 
-.song-name {
-  flex-grow: 1; /* Allows more space for song names */
-}
+  .song-name {
+    flex-grow: 1; /* Allows more space for song names */
+  }
 
-.song-artist {
-  flex-grow: 1; /* Allows more space for artist names */
-}
+  .song-artist {
+    flex-grow: 1; /* Allows more space for artist names */
+  }
 
-.song-duration {
-  flex-grow: 1;
-}
+  .song-duration {
+    flex-grow: 1;
+  }
 
-.song-release-year {
-  flex-grow: 1;
-}
+  .song-release-year {
+    flex-grow: 1;
+  }
 
-.song-rating-p {
-  flex-grow: 1;
-  justify-content: flex-end; /* Align the rating to the end */
-}
-/* Add media queries and other styles as necessary */
-
-
-
-
-
-
-
-
-
-
-
+  .song-rating-p {
+    flex-grow: 1;
+    justify-content: flex-end; /* Align the rating to the end */
+  }
+  /* Add media queries and other styles as necessary */
 }

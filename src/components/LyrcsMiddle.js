@@ -9,17 +9,11 @@ const formatLyrics = (lyrics) => {
 const LyrcsMiddle = ({ song }) => {
   const [lyrics, setLyrics] = useState("");
 
-  const normalizeText = (text) => {
-    return text
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[\W_]+/g, "_")
-      .toLowerCase();
-  };
-
   useEffect(() => {
-    const artistName = normalizeText(song.artist);
-    const songName = normalizeText(song.title);
+    const artistName = song.artists;
+    const songName = song.title;
+
+    /*artist name normalization and title normalization should be sone */
     const lyricsUrl = `http://127.0.0.1:8008/lyrics/${artistName}/${songName}`;
 
     fetch(lyricsUrl)

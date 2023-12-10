@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NavigationButtons from "./subcomponents/NavigationButtons";
 import PlaylistCardLeftbar from "./subcomponents/PlaylistCardLeftbar";
+import globalVar from "../global";
 
-const LeftBar = ({ setCurrentPlace }) => {
+const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
   const [playlists, setPlaylists] = useState([]);
 
   useEffect(() => {
@@ -22,10 +23,64 @@ const LeftBar = ({ setCurrentPlace }) => {
     fetchPlaylists();
   }, []);
 
-  const handleClick = (key) => {
-    console.log(`You clicked on ${key}`);
-    setCurrentPlace("playlist");
-    // Implement your playlist click functionality here
+  function transformJson(originalJson) {
+    return {
+      album: originalJson.artist + " Album", // You might need a better way to determine the album name
+      artistName: originalJson.artist,
+      rating: originalJson.song_rating,
+      releaseYear: originalJson.release_year.split("-")[0],
+      songLength: originalJson.duration,
+      songName: originalJson.song_name, // Placeholder, replace with actual logic to determine the picture URL
+      id: originalJson.song_id,
+    };
+  }
+  function transformPlaylistJson(originalJson) {
+    return {
+      ...originalJson, // Spread the rest of the original object properties
+      name: originalJson.playlistName, // Rename playlistName to name
+      url: originalJson.playlistPicture, // Rename playlistPicture to imageUrl
+      // Remove the old properties if you no longer need them
+    };
+  }
+
+  const handleClick = async (playlistId) => {
+    console.log(`You clicked on playlist with ID: ${playlistId}`);
+
+    const url =
+      "http://127.0.0.1:8008/get_playlist_info/" +
+      globalVar.username +
+      "/" +
+      playlistId;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      let data = await response.json(); // Parsing the JSON data
+      console.log("Fetched data in leftbar: ", data); // Now you log the actual data
+
+      // Assuming transformJson is a function that transforms each song
+      // For example:
+      // function transformJson(song) {
+      //   // transform logic here
+      //   return transformedSong;
+      // }
+
+      const transformedArray = data.songs.map(transformJson);
+
+      data.songs = transformedArray;
+      data = transformPlaylistJson(data);
+      // Update the songs array in data with the transformed array
+      console.log("halıl burdayız", data);
+      setCurrentPlaylistInfo(data);
+
+      setCurrentPlace("playlist");
+
+      /* After getting data put this data to umit's playlist component*/
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   const handleMain = () => {
@@ -45,12 +100,19 @@ const LeftBar = ({ setCurrentPlace }) => {
     // Implement your profile click functionality here
   };
 
+  const handleDatabaseClick = () => {
+    console.log("You clicked on databse");
+    setCurrentPlace("database");
+    // Implement your profile click functionality here
+  };
+
   return (
     <div className="left-bar">
       <NavigationButtons
         onHomeClick={handleMain}
         onSearchClick={handleSearch}
         onProfileClick={handleProfile}
+        onDatabaseClick= {handleDatabaseClick}
       />
       <PlaylistCardLeftbar
         playlists={playlists}

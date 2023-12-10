@@ -1,17 +1,37 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../pagesCSS/FavoriteSongs90s.css";
+import globalVar from "../../global.js";
 const FavoriteRecentSongs = () => {
   const [songs, setSongs] = useState([]);
 
   useEffect(() => {
-    fetch("../../../data/songs.json")
-      .then((response) => response.json())
+    fetch("http://127.0.0.1:8008/" + globalVar.username + "/new_songs")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
       .then((data) => {
-        const sixMonthsAgo = new Date();
-        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+        // Ensure the data structure matches the provided JSON format
+        let favorite90sSongs = data;
+        favorite90sSongs = favorite90sSongs.filter((song) => song.rate >= 3);
+        const first6Items =
+          favorite90sSongs.length >= 6
+            ? favorite90sSongs.slice(0, 6)
+            : favorite90sSongs;
 
-        const recentSongs = data.slice(0, 10);
-        setSongs(recentSongs);
+        console.log(first6Items);
+        const transformedData = first6Items.map((song) => {
+          return {
+            title: song.song_name,
+            artist: song.artist_name.join(" "), // Convert the array to a string with spaces
+            releaseYear: song.release_date,
+          };
+        });
+
+        // Set the transformed data to your state variable (e.g., albums)
+        setSongs(transformedData);
       });
   }, []);
 

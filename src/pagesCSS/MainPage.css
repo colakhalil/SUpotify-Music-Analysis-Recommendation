@@ -254,3 +254,48 @@
   cursor: pointer;
 }
 
+.search-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px; /* Adjust as needed */
+}
+
+.search-input {
+  flex-grow: 1;
+  margin-right: 10px; /* Adjust as needed */
+}
+
+.user-results {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Adjust as needed */
+}
+
+.user-image {
+  width: 50px; /* Adjust as needed */
+  height: 50px; /* Adjust as needed */
+  border-radius: 50%; /* Makes the image circular */
+  object-fit: cover;
+  margin-right: 10px; /* Adjust as needed */
+}
+
+.user-name {
+  font-weight: bold;
+  color: #333; /* Adjust as needed */
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
