@@ -97,6 +97,13 @@ def token_add():
     token = session['token_info']['access_token']
     return redirect("http://localhost:3000/main")
 
+@main.route('/token_add_mobile')
+@cross_origin()
+def token_add_mobile():
+    global token
+    token = session['token_info']['access_token']
+    return "SUCCESS"
+
 #WORKS
 @main.route("/lyrics/<artist_name>/<song_name>")
 @cross_origin()
