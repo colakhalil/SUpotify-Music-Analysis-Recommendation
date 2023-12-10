@@ -11,13 +11,15 @@ const PlaylistMiddle = ({ setCurrentBottomSong, playlistInfo }) => {
     setKey((prevKey) => prevKey + 1);
   }, [playlistInfo]);
   return (
-    <div className="playlist-middle" key={key}>
-      <PlaylistPicture imageUrl={playlistInfo.url} />
-      <PlaylistName name={playlistInfo.name} />
-      <PlaylistContainer
-        songs={playlistInfo.songs}
-        setCurrentBottomSong={setCurrentBottomSong}
-      />
+    <div className="centerp">
+      <div className="playlist-middle" key={key}>
+        <PlaylistPicture className="centerphoto" imageUrl={playlistInfo.url} />
+        <PlaylistName className="center-name" name={playlistInfo.name} />
+        <PlaylistContainer
+          songs={playlistInfo.songs}
+          setCurrentBottomSong={setCurrentBottomSong}
+        />
+      </div>
     </div>
   );
 }; 
