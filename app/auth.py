@@ -14,8 +14,8 @@ auth = Blueprint('auth', __name__)
 
 TOKEN_INFO = "token_info" 
 
-client_id = "YOUR CLIENT ID"
-client_secret = "YOUR CLIENT SECRET"
+client_id = "YOUR_CLIENT_ID"
+client_secret = "YOUR_CLIENT_SECRET"
 # scope tanimi 
 def create_spotify_outh():
     return SpotifyOAuth(

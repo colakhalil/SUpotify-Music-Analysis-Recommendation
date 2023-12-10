@@ -202,7 +202,10 @@ def most_rated_songs(current_user_id):
             'timestamp': song.timestamp,
             'rating': song.rating,
             'album_name': song_info.album_name,
-            'picture': song_info.picture
+            'picture': song_info.picture,
+            'song_id': song.song_id,
+            'album_id': song_info.album_id,
+            'duration': song_info.duration
         })
 
-    return jsonify({'song_recommendations': song_recommendations})
+    return jsonify({'most_rated_songs': song_recommendations})
