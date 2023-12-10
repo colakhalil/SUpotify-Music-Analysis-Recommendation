@@ -243,6 +243,8 @@ const MainPage = () => {
         )}
 
         <FriendActivity
+          friendsUpdate={friendsUpdate}
+          setFriendsUpdate={setFriendsUpdate}
           friendsData={friendsData}
           setCurrentPlace={setCurrentPlace}
         />
