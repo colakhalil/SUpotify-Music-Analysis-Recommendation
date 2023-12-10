@@ -415,6 +415,7 @@ def get_all_songs(user_id):
             artists = ArtistsOfSong.query.filter_by(song_id=song.song_id).all()
             result = {
                 'song_id': song.song_id,
+                'artist_id': song.artist_id,
                 'artist_name': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
                 'album_name': song.album.album_name if song.album else None,
                 'song_name': song.song_name,
@@ -719,11 +720,15 @@ def friend_artist_recommendations(current_user_id):
     artist_recommendations = []
     for artist_id in unique_artist_ids:
         artist = Artist.query.get(artist_id)
-        artist_recommendations.append({
-            'artist_name': artist.artist_name,
-            'picture': artist.picture,
-            'timestamp': artist.date_added,  # You may want to use a different timestamp for artists
-        })
+        if artist:
+            artist_recommendations.append({
+                'artist_name': artist.artist_name,
+                'picture': artist.picture,
+                'artist_id': artist.artist_id,
+                'popularity': artist.popularity,
+                'genres': artist.genres,
+                'followers': artist.followers
+            })
 
     return jsonify({'recommendations': artist_recommendations})
 # Route to delete an song from the database 
