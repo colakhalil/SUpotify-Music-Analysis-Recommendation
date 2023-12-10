@@ -203,34 +203,12 @@ def fill_db(playlist_id):
 
         new_rate = RateSong(
             song_id=track_info['id'],
-            user_id="bercin",
-            rating= counter % 5,
-            timestamp = datetime(2023, counter % 12 + 1, 1)
-        )
-        new_rate2 = RateSong(
-            song_id=track_info['id'],
-            user_id="arda",
-            rating= counter % 5,
-            timestamp = datetime(2023, counter % 12 + 1, 1)
-        )
-        new_rate3 = RateSong(
-            song_id=track_info['id'],
-            user_id="atakan",
-            rating= counter % 5,
-            timestamp = datetime(2023, counter % 12 + 1, 1)
-        )
-        
-        new_rate4 = RateSong(
-            song_id=track_info['id'],
-            user_id="ezgi",
+            user_id="yeren",
             rating= counter % 5,
             timestamp = datetime(2023, counter % 12 + 1, 1)
         )
         
         db.session.add(new_rate)
-        db.session.add(new_rate2)
-        db.session.add(new_rate3)
-        db.session.add(new_rate4)
         counter += 1
         
     db.session.commit()
@@ -702,7 +680,6 @@ def friends_recommendations(current_user_id):
     return jsonify({'recommendations': recommendations})
 
 @main.route('/<current_user_id>/friend_artist_recommendations', methods=['GET'])
-@cross_origin()
 def friend_artist_recommendations(current_user_id):
     # Fetch the user's friends
     friends = Friendship.query.filter(
@@ -717,7 +694,7 @@ def friend_artist_recommendations(current_user_id):
     # Fetch the most recent highly-rated songs listened by friends
     recent_highly_rated_songs = (
         RateArtist.query
-        .filter(RateArtist.user_id.in_(friend_ids), RateArtist.rating >= 4)
+        .filter(RateArtist.user_id.in_(friend_ids), RateArtist.rating >= 4, RateArtist.rate_sharing == 'public')
         .order_by(desc(RateArtist.timestamp))
         .limit(20)
         .all()
@@ -733,10 +710,7 @@ def friend_artist_recommendations(current_user_id):
         artist_recommendations.append({
             'artist_name': artist.artist_name,
             'picture': artist.picture,
-            'timestamp': artist.date_added,
-            'popularity': artist.popularity,
-            'genres': artist.genres,
-            'followers': artist.followers
+            'timestamp': artist.date_added,  # You may want to use a different timestamp for artists
         })
 
     return jsonify({'recommendations': artist_recommendations})

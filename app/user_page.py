@@ -59,18 +59,25 @@ def friends_activity(user_id):
     to_be_returned = []
     
     for friend in friends:
-        all_friends.append(friend.user2_id)
+        all_friends.append({
+            "user_id": friend.user2_id,
+            "rate_sharing": friend.rate_sharing
+        })
         
     for friend in friends2:
-        all_friends.append(friend.user1_id)
+        all_friends.append({
+            "user_id": friend.user1_id,
+            "rate_sharing": friend.rate_sharing
+        })
         
     for friend in all_friends:
-        user = User.query.filter_by(user_id=friend).first()
-        to_be_returned.append({
-            'name': user.user_id,
-            'profilePicture': user.profile_pic,
-            'lastListenedSong': user.last_sid
-        })
+        user = User.query.filter_by(user_id=friend["user_id"]).first()
+        if friend["rate_sharing"] == "public":
+            to_be_returned.append({
+                'name': user.user_id,
+                'profilePicture': user.profile_pic,
+                'lastListenedSong': user.last_sid
+            })
         
     return jsonify(to_be_returned)
 
@@ -197,7 +204,7 @@ def most_rated_songs(current_user_id):
         song_info = Song.query.filter(Song.song_id == song.song_id).first()
         artists = ArtistsOfSong.query.filter(ArtistsOfSong.song_id == song.song_id).all()
         song_recommendations.append({
-            'artists': [artist.artist_name for artist in artists],
+            'artists': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
             'song_name': song_info.song_name, 
             'timestamp': song.timestamp,
             'rating': song.rating,
@@ -209,3 +216,26 @@ def most_rated_songs(current_user_id):
         })
 
     return jsonify({'most_rated_songs': song_recommendations})
+
+@user.route('/update_friendship/<user_id>', methods=['POST'])
+@cross_origin()
+def update_friendship(user_id):
+    try:
+        data = request.get_json()
+        friend_id = data.get('friend_id')
+        new_rate_sharing = data.get('rate_sharing')
+
+        friendship = Friendship.query.filter(
+            ((Friendship.user1_id == user_id) & (Friendship.user2_id == friend_id)) |
+            ((Friendship.user1_id == friend_id) & (Friendship.user2_id == user_id))
+        ).first()
+
+        if friendship:
+            friendship.rate_sharing = new_rate_sharing
+            db.session.commit()
+            return jsonify({"message": "Friendship rate_sharing updated successfully."})
+        else:
+            return jsonify({"message": "Friendship not found."}), 404
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
