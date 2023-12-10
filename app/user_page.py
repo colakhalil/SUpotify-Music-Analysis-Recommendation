@@ -78,6 +78,12 @@ def friends_activity(user_id):
                 'profilePicture': user.profile_pic,
                 'lastListenedSong': user.last_sid
             })
+        else:
+            to_be_returned.append({
+                'name': user.user_id,
+                'profilePicture': user.profile_pic,
+                'lastListenedSong': "private"
+            })
         
     return jsonify(to_be_returned)
 
