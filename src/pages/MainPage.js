@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../pagesCSS/MainPage.css";
 import Searched from "../components/Searched";
-
+import axios from "axios";
 import LeftBar from "../components/LeftBar";
 import FriendActivity from "../components/FriendActivity";
 import BottomBar from "../components/BottomBar";
@@ -48,7 +48,60 @@ const MainPage = () => {
     const seconds = ((durationMs % 60000) / 1000).toFixed(0);
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Use your specific API endpoint
+        const apiEndpoint = "http://127.0.0.1:8008/user_data/" + globalVar.mail;
+        console.log("globalmail " + globalVar.mail);
 
+        const response = await axios.get(apiEndpoint);
+        let song_id = response.data.lastListenedSong;
+
+        try {
+          const response = await fetch(
+            `http://127.0.0.1:8008/get_song_info/` +
+              globalVar.username +
+              `/` +
+              song_id
+          );
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          let songData = await response.json();
+          if (songData.song_id !== undefined) {
+            songData.id = songData.song_id;
+            delete songData.song_id;
+          }
+          // Format the duration
+          if (songData.duration) {
+            songData = {
+              ...songData,
+              duration: formatDuration(songData.duration),
+            };
+          }
+
+          // Format the artists array
+          if (songData.artists && Array.isArray(songData.artists)) {
+            songData = {
+              ...songData,
+              artists: songData.artists.join(" "),
+            };
+          }
+
+          setCurrentBottomSong(songData);
+        } catch (error) {
+          console.error("Error fetching song data:", error);
+        }
+
+        // You can continue your logic here with the song_id value
+      } catch (error) {
+        console.error("API request error:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   // DUMMY DATALAR
   const [popPlaylist, setPopPlaylist] = useState({
     songs: [],
@@ -184,6 +237,45 @@ const MainPage = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+
+        for (let i = 0; i < data.length; i++) {
+          try {
+            const response = await fetch(
+              `http://127.0.0.1:8008/get_song_info/` +
+                globalVar.username +
+                `/` +
+                data[i].lastListenedSong
+            );
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            let songData = await response.json();
+            if (songData.song_id !== undefined) {
+              songData.id = songData.song_id;
+              delete songData.song_id;
+            }
+            // Format the duration
+            if (songData.duration) {
+              songData = {
+                ...songData,
+                duration: formatDuration(songData.duration),
+              };
+            }
+
+            // Format the artists array
+            if (songData.artists && Array.isArray(songData.artists)) {
+              songData = {
+                ...songData,
+                artists: songData.artists.join(" "),
+              };
+            }
+
+            data[i].lastListenedSong = songData.title + " " + songData.artists;
+          } catch (error) {
+            console.error("Error fetching song data:", error);
+          }
+        }
+
         setFriendsData(data);
       } catch (error) {
         console.error("Error fetching friends activity:", error);
