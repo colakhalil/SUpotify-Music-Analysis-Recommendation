@@ -2,6 +2,7 @@ import React from "react";
 import globalVar from "../../global.js";
 
 const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
+  console.log("ihtiyacım olan", songs);
   const handleSongClick = async (song) => {
     console.log("Song: " + song.id + " clicked");
 

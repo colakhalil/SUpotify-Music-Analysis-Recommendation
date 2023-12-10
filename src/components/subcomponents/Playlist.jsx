@@ -8,7 +8,6 @@ const Playlist = ({ name, playlistData, thumbnail, onClick }) => {
         className="recommended-thumbnail"
       />
       <div className="recommended-name">{name}</div>
-     
     </div>
   );
 };

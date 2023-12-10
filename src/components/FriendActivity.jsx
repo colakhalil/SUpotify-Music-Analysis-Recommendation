@@ -52,6 +52,7 @@ const FriendActivity = ({
       console.error("Error:", error);
     }
     setFriendsUpdate(!friendsUpdate);
+    console.log("friendsUpdate:", friendsUpdate);
   };
 
   return (

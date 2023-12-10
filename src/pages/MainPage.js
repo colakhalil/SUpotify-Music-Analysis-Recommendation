@@ -57,43 +57,43 @@ const MainPage = () => {
 
         const response = await axios.get(apiEndpoint);
         let song_id = response.data.lastListenedSong;
+        if (song_id != null) {
+          try {
+            const response = await fetch(
+              `http://127.0.0.1:8008/get_song_info/` +
+                globalVar.username +
+                `/` +
+                song_id
+            );
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            let songData = await response.json();
+            if (songData.song_id !== undefined) {
+              songData.id = songData.song_id;
+              delete songData.song_id;
+            }
+            // Format the duration
+            if (songData.duration) {
+              songData = {
+                ...songData,
+                duration: formatDuration(songData.duration),
+              };
+            }
 
-        try {
-          const response = await fetch(
-            `http://127.0.0.1:8008/get_song_info/` +
-              globalVar.username +
-              `/` +
-              song_id
-          );
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          let songData = await response.json();
-          if (songData.song_id !== undefined) {
-            songData.id = songData.song_id;
-            delete songData.song_id;
-          }
-          // Format the duration
-          if (songData.duration) {
-            songData = {
-              ...songData,
-              duration: formatDuration(songData.duration),
-            };
-          }
+            // Format the artists array
+            if (songData.artists && Array.isArray(songData.artists)) {
+              songData = {
+                ...songData,
+                artists: songData.artists.join(" "),
+              };
+            }
 
-          // Format the artists array
-          if (songData.artists && Array.isArray(songData.artists)) {
-            songData = {
-              ...songData,
-              artists: songData.artists.join(" "),
-            };
+            setCurrentBottomSong(songData);
+          } catch (error) {
+            console.error("Error fetching song data:", error);
           }
-
-          setCurrentBottomSong(songData);
-        } catch (error) {
-          console.error("Error fetching song data:", error);
         }
-
         // You can continue your logic here with the song_id value
       } catch (error) {
         console.error("API request error:", error);
@@ -239,40 +239,43 @@ const MainPage = () => {
         const data = await response.json();
 
         for (let i = 0; i < data.length; i++) {
-          try {
-            const response = await fetch(
-              `http://127.0.0.1:8008/get_song_info/` +
-                globalVar.username +
-                `/` +
-                data[i].lastListenedSong
-            );
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            let songData = await response.json();
-            if (songData.song_id !== undefined) {
-              songData.id = songData.song_id;
-              delete songData.song_id;
-            }
-            // Format the duration
-            if (songData.duration) {
-              songData = {
-                ...songData,
-                duration: formatDuration(songData.duration),
-              };
-            }
+          if (data[i].lastListenedSong != null) {
+            try {
+              const response = await fetch(
+                `http://127.0.0.1:8008/get_song_info/` +
+                  globalVar.username +
+                  `/` +
+                  data[i].lastListenedSong
+              );
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              let songData = await response.json();
+              if (songData.song_id !== undefined) {
+                songData.id = songData.song_id;
+                delete songData.song_id;
+              }
+              // Format the duration
+              if (songData.duration) {
+                songData = {
+                  ...songData,
+                  duration: formatDuration(songData.duration),
+                };
+              }
 
-            // Format the artists array
-            if (songData.artists && Array.isArray(songData.artists)) {
-              songData = {
-                ...songData,
-                artists: songData.artists.join(" "),
-              };
-            }
+              // Format the artists array
+              if (songData.artists && Array.isArray(songData.artists)) {
+                songData = {
+                  ...songData,
+                  artists: songData.artists.join(" "),
+                };
+              }
 
-            data[i].lastListenedSong = songData.title + " " + songData.artists;
-          } catch (error) {
-            console.error("Error fetching song data:", error);
+              data[i].lastListenedSong =
+                songData.title + " " + songData.artists;
+            } catch (error) {
+              console.error("Error fetching song data:", error);
+            }
           }
         }
 
@@ -295,7 +298,9 @@ const MainPage = () => {
 
         {currentPlace === "main" && (
           <MainMiddle
+            friendsUpdate={friendsUpdate}
             setCurrentPlace={setCurrentPlace}
+            friendsData={friendsData}
             setCurrentBottomSong={setCurrentBottomSong}
             setSearchedArray={setSearchedArray}
             popPlaylist={popPlaylist}
