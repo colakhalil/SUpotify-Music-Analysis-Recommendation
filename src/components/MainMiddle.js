@@ -38,11 +38,19 @@ const MainMiddle = ({
         ...friendPlaylist,
         name: "Friend Recommendation",
       },
+      recommendedartistsongs: {
+        ...recommendedArtistSongs,
+        name: "Recommended Artist Songs",
+      },
     };
 
     setCurrentPlaylistInfo(playlists[playlistName.toLowerCase()]);
     // Here you would handle the click event, such as navigating to the playlist page.
   };
+  const [recommendedArtistSongs, setRecommendedArtistSongs] = useState({
+    url: "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
+    songs: [],
+  });
 
   const [friendPlaylist, setFriendPlaylist] = useState({
     url: "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
@@ -65,6 +73,41 @@ const MainMiddle = ({
 
     return transformedData;
   }
+
+  useEffect(() => {
+    // Define the URL
+    const url = "http://127.0.0.1:8008/colakhalil/recommended_artist_songs";
+
+    // Send a GET request using the fetch API
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json(); // Parse the response as JSON
+      })
+      .then((data) => {
+        if (data.length != 0) {
+          const transformedData = {
+            songs: data.song_recommendations.map((song) => ({
+              artistName: song.artist_name,
+              id: song.song_id,
+              songLength: song.songLength,
+              songName: song.song_name,
+            })),
+            url:
+              data.song_recommendations.length > 0
+                ? data.song_recommendations[0].picture
+                : "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
+          };
+          console.log("Response data as JSON:", transformedData);
+          setRecommendedArtistSongs(transformedData);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
 
   useEffect(() => {
     setFriendPlaylist({
@@ -201,7 +244,7 @@ const MainMiddle = ({
           />
         </div>
       </div>
-      <h2 className="recommended-title">Recommended Playlists Friends</h2>
+      <h2 className="recommended-title">Some Other Recommendations</h2>
       <div className="header-line" />
       <div class="container">
         <Playlist
@@ -228,6 +271,17 @@ const MainMiddle = ({
           }
           onClick={() =>
             handlePlaylistClick("friendrecommendation", setCurrentPlace)
+          }
+        />
+        <Playlist
+          name="Recommended Artist Songs"
+          playlistData={recommendedArtistSongs}
+          thumbnail={
+            recommendedArtistSongs.url ||
+            "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
+          }
+          onClick={() =>
+            handlePlaylistClick("recommendedartistsongs", setCurrentPlace)
           }
         />
       </div>
