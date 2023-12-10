@@ -17,7 +17,9 @@ const MonthlyAverageRatingsChart = () => {
 
   useEffect(() => {
     // Fetch data from the provided URL
-    fetch("http://127.0.0.1:8008/colakhalil/monthly_average_rating")
+    fetch(
+      "http://127.0.0.1:8008/" + globalVar.username + "/monthly_average_rating"
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
