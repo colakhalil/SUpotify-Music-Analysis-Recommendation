@@ -3,7 +3,7 @@ import SongDetails from "./subcomponents/SongDetails";
 import SongControls from "./subcomponents/SongControls";
 import SongRating from "./subcomponents/SongRating";
 import globalVar from "../global.js";
-
+import axios from "axios";
 import SongDetailsExtra from "./subcomponents/SongDetailsExtra";
 
 const RatingPopup = ({
@@ -341,7 +341,35 @@ const BottomBar = ({
   };
 
   const togglePlay = () => {
+    console.log("Play/pause toggled");
     setIsPlaying(!isPlaying);
+
+    if (isPlaying) {
+      const apiEndpoint = "http://127.0.0.1:8008/song_played";
+      let userId = globalVar.username;
+      let songId = song.id;
+      // The data to be sent in the POST request
+      const songPlayedData = {
+        user_id: userId,
+        song_id: songId,
+      };
+
+      // Make a POST request with Axios
+      axios
+        .post(apiEndpoint, songPlayedData)
+        .then((response) => {
+          // Handle the response from the server
+          if (response.data.message) {
+            console.log("Song play count updated successfully.");
+          } else {
+            console.log("Song not found or error updating play count.");
+          }
+        })
+        .catch((error) => {
+          // Handle any errors during the request
+          console.error("Error sending song played data:", error);
+        });
+    }
     // Add additional logic for when play/pause is toggled
   };
 
