@@ -1,5 +1,6 @@
 import React from "react";
 import globalVar from "../global.js";
+import "../pagesCSS/SearchBar.css";
 
 const UserList = ({ users, friendsData, setFriendsUpdate, friendsUpdate }) => {
   const checkIsFriend = (userId) => {
@@ -85,31 +86,50 @@ const UserList = ({ users, friendsData, setFriendsUpdate, friendsUpdate }) => {
   };
 
   return (
-    <div className="search-results">
-      {users
-        .filter((user) => user.user_id !== globalVar.username) // Filter out the current user
-        .map((user, index) => (
-          <div key={index} className="profile-card">
-            <div className="profile-image-container">
-              <img
-                src={user.profile_pic || "default-profile.png"} // Replace with the path to your default image
-                alt={user.user_id}
-                className="profile-image"
-              />
+    <div className="container mt-5">
+      <div className="row d-flex justify-content-center">
+        <div className="col-md-6">
+          <div className="card">
+            {/* Assuming this input box is a search or filter for the list */}
+            <div className="input-box">
+              <input type="text" className="form-control" placeholder="Search..." />
+              <i className="fa fa-search"></i>
             </div>
-            <div className="profile-name">{user.user_id}</div>
-            {globalVar.username !== user.user_id && // Check if it's not the current user
-              (checkIsFriend(user.user_id) ? (
-                <button onClick={() => onRemoveFriend(user.user_id)}>
-                  Remove
-                </button>
-              ) : (
-                <button onClick={() => onAddFriend(user.user_id)}>Add</button>
-              ))}
+  
+            {/* Render user list */}
+            {users.filter(user => user.user_id !== globalVar.username)
+                  .map((user, index) => (
+              <div key={user.user_id} className="list border-bottom">
+                <img 
+                  src={user.profile_pic || "default-profile.png"} 
+                  alt={user.user_id} 
+                  className="profile-picture" 
+                />
+                <div className="d-flex flex-column ml-3">
+                  <span>{user.user_id}</span>
+                  <small>{/* Additional user info here */}</small>
+                </div>
+                {globalVar.username !== user.user_id && (
+                  checkIsFriend(user.user_id) ? (
+                    <button onClick={() => onRemoveFriend(user.user_id)} className="friend-button-remove">
+                      Remove
+                    </button>
+                  ) : (
+                    <button onClick={() => onAddFriend(user.user_id)} className="friend-button-add">
+                        Add
+                    </button>
+                  )
+                )}
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+      </div>
     </div>
   );
+  
+  
+  
 };
 
 export default UserList;

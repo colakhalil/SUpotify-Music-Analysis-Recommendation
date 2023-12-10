@@ -1,0 +1,86 @@
+body {
+    background-color: #eee; 
+  }
+  
+  .card {
+    background-color: transparent; /* Changed from #fff to transparent */
+    padding: 15px;
+    border: none;
+  }
+  
+  .input-box {
+    position: relative;
+    margin-bottom: 20px; /* Arama kutusu altındaki boşluğu ayarla */
+  }
+  
+  .input-box i {
+    position: absolute;
+    right: 13px;
+    top: 15px;
+    color: #ced4da;
+  }
+  
+  .form-control {
+    width: 500px;
+    height: 50px;
+    background-color: white;
+    border: none; /* Çerçeveyi kaldır */
+    border-radius: 10px; /* Köşe yuvarlaklığı ekle */
+    box-shadow: none; /* Varsayılan gölgeyi kaldır */
+  }
+  
+  .form-control:focus {
+    background-color: white;
+    box-shadow: none;
+    border-color: #eee;
+  }
+  
+  .list {
+    padding-top: 20px;
+    padding-bottom: 20px; /* Alt tarafındaki boşluğu artırın */
+    display: flex;
+    align-items: center;
+    justify-content: start; /* Elemanları sola hizala */
+    gap: 10px; /* Elemanlar arasındaki boşluğu ayarlar */
+  }
+  
+  .border-bottom {
+    border-bottom: 2px solid #eee;
+  }
+  
+  .list i {
+    font-size: 19px;
+    color: red;
+  }
+  
+  .list small {
+    color: #dedddd;
+  }
+  
+  .profile-picture {
+    border-radius: 50%;
+    width: 90px; /* Resmi daha büyük yap */
+    height: 90px; /* Resmi daha büyük yap */
+    object-fit: cover;
+    margin-right: 50px;
+  }
+  
+  /* Add this to change the username color to white */
+  .list span {
+    color: white;
+    font-size: 1.25rem;
+    display: block; /* Yeni bir satıra zorlar */
+    margin-bottom: 20px; /* Alt tarafındaki boşluğu artırın */
+  }
+  
+  .friend-button-remove{
+    margin-top: 8px; /* Üst tarafındaki boşluğu artırın */
+    margin-right: 5px; 
+    margin-left: 200px;
+  }
+
+  .friend-button-add{
+    margin-top: 8px; /* Üst tarafındaki boşluğu artırın */
+    margin-right: 5px; 
+    margin-left: 230px;
+  }
