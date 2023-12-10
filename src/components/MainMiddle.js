@@ -53,6 +53,7 @@ const MainMiddle = ({
             name="Pop"
             playlistData={popPlaylist}
             thumbnail={
+              popPlaylist.url ||
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
             onClick={() => handlePlaylistClick("Pop", setCurrentPlace)}
@@ -63,6 +64,7 @@ const MainMiddle = ({
             name="Rock"
             playlistData={rockPlaylist}
             thumbnail={
+              rockPlaylist.url ||
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
             onClick={() => handlePlaylistClick("Rock", setCurrentPlace)}
@@ -73,6 +75,7 @@ const MainMiddle = ({
             name="Jazz"
             playlistData={jazzPlaylist}
             thumbnail={
+              jazzPlaylist.url ||
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
             onClick={() => handlePlaylistClick("Jazz", setCurrentPlace)}
@@ -83,6 +86,7 @@ const MainMiddle = ({
             name="House"
             playlistData={housePlaylist}
             thumbnail={
+              housePlaylist.url ||
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
             onClick={() => handlePlaylistClick("House", setCurrentPlace)}
@@ -95,8 +99,9 @@ const MainMiddle = ({
         <div class="Playlist1">
           <Playlist
             name="Happy"
-            playlistData={popPlaylist}
+            playlistData={happyPlaylist}
             thumbnail={
+              happyPlaylist.url ||
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
             onClick={() => handlePlaylistClick("Happy", setCurrentPlace)}
@@ -106,8 +111,9 @@ const MainMiddle = ({
         <div class="Playlist2">
           <Playlist
             name="Sad"
-            playlistData={popPlaylist}
+            playlistData={sadPlaylist}
             thumbnail={
+              sadPlaylist.url ||
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
             onClick={() => handlePlaylistClick("Sad", setCurrentPlace)}
@@ -117,8 +123,9 @@ const MainMiddle = ({
         <div class="Playlist3">
           <Playlist
             name="Study"
-            playlistData={popPlaylist}
+            playlistData={studyPlaylist}
             thumbnail={
+              studyPlaylist.url ||
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
             onClick={() => handlePlaylistClick("Study", setCurrentPlace)}
@@ -128,8 +135,9 @@ const MainMiddle = ({
         <div class="Playlist4">
           <Playlist
             name="Chill"
-            playlistData={popPlaylist}
+            playlistData={chillPlaylist}
             thumbnail={
+              chillPlaylist.url ||
               "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
             }
             onClick={() => handlePlaylistClick("Chill", setCurrentPlace)}
