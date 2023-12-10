@@ -16,7 +16,7 @@ TOKEN_INFO = "token_info"
 
 client_id = "YOUR_CLIENT_ID"
 client_secret = "YOUR_CLIENT_SECRET"
-# scope tanimi 
+# Create Spotify OAuth object for standard login 
 def create_spotify_outh():
     return SpotifyOAuth(
         client_id=client_id,
@@ -25,7 +25,7 @@ def create_spotify_outh():
         #scope="user-read-playback-state user-read-private user-read-email user-follow-read user-top-read",
         scope="user-read-recently-played playlist-read-private user-read-playback-state user-read-private user-read-email user-follow-read user-top-read",
     ) 
-    
+# Create Spotify OAuth object for mobile login     
 def create_spotify_outh_mobile():
     return SpotifyOAuth(
         client_id=client_id,
@@ -34,7 +34,7 @@ def create_spotify_outh_mobile():
         #scope="user-read-playback-state user-read-private user-read-email user-follow-read user-top-read",
         scope="user-read-recently-played playlist-read-private user-read-playback-state user-read-private user-read-email user-follow-read user-top-read",
     ) 
-
+# Route for user sign-up
 @auth.route('/sign_up', methods=['POST', 'GET'])
 def sign_up():
     if request.method == "POST":
@@ -56,7 +56,7 @@ def sign_up():
             return jsonify({"message": False})
 
         
-
+# Route for user login 
 @auth.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
@@ -76,17 +76,19 @@ def login():
         else:
             return jsonify({"message": False})
 
-# spotify login 
+# Route for initiating Spotify login 
 @auth.route('/sauth')
 def login_spotify():
     auth_url = create_spotify_outh().get_authorize_url()
     return redirect(auth_url)
-
+# Route for initiating Spotify login on mobile 
 @auth.route('/sauth_mobile')
 def login_spotify_mobile():
     auth_url = create_spotify_outh_mobile().get_authorize_url()
     return redirect(auth_url)
 
+
+# Route for handling the redirect from Spotify login
 @auth.route("/redirect")
 def redirect_page():
     
@@ -108,7 +110,7 @@ def redirect_page():
         db.session.commit()
     
     return redirect("http://127.0.0.1:8008/token_add")
-
+# Route for handling the redirect from Spotify login on mobile
 @auth.route("/redirect_mobile")
 def redirect_mobile():
     
