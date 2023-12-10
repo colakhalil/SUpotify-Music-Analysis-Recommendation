@@ -24,7 +24,6 @@ const RatingPopup = ({
   };
 
   const deleteSong = (rating) => {
-    console.log("Song will be deleted: ", song.id);
     let songId = song.id;
 
     fetch(`http://127.0.0.1:8008/delete_song/${songId}`, {
@@ -205,7 +204,6 @@ const BottomBar = ({
   setDataBaseChanged,
   dataBaseChanged,
 }) => {
-  console.log("Song: ", song);
   const [isSongRatePopupOpen, setIsSongRatePopupOpen] = useState(false); //songrate
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -248,7 +246,7 @@ const BottomBar = ({
       rating: newRating,
       user_id: globalVar.username,
     };
-    console.log("myjson: ", myjson);
+
     try {
       const response = await fetch("http://127.0.0.1:8008/change_rating_song", {
         method: "POST",
@@ -341,7 +339,6 @@ const BottomBar = ({
   };
 
   const togglePlay = () => {
-    console.log("Play/pause toggled");
     setIsPlaying(!isPlaying);
 
     if (isPlaying) {

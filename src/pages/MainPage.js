@@ -53,7 +53,6 @@ const MainPage = () => {
       try {
         // Use your specific API endpoint
         const apiEndpoint = "http://127.0.0.1:8008/user_data/" + globalVar.mail;
-        console.log("globalmail " + globalVar.mail);
 
         const response = await axios.get(apiEndpoint);
         let song_id = response.data.lastListenedSong;
@@ -127,7 +126,6 @@ const MainPage = () => {
         );
       }
       const data = await response.json();
-      console.log("Fetched data:", data); // Check the structure of the fetched data
 
       const formattedSongs = data.map((track) => ({
         songName: track.song_name,
@@ -239,7 +237,10 @@ const MainPage = () => {
         const data = await response.json();
 
         for (let i = 0; i < data.length; i++) {
-          if (data[i].lastListenedSong != null) {
+          if (
+            data[i].lastListenedSong != null &&
+            data[i].lastListenedSong != "private"
+          ) {
             try {
               const response = await fetch(
                 `http://127.0.0.1:8008/get_song_info/` +

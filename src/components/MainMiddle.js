@@ -22,7 +22,6 @@ const MainMiddle = ({
 }) => {
   const handlePlaylistClick = (playlistName, setCurrentPlace) => {
     setCurrentPlace("playlist");
-    console.log(`Playlist clicked: ${playlistName}`);
 
     const playlists = {
       pop: { ...popPlaylist, name: "Pop" },
@@ -41,8 +40,6 @@ const MainMiddle = ({
       },
     };
 
-    console.log("playlists", playlists);
-
     setCurrentPlaylistInfo(playlists[playlistName.toLowerCase()]);
     // Here you would handle the click event, such as navigating to the playlist page.
   };
@@ -52,7 +49,6 @@ const MainMiddle = ({
     songs: [],
   });
   function transformData(apiData) {
-    console.log("apiData", apiData);
     // Assuming apiData is the object you receive from your API
     const transformedData = {
       songs: apiData.recommendations.map((song) => ({
@@ -60,9 +56,11 @@ const MainMiddle = ({
         id: song.song_id,
         songLength: song.songLength,
         songName: song.song_name,
-        url: song.picture,
       })),
-      url: apiData.recommendations[0].picture, // Replace "some_link" with the actual URL you need
+      url:
+        apiData.recommendations.length > 0
+          ? apiData.recommendations[0].picture
+          : "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
     };
 
     return transformedData;
@@ -78,9 +76,11 @@ const MainMiddle = ({
         const response = await axios.get(
           `http://127.0.0.1:8008/${globalVar.username}/friends_recommendations`
         );
-        const formattedData = transformData(response.data);
-        setFriendPlaylist(formattedData);
-        console.log("formattedData", formattedData);
+
+        if (transformData.length != 0) {
+          const formattedData = transformData(response.data);
+          setFriendPlaylist(formattedData);
+        }
       } catch (error) {
         console.error("Error fetching data: ", error);
         // Handle the error appropriately
@@ -210,8 +210,6 @@ const MainMiddle = ({
             "Based On " +
             friendsData
               .map((friend) => {
-                console.log("bitane", friend);
-
                 // If last listened song is private, only return the friend's name
                 if (friend.lastListenedSong != "private") {
                   return friend.name;
