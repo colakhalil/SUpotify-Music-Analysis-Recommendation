@@ -116,7 +116,7 @@ def redirect_mobile():
     
     session.clear()
     code = request.args.get("code")
-    token_info = create_spotify_outh().get_access_token(code)
+    token_info = create_spotify_outh_mobile().get_access_token(code)
     session[TOKEN_INFO] = token_info
     
     spotify = spotipy.Spotify(auth=token_info['access_token'])
