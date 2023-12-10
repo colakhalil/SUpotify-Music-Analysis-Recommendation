@@ -42,12 +42,22 @@ const MainMiddle = ({
         ...recommendedArtistSongs,
         name: "Recommended Artist Songs",
       },
+
+      newlyratedrecommendation: {
+        ...newlyRatedRecommendation,
+        name: "Based on Newly Rated Songs",
+      },
     };
 
     setCurrentPlaylistInfo(playlists[playlistName.toLowerCase()]);
     // Here you would handle the click event, such as navigating to the playlist page.
   };
   const [recommendedArtistSongs, setRecommendedArtistSongs] = useState({
+    url: "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
+    songs: [],
+  });
+
+  const [newlyRatedRecommendation, setNewlyRatedRecommendation] = useState({
     url: "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
     songs: [],
   });
@@ -76,7 +86,48 @@ const MainMiddle = ({
 
   useEffect(() => {
     // Define the URL
-    const url = "http://127.0.0.1:8008/colakhalil/recommended_artist_songs";
+    const url =
+      "http://127.0.0.1:8008/" +
+      globalVar.username +
+      "/newly_rating_recomendations";
+
+    // Send a GET request using the fetch API
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json(); // Parse the response as JSON
+      })
+      .then((data) => {
+        if (data.length !== 0) {
+          const transformedData = {
+            songs: data.map((item) => ({
+              artistName: item.artist_name.join(", "), // Assuming artist_name is an array
+              id: item.song_id,
+              songLength: item.songLength,
+              songName: item.song_name,
+            })),
+            url:
+              data.length > 0
+                ? data[0].picture
+                : "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
+          };
+          console.log("Response data as JSON:", transformedData);
+          setNewlyRatedRecommendation(transformedData);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Define the URL
+    const url =
+      "http://127.0.0.1:8008/" +
+      globalVar.username +
+      "/recommended_artist_songs";
 
     // Send a GET request using the fetch API
     fetch(url)
@@ -282,6 +333,17 @@ const MainMiddle = ({
           }
           onClick={() =>
             handlePlaylistClick("recommendedartistsongs", setCurrentPlace)
+          }
+        />
+        <Playlist
+          name="Based on Newly Rated Songs"
+          playlistData={newlyRatedRecommendation}
+          thumbnail={
+            newlyRatedRecommendation.url ||
+            "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
+          }
+          onClick={() =>
+            handlePlaylistClick("newlyratedrecommendation", setCurrentPlace)
           }
         />
       </div>
