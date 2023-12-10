@@ -13,7 +13,7 @@ from .models import Album, Friendship, RateSong, SongPlaylist, Playlist, Artist,
 user = Blueprint('user', __name__)
 
 TOKEN_INFO = "token_info" 
-#WORKS
+# Route to retrieve user data by email
 @user.route('/user_data/<email>', methods=['GET'])
 @cross_origin()
 def user_page(email):
@@ -46,7 +46,7 @@ def user_page(email):
     })
 
 
-#WORKS
+# Route to retrieve the activity of friends of a given user
 @user.route('/friends_activity/<user_id>', methods=['GET'])
 @cross_origin()
 def friends_activity(user_id):
@@ -87,7 +87,7 @@ def friends_activity(user_id):
         
     return jsonify(to_be_returned)
 
-#WILL BE CHECKED AFTER DATABASE IS FILLED WITH RATING DATA
+# Route to calculate the monthly average rating of songs by a user 
 @user.route('/<user_id>/monthly_average_rating', methods=['GET'])
 @cross_origin()
 def get_user_monthly_average_rating(user_id):
@@ -128,7 +128,7 @@ def get_user_monthly_average_rating(user_id):
     except Exception as e:
         return jsonify({'error': str(e)})
 
-#WORKS
+# Route to add a friend for a user 
 @user.route('/add_friend/<user_id>', methods=['POST'])
 @cross_origin()
 def add_friend(user_id):
@@ -157,6 +157,7 @@ def add_friend(user_id):
 
     return jsonify({'message': 'Friend added successfully'})
 
+# Route to search for users based on a search term
 @user.route('/search_user/<search_term>', methods=['GET'])
 @cross_origin()
 def search_friends(search_term):
@@ -165,7 +166,7 @@ def search_friends(search_term):
         return jsonify({'error': 'No users found'})
 
     return jsonify([{'user_id': user.user_id, 'profile_pic': user.profile_pic} for user in users])
-
+# Route to remove a friend from a user's friend list
 @user.route('/remove_friend/<user_id>', methods=['POST'])
 @cross_origin()
 def remove_friend(user_id):
@@ -193,6 +194,7 @@ def remove_friend(user_id):
 
     return jsonify({'message': 'Friend removed successfully'})
 
+# Route to fetch the most rated songs by the current user
 @user.route('/<current_user_id>/most_rated_songs', methods=['GET'])
 @cross_origin()
 def most_rated_songs(current_user_id):
@@ -222,7 +224,8 @@ def most_rated_songs(current_user_id):
         })
 
     return jsonify({'most_rated_songs': song_recommendations})
-
+    
+# Route to update the friendship settings, like rate sharing preference 
 @user.route('/update_friendship/<user_id>', methods=['POST'])
 @cross_origin()
 def update_friendship(user_id):
@@ -245,7 +248,7 @@ def update_friendship(user_id):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+# Route to retrieve all rated songs by the current user     
 @user.route('/<current_user_id>/all_rated_songs', methods=['GET'])
 @cross_origin()
 def all_rated_songs(current_user_id):
