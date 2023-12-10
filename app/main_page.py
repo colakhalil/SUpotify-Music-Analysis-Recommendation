@@ -699,13 +699,14 @@ def friend_artist_recommendations(current_user_id):
 
     friend_ids = set()
     for friend in friends:
-        friend_ids.add(friend.user1_id)
-        friend_ids.add(friend.user2_id)
+        if friend.rate_sharing == 'public':
+            friend_ids.add(friend.user1_id)
+            friend_ids.add(friend.user2_id)
 
     # Fetch the most recent highly-rated songs listened by friends
     recent_highly_rated_songs = (
         RateArtist.query
-        .filter(RateArtist.user_id.in_(friend_ids), RateArtist.rating >= 4, RateArtist.rate_sharing == 'public')
+        .filter(RateArtist.user_id.in_(friend_ids), RateArtist.rating >= 4)
         .order_by(desc(RateArtist.timestamp))
         .limit(20)
         .all()
