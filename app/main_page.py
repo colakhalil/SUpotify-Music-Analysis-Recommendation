@@ -21,7 +21,7 @@ token = ""
 
 GENIUS_API_KEY = "ELYRzAgCM0wR2jm42T8YVN3sJZMXH4Yss-hBIERYV4xFp2RJGiRbrfnuQh5gqJfg"
 
-
+# Function to fetch and save song information from Spotify
 def fetch_and_save_song(sp, song_id):
     
     track_info = sp.track(song_id)
@@ -89,7 +89,7 @@ def fetch_and_save_song(sp, song_id):
     db.session.add(new_song)
     db.session.commit()
     
-
+# Route to store Spotify token information
 @main.route('/token_add')
 @cross_origin()
 def token_add():
@@ -97,6 +97,7 @@ def token_add():
     token = session['token_info']['access_token']
     return redirect("http://localhost:3000/main")
 
+# Mobile version of the token add route
 @main.route('/token_add_mobile')
 @cross_origin()
 def token_add_mobile():
@@ -104,7 +105,7 @@ def token_add_mobile():
     token = session['token_info']['access_token']
     return "SUCCESS"
 
-#WORKS
+# Route to fetch lyrics of a song using the Genius API 
 @main.route("/lyrics/<artist_name>/<song_name>")
 @cross_origin()
 def lyrics(artist_name, song_name):
@@ -116,7 +117,7 @@ def lyrics(artist_name, song_name):
     
     return jsonify(song.lyrics)
     
-#WORKS
+# Route to save a song to the database 
 @main.route('/save_song/<song_id>', methods=['GET', 'POST'])
 @cross_origin()
 def save_song(song_id):
@@ -135,7 +136,7 @@ def save_song(song_id):
             "artists":[Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists]
             })
 
-#WORKS
+# Route to get recommendations based on genre from Spotify
 @main.route('/recommendations/<genre>')
 @cross_origin()
 def get_recommendations_by_genre(genre):
@@ -155,7 +156,7 @@ def get_recommendations_by_genre(genre):
 
     return jsonify(result)
 
-#WORKS
+# Route to fetch and save song information, or retrieve existing song information
 @main.route('/get_song_info/<user_id>/<song_id>') 
 @cross_origin()
 def get_song_info(user_id, song_id):
@@ -193,7 +194,7 @@ def get_song_info(user_id, song_id):
 
     return jsonify(song_info)
 
-
+# Route to fill the database with songs from a specified playlist 
 @main.route('/fill_db/<playlist_id>')
 @cross_origin()
 def fill_db(playlist_id):
@@ -222,7 +223,7 @@ def fill_db(playlist_id):
 
     return jsonify({'message': "DB FILLED!"})
 
-#WORKS
+# Route to get the user's playlists from Spotify 
 @main.route('/get_user_playlists')
 @cross_origin()
 def get_user_playlists():
@@ -257,7 +258,7 @@ def get_user_playlists():
 
     return jsonify(formatted_playlists) 
 
-#WORKS
+# Route to change the rating of a song
 @main.route('/change_rating_song', methods=['GET', 'POST'])
 @cross_origin()
 def change_rating_song():
@@ -280,7 +281,7 @@ def change_rating_song():
         
         return jsonify({'message': True})
     
-#WORKS
+# Route to update song play count
 @main.route('/song_played', methods=['GET', 'POST'])
 @cross_origin()
 def song_played():
@@ -295,7 +296,7 @@ def song_played():
         else:
             return jsonify({'message': False})
         
-#WORKS
+# Route to get detailed information of a specific playlist 
 @main.route("/get_playlist_info/<user_id>/<playlist_id>")
 @cross_origin()
 def get_playlist_info(user_id,playlist_id):
@@ -326,7 +327,7 @@ def get_playlist_info(user_id,playlist_id):
     
     return jsonify(data)
 
-#WORKS
+# Route to save a song with form data
 @main.route("/save_song_with_form", methods=['GET', 'POST'])
 @cross_origin()
 def save_song_with_form():
@@ -364,7 +365,7 @@ def save_song_with_form():
         
         return jsonify({'message': True})
     
-#WORKS
+# Route to get highly rated 90s songs for a specific user
 @main.route('/<user_id>/90s', methods=['GET'])
 @cross_origin()
 def get_user_highly_rated_90s_songs(user_id):
@@ -400,7 +401,7 @@ def get_user_highly_rated_90s_songs(user_id):
     except Exception as e:
         print(e)
 
-#WORKS
+# Route to get all songs for a specific user
 @main.route('/<user_id>/all_songs', methods=['GET'])
 @cross_origin()
 def get_all_songs(user_id):
@@ -438,7 +439,7 @@ def get_all_songs(user_id):
     except Exception as e:
         return jsonify({'error': str(e)})
 
-#WORKS
+# Route to get new songs for a specific user
 @main.route('/<user_id>/new_songs', methods=['GET'])
 @cross_origin()
 def get_user_new_songs(user_id):
@@ -471,7 +472,7 @@ def get_user_new_songs(user_id):
         print("DEBUG: Exception:", str(e))
         return jsonify({'error': str(e)})
 
-#WORKS
+# Route to count songs for each artist
 @main.route('/<user_id>/artist_song_count', methods=['GET'])
 @cross_origin()
 def artist_song_count(user_id):
@@ -507,7 +508,7 @@ def artist_song_count(user_id):
     except Exception as e:
         return jsonify({'error': str(e)})
 
-#WORKS
+# Route to search items (songs, albums, artists) based on a term
 @main.route('/search_item/<user_id>/<search_term>', methods=['GET'])
 @cross_origin()
 def search_item(user_id, search_term):
@@ -556,7 +557,8 @@ def search_item(user_id, search_term):
 
     except Exception as e:
         return jsonify({'error': str(e)})
-    
+        
+# Route to save a song with a JSON file    
 @main.route('/save_song_with_json', methods=['POST'])
 @cross_origin()
 def save_song_with_json():
@@ -602,7 +604,7 @@ def save_song_with_json():
     except Exception as e:
         return jsonify({'error': str(e)})
     
-#WORKS
+# Route to change the rating of an artist
 @main.route('/change_rating_artist', methods=['GET', 'POST'])
 @cross_origin()
 def change_rating_artist():
@@ -624,7 +626,7 @@ def change_rating_artist():
         
         return jsonify({'message': True})
     
-#WORKS
+# Route to change the rating of an album
 @main.route('/change_rating_album', methods=['GET', 'POST'])
 @cross_origin()
 def change_rating_album():
@@ -645,7 +647,8 @@ def change_rating_album():
         db.session.commit()
         
         return jsonify({'message': True})
-    
+
+# Route to get song recommendations based on friends' preferences 
 @main.route('<current_user_id>/friends_recommendations', methods=['GET'])
 @cross_origin()
 def friends_recommendations(current_user_id):
@@ -686,6 +689,7 @@ def friends_recommendations(current_user_id):
 
     return jsonify({'recommendations': recommendations})
 
+# Route to delete a song from the database 
 @main.route('/<current_user_id>/friend_artist_recommendations', methods=['GET'])
 def friend_artist_recommendations(current_user_id):
     # Fetch the user's friends
@@ -721,7 +725,7 @@ def friend_artist_recommendations(current_user_id):
         })
 
     return jsonify({'recommendations': artist_recommendations})
-
+# Route to delete an song from the database 
 @main.route('/delete_song/<song_id>', methods=['POST'])
 @cross_origin()
 def delete_song(song_id):
@@ -741,7 +745,7 @@ def delete_song(song_id):
     else:
 
         return jsonify({"message": False})
-
+# Route to delete an album from the database 
 @main.route('/delete_album/<album_id>', methods=['POST'])
 @cross_origin()
 def delete_album(album_id):
@@ -764,7 +768,7 @@ def delete_album(album_id):
 
         return jsonify({"message": False})
 
-
+# Route to delete an artist from the database 
 @main.route('/delete_artist/<artist_id>', methods=['POST'])
 @cross_origin()
 def delete_artist(artist_id):
@@ -792,7 +796,7 @@ def delete_artist(artist_id):
             return jsonify({"message": True})
         else:
             return jsonify({"message": False})
-
+# Route to get song recommendations from a specific artist
 @main.route('/<current_user_id>/recommended_artist_songs', methods=['GET'])
 def recommended_artist_songs(current_user_id):
     # Fetch the most liked artist's ID using the find_most_liked_artist function
@@ -839,7 +843,7 @@ def find_most_liked_artist(user_id):
         most_liked_artist_id = artist_counter.most_common(1)[0][0]
 
     return most_liked_artist_id
-
+# Route to get song recommendations based on a newly rated song
 @main.route('/<current_user_id>/newly_rating_recomendations', methods=['GET']) 
 @cross_origin()
 def get_newly_recommendations(current_user_id):    
@@ -858,7 +862,7 @@ def get_newly_recommendations(current_user_id):
     else:
         return jsonify({'recommendation': None})
 
-#spotify recomendations 
+# Route to get Spotify recommendations based on a specific track
 @main.route('recommendations_track/<track_id>')
 @cross_origin()
 def get_recommendations_by_track(track_id):
