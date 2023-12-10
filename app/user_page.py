@@ -214,7 +214,7 @@ def most_rated_songs(current_user_id):
             'song_name': song_info.song_name, 
             'timestamp': song.timestamp,
             'rating': song.rating,
-            'album_name': song_info.album_name,
+            'album_name': song_info.album.album_name,
             'picture': song_info.picture,
             'song_id': song.song_id,
             'album_id': song_info.album_id,
@@ -245,3 +245,32 @@ def update_friendship(user_id):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@user.route('/<current_user_id>/all_rated_songs', methods=['GET'])
+@cross_origin()
+def all_rated_songs(current_user_id):
+    # Fetch the most recent highly-rated songs listened by the user
+    recent_highly_rated_songs = (
+        RateSong.query
+        .filter(RateSong.user_id == current_user_id)
+        .all()
+    )
+    
+    # Recommendation based on highly-rated songs
+    song_recommendations = []
+    for song in recent_highly_rated_songs:
+        song_info = Song.query.filter(Song.song_id == song.song_id).first()
+        artists = ArtistsOfSong.query.filter(ArtistsOfSong.song_id == song.song_id).all()
+        song_recommendations.append({
+            'artists': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
+            'song_name': song_info.song_name, 
+            'timestamp': song.timestamp,
+            'rating': song.rating,
+            'album_name': song_info.album.album_name,
+            'picture': song_info.picture,
+            'song_id': song.song_id,
+            'album_id': song_info.album_id,
+            'duration': song_info.duration
+        })
+
+    return jsonify({'all_rated_songs': song_recommendations})
