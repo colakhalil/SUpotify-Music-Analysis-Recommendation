@@ -44,8 +44,11 @@ const MonthlyAverageRatingsChart = () => {
       });
   }, []);
   return (
-    <>
-      <h3 style={{ color: "white" }}> Monthly Average Rating</h3>
+    <div>
+      {" "}
+      <div style={{ color: "white" }}>
+        <h3>Artist Placement According to Number of Songs Released </h3>
+      </div>
       <LineChart
         style={{ marginLeft: "10rem" }}
         width={500}
@@ -65,7 +68,7 @@ const MonthlyAverageRatingsChart = () => {
           activeDot={{ r: 8 }}
         />
       </LineChart>
-    </>
+    </div>
   );
 };
 

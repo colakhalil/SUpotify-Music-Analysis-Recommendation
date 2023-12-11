@@ -7,6 +7,19 @@ import FavoriteRecentSongs from "./subcomponents/FavoriteRecentSongs";
 import MonthlyAverageRatingsChart from "./subcomponents/MonthlyAverageRatingsChart";
 import SongsAddedByPerformerChart from "./subcomponents/SongsAddedByPerformerChart";
 import globalVar from "../global";
+import html2canvas from "html2canvas";
+
+const handleScreenshotDownload = () => {
+  html2canvas(document.body).then((canvas) => {
+    const image = canvas
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
+    const link = document.createElement("a");
+    link.download = "screenshot.png";
+    link.href = image;
+    link.click();
+  });
+};
 
 const ProfileMiddle = ({ setCurrentPlace }) => {
   const [userData, setUserData] = useState(null);
@@ -114,19 +127,21 @@ const ProfileMiddle = ({ setCurrentPlace }) => {
     <>
       <div className="main-container">
         <div className="content-container">
-          <UserPart userData={userData} />{" "},
+        <UserPart userData={userData} />{" "},
           <div className="buttonthree-container">
             <button onClick={handleButtonClick} className="add-song-btn">Add song to the database</button>
             <button onClick={handleRated} className="add-song-btn">Export All Rated Songs</button>
             <button onClick={handleHighRated} className="add-song-btn">Export Highly Rated Songs</button>
-            <button onClick={handleHighRated} className="add-song-btn">share on social media</button>
+            <button onClick={handleScreenshotDownload} className="add-song-btn">Download Screenshot than Share it on Social Media</button>
 
           </div>
           {/* UserPart bileşenini burada kullan */}
           <FavoriteSongs90s />
           <FavoriteRecentSongs />
-          <MonthlyAverageRatingsChart />
-          <SongsAddedByPerformerChart />
+          <div style={{ display: "flex" }}>
+            <MonthlyAverageRatingsChart />
+            <SongsAddedByPerformerChart />
+          </div>
         </div>
       </div>
     </>
