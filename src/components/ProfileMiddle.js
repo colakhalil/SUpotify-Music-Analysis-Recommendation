@@ -7,6 +7,19 @@ import FavoriteRecentSongs from "./subcomponents/FavoriteRecentSongs";
 import MonthlyAverageRatingsChart from "./subcomponents/MonthlyAverageRatingsChart";
 import SongsAddedByPerformerChart from "./subcomponents/SongsAddedByPerformerChart";
 import globalVar from "../global";
+import html2canvas from "html2canvas";
+
+const handleScreenshotDownload = () => {
+  html2canvas(document.body).then((canvas) => {
+    const image = canvas
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
+    const link = document.createElement("a");
+    link.download = "screenshot.png";
+    link.href = image;
+    link.click();
+  });
+};
 
 const ProfileMiddle = ({ setCurrentPlace }) => {
   const [userData, setUserData] = useState(null);
@@ -124,11 +137,16 @@ const ProfileMiddle = ({ setCurrentPlace }) => {
           <button onClick={handleHighRated} className="add-song-btn">
             Export Highly Rated Songs
           </button>
+          <button onClick={handleScreenshotDownload} className="add-song-btn">
+            Download Screenshot than Share it on Social Media
+          </button>
           {/* UserPart bileşenini burada kullan */}
           <FavoriteSongs90s />
           <FavoriteRecentSongs />
-          <MonthlyAverageRatingsChart />
-          <SongsAddedByPerformerChart />
+          <div style={{ display: "flex" }}>
+            <MonthlyAverageRatingsChart />
+            <SongsAddedByPerformerChart />
+          </div>
         </div>
       </div>
     </>

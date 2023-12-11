@@ -38,10 +38,9 @@ const SongsAddedByPerformerChart = () => {
 
   return (
     <div>
-      <h3 style={{ color: "white" }}>
-        {" "}
-        Artist Placement According to Number of Songs Released{" "}
-      </h3>
+      <div style={{ color: "white" }}>
+        <h3>Artist Placement According to Number of Songs Released </h3>
+      </div>
       <BarChart
         style={{ marginLeft: "10rem" }}
         width={500}
