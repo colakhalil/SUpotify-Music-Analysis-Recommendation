@@ -582,6 +582,7 @@
 .artist-item img {
   max-width: 80%;
   height: auto;
+  border-radius: 200px;
   /* Add any additional styling for artist images */
 }
 
