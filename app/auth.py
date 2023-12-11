@@ -14,8 +14,8 @@ auth = Blueprint('auth', __name__)
 
 TOKEN_INFO = "token_info" 
 
-client_id = "8a4bedf5508b4e31bfb0d901f414c179"
-client_secret = "d090832ec5b343999dfa61c218dfced0"
+client_id = "YOUR_CLIENT_ID"
+client_secret = "YOUR_CLIENT_SECRET"
 # Create Spotify OAuth object for standard login 
 def create_spotify_outh():
     return SpotifyOAuth(
