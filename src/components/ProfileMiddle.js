@@ -114,16 +114,14 @@ const ProfileMiddle = ({ setCurrentPlace }) => {
     <>
       <div className="main-container">
         <div className="content-container">
-          <UserPart userData={userData} />{" "}
-          <button onClick={handleButtonClick} className="add-song-btn">
-            Add song to the database
-          </button>
-          <button onClick={handleRated} className="add-song-btn">
-            Export All Rated Songs
-          </button>
-          <button onClick={handleHighRated} className="add-song-btn">
-            Export Highly Rated Songs
-          </button>
+          <UserPart userData={userData} />{" "},
+          <div className="buttonthree-container">
+            <button onClick={handleButtonClick} className="add-song-btn">Add song to the database</button>
+            <button onClick={handleRated} className="add-song-btn">Export All Rated Songs</button>
+            <button onClick={handleHighRated} className="add-song-btn">Export Highly Rated Songs</button>
+            <button onClick={handleHighRated} className="add-song-btn">share on social media</button>
+
+          </div>
           {/* UserPart bileşenini burada kullan */}
           <FavoriteSongs90s />
           <FavoriteRecentSongs />

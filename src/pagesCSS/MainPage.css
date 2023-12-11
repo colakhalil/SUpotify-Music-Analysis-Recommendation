@@ -67,6 +67,7 @@
   display: flex;
   overflow: hidden;
   height: 100vh; /* Full viewport height */
+  width:100%;
 }
 
 .content-container {
@@ -212,16 +213,26 @@
 }
 
 .add-song-btn {
-  width: 15rem;
   background: transparent;
   border: 1px solid white;
   border-radius: 10px;
-  margin-right: 2rem;
   color: white;
-  margin-left: 68rem;
-  padding: 5px 10px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* İçeriği yatay olarak ortalar */
+  padding: 1px; /* İçerik için yeterli padding */
+  height: 40px; /* Buton yüksekliği */
+  margin: 3px; /* Butonlar arası ve üst alt boşluk */
 }
+
+.buttonthree-container {
+  display: flex;
+  justify-content: center; /* Butonları yatay olarak ortalar */
+  align-items: center; /* Butonları dikey olarak ortalar */
+  gap: 10px; /* Butonlar arasında boşluk ekler */
+}
+
 
 .popup-overlay {
   position: fixed;

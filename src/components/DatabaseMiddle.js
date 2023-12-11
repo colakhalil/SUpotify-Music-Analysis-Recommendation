@@ -37,13 +37,15 @@ const DatabaseMiddle = ({ setCurrentBottomSong, dataBaseChanged }) => {
   }, [dataBaseChanged]);
 
   return (
-    <div className="playlist-middle">
-      <h1>Database</h1>
-      <PlaylistContainer
-        className="playlist-container"
-        songs={songs}
-        setCurrentBottomSong={setCurrentBottomSong}
-      />
+    <div className="center-m">
+      <div className="playlist-middle">
+        <h1>Database</h1>
+        <PlaylistContainer
+          className="playlist-container"
+          songs={songs}
+          setCurrentBottomSong={setCurrentBottomSong}
+        />
+      </div>
     </div>
   );
 };

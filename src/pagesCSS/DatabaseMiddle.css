@@ -8,3 +8,9 @@
   height: calc(100vh - 100px); /* Adjust based on header/footer heights */
   overflow-y: auto; /* Allow vertical scrolling */
 }
+
+.center-m{
+  margin-bottom: 100px;
+  margin-right: 700px;
+  padding:200px;
+}

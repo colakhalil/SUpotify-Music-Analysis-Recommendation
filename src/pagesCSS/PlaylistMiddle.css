@@ -7,10 +7,12 @@
   flex-direction: column;
   align-items: center; /* Aligns children to the center horizontally */
   justify-content: flex-start; /* Aligns children to the start vertically */
-  padding: 30px;
+  padding: 10px;
   width: 100%;
   height: calc(100vh - 100px); /* Adjust based on header/footer heights */
   overflow-y: auto; /* Allow vertical scrolling */
+  margin-right:1rem;
+  margin-top:12px;
 }
 
 /* Playlist Picture Styling */
@@ -21,6 +23,7 @@
   align-items: center; /* Centers the image vertically */
   max-height: 200px; /* Adjust height as necessary */
   margin-bottom: 20px; /* Spacing between image and song info */
+  margin-right:150px;
 }
 
 .playlist-picture img {
@@ -46,7 +49,7 @@
   font-size: 1em;
   margin-top: 1em;
   margin-bottom: 0.5em;
-  margin-right: 13rem;
+  margin-right: 150px;
   text-align: center;
   color: #fff;
 }
@@ -179,10 +182,15 @@
 }
 
 .centerk{
-  border: 5px solid;
-  margin: auto;
-  width: 50%;
-  padding: 10px;
-  margin-right: 20px;
-  margin-bottom:500px;
+  width: 100%;
+  padding: 100px;
+  margin-right: 300px;
+  margin-left: 5px;
 }
+
+.center-photo{
+  margin-right: 300px;
+
+
+}
+

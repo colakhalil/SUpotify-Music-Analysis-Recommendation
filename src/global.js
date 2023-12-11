@@ -1,7 +1,7 @@
 // This is an example of a global variable
 const globalVar = {
-  mail: "basaksune12@gmail.com",
-  username: "basaksune1234",
+  mail: "idililguler2002@gmail.com",
+  username: "idilito",
 };
 
 export default globalVar;

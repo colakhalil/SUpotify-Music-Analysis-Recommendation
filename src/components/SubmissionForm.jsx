@@ -101,6 +101,7 @@ const SubmissionForm = () => {
       }
     } else {
       console.error('No valid data to submit');
+
     }
   };
 
