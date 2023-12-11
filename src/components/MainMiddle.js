@@ -4,6 +4,7 @@ import Playlist from "./subcomponents/Playlist";
 import { useState, useEffect } from "react";
 import globalVar from "../global";
 import axios from "axios";
+import RecommendArtist from "./subcomponents/RecommendArtist";
 
 
 const MainMiddle = ({
@@ -348,6 +349,8 @@ const MainMiddle = ({
           }
         />
       </div>
+      <h2 className="recommended-title">Artist Recommendation</h2>
+      <RecommendArtist  currentUserId= {globalVar.username}/>
     </div>
   );
 };

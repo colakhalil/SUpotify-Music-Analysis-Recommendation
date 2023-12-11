@@ -310,3 +310,33 @@
   color: red;
   margin-top: 10px;
 }
+
+
+
+.recommend-artist {
+  /* Add any additional styling for the parent container */
+}
+
+.artist-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  /* Adjust the spacing between artist items as needed */
+  gap: 10px;
+}
+
+.artist-item {
+  width: calc(25% - 30px); /* 25% width for 4 artists in a row with 20px gap */
+  text-align: center;
+}
+
+.artist-name{
+  color: white;
+}
+.artist-item img {
+  max-width: 80%;
+  height: auto;
+  border-radius: 200px;
+  /* Add any additional styling for artist images */
+}
+
