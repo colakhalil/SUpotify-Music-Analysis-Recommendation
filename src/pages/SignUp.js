@@ -5,7 +5,6 @@ import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
 import "../pagesCSS/SignIN-UP.css";
 import globalVar from '../global';
-import { updateGlobalUser } from "../utils";
 
 
 function SignUp() {
@@ -49,7 +48,6 @@ function SignUp() {
     console.log("isregister: ", isRegister);
     if (isRegister) {
       //Than naviagte to main page
-      updateGlobalUser(emailn, username);
       window.location.href = "http://127.0.0.1:8008/sauth";
     }
     if (!isRegister) {
