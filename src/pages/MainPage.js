@@ -125,7 +125,7 @@ const MainPage = () => {
   const getSongsByGenre = async (genre) => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8008/rrecommendations/${genre}`
+        `http://127.0.0.1:8008/recommendations/${genre}`
       );
       if (!response.ok) {
         throw new Error(
