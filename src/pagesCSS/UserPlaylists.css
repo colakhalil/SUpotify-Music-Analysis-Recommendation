@@ -8,14 +8,16 @@
   display: flex;
   justify-content: space-around;
   padding: 20px;
+  overflow-y: auto; /* Allow vertical scrolling */
+  max-height: 400px; /* Adjust this value as needed */
 }
 
 .playlist-card {
-  background-color: #cfe8fc; /* Örnek arka plan rengi */
+  background-color: #cfe8fc; /* Example background color */
   border-radius: 10px;
   padding: 10px;
-  width: 150px; /* İhtiyacınıza göre ayarlayın */
-  height: 200px; /* İhtiyacınıza göre ayarlayın */
+  width: 150px; /* Adjust according to your needs */
+  height: 200px; /* Adjust according to your needs */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,7 +25,7 @@
 
 .playlist-thumbnail {
   width: 100%;
-  height: 120px; /* İhtiyacınıza göre ayarlayın */
+  height: 120px; /* Adjust according to your needs */
   background-size: cover;
   background-position: center;
   border-radius: 5px;
@@ -31,6 +33,6 @@
 }
 
 .playlist-name {
-  color: #333; /* Yazı rengi */
+  color: #333; /* Text color */
   font-size: 1rem;
 }

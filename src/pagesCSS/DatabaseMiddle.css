@@ -1,11 +1,10 @@
-.database-middle{
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Aligns children to the center horizontally */
-    justify-content: flex-start; /* Aligns children to the start vertically */
-    padding: 30px;
-    width: 100%;
-    height: calc(100vh - 100px); /* Adjust based on header/footer heights */
-    overflow-y: auto; /* Allow vertical scrolling */
+.database-middle {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Aligns children to the center horizontally */
+  justify-content: flex-start; /* Aligns children to the start vertically */
+  padding: 30px;
+  width: 100%;
+  height: calc(100vh - 100px); /* Adjust based on header/footer heights */
+  overflow-y: auto; /* Allow vertical scrolling */
 }
-

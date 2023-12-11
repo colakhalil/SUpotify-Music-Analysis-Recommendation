@@ -1,5 +1,5 @@
-import React from 'react';
-import SongRating from './SongRating';
+import React from "react";
+import SongRating from "./SongRating";
 
 const SongControls = ({
   isPlaying,
@@ -8,13 +8,17 @@ const SongControls = ({
   songDurationInSeconds,
   song,
   toggleLyrics,
-  
+
   userRating,
-  handleRatingChange
+  handleRatingChange,
 }) => {
   return (
-    <div className="song-controls-container"> {/* Container for all song controls and extras */}
-      <div className="song-controls"> {/* Container for the main controls */}
+    <div className="song-controls-container">
+      {" "}
+      {/* Container for all song controls and extras */}
+      <div className="song-controls">
+        {" "}
+        {/* Container for the main controls */}
         <button className="song-lyrics-btn" onClick={toggleLyrics}>
           Lyrics
         </button>
@@ -30,7 +34,8 @@ const SongControls = ({
           readOnly
         />
         <div className="song-timer">
-          {Math.floor(currentTime / 60)}:{String(currentTime % 60).padStart(2, "0")} / {song.duration}
+          {Math.floor(currentTime / 60)}:
+          {String(currentTime % 60).padStart(2, "0")} / {song.duration}
         </div>
       </div>
       {/*

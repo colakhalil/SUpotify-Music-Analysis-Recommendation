@@ -31,6 +31,7 @@ const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
       releaseYear: originalJson.release_year.split("-")[0],
       songLength: originalJson.duration,
       songName: originalJson.song_name, // Placeholder, replace with actual logic to determine the picture URL
+      id: originalJson.song_id,
     };
   }
   function transformPlaylistJson(originalJson) {
@@ -71,8 +72,9 @@ const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
       data.songs = transformedArray;
       data = transformPlaylistJson(data);
       // Update the songs array in data with the transformed array
-
+      console.log("halıl burdayız", data);
       setCurrentPlaylistInfo(data);
+
       setCurrentPlace("playlist");
 
       /* After getting data put this data to umit's playlist component*/

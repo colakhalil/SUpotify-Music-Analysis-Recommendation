@@ -1,26 +1,46 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../pagesCSS/FavoriteSongs90s.css";
+import globalVar from "../../global.js";
 
 const FavoriteAlbums90s = () => {
   const [albums, setAlbums] = useState([]);
 
   useEffect(() => {
     // Correct path assuming your server setup serves the public directory
-    fetch("../../../data/albums.json")
-      .then((response) => response.json())
+
+    fetch("http://127.0.0.1:8008/" + globalVar.username + "/90s")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
       .then((data) => {
-        const favorite90sAlbums = data
-          .filter(
-            (album) => album.releaseYear >= 1990 && album.releaseYear < 2000
-          )
-          .slice(0, 10);
-        setAlbums(favorite90sAlbums);
+        // Ensure the data structure matches the provided JSON format
+        const favorite90sSongs = data;
+
+        // Transform the data into the desired format
+        const transformedData = favorite90sSongs.highly_rated_90s_songs.map(
+          (song) => {
+            return {
+              title: song.title,
+              artist: song.artist.join(" "), // Convert the array to a string with spaces
+              releaseYear: song.releaseYear,
+            };
+          }
+        );
+        const first6Items =
+          transformedData.length >= 6
+            ? transformedData.slice(0, 6)
+            : transformedData;
+        // Set the transformed data to your state variable (e.g., albums)
+        setAlbums(first6Items);
       });
   }, []);
 
   return (
     <div>
-      <h3 style={{ color: "white" }}>Your Favorite 10 '90s Albums</h3>
+      <h3 style={{ color: "white" }}>Your Favorite 90s Songs</h3>
       <ul className="albumsList">
         {albums.map((album) => (
           <li key={album.title} className="albumCard">

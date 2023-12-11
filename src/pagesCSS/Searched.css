@@ -1,0 +1,44 @@
+/* Searched.css */
+.search-results {
+  overflow-y: auto;
+  display: "grid";
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(120px, 1fr)
+  ); /* Creates a responsive number of columns based on the minimum width of 120px */
+  gap: 10px; /* Spacing between items */
+  justify-content: center;
+  padding: 20px;
+}
+
+.profile-card {
+  margin: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-image-container {
+  width: 120px; /* Width of the image container */
+  height: 120px; /* Height of the image container, can be the same as width for a square */
+  border-radius: 50%; /* Makes the container circular */
+  overflow: hidden; /* Ensures the image stays within the circular boundary */
+  position: relative; /* Needed to position the image absolutely within the container */
+  background-color: #aaa; /* Background color if no image is present */
+}
+
+.profile-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image covers the whole container */
+}
+
+.profile-name {
+  margin-top: 8px; /* Space between image and text */
+  color: white;
+  font-size: 14px; /* Adjust the font size as needed */
+  text-align: center;
+}

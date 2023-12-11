@@ -1,9 +1,46 @@
 import React from "react";
+import globalVar from "../../global.js";
 
 const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
-  const handleSongClick = (song) => {
-    console.log("Song: " + song);
-    setCurrentBottomSong(song);
+  console.log("ihtiyacım olan", songs);
+  const handleSongClick = async (song) => {
+    console.log("Song: " + song.id + " clicked");
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8008/get_song_info/` +
+          globalVar.username +
+          `/` +
+          song.id
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      let songData = await response.json();
+      if (songData.song_id !== undefined) {
+        songData.id = songData.song_id;
+        delete songData.song_id;
+      }
+      // Format the duration
+      if (songData.duration) {
+        songData = {
+          ...songData,
+          duration: formatDuration(songData.duration),
+        };
+      }
+
+      // Format the artists array
+      if (songData.artists && Array.isArray(songData.artists)) {
+        songData = {
+          ...songData,
+          artists: songData.artists.join(" "),
+        };
+      }
+
+      setCurrentBottomSong(songData);
+    } catch (error) {
+      console.error("Error fetching song data:", error);
+    }
   };
 
   // Helper function to format song duration from milliseconds to "mm:ss"
@@ -25,8 +62,7 @@ const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
         <div className="song-title-h">Title</div>
         <div className="song-artist-h">Artist</div>
         <div className="song-duration-h">Duration</div>
-        <div className="song-release-year-h">Release Year</div>
-        <div className="song-rating-h">Rating</div>
+        <div className="song-duration-h">Album ID</div>
       </div>
       {songs.map((song, index) => (
         <div
@@ -36,10 +72,13 @@ const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
         >
           <div className="song-index">{index + 1}</div>
           <div className="song-title-row">{song.songName}</div>
-          <div className="song-artist">{song.artistName}</div>
+          <div className="song-artist">
+            {Array.isArray(song.artistName)
+              ? song.artistName.join(" ")
+              : song.artistName}
+          </div>
+
           <div className="song-duration">{formatDuration(song.songLength)}</div>
-          <div className="song-release-year-p">{song.releaseYear}</div>
-          <div className="song-rating-p">{formatRating(song.rating)}</div>
         </div>
       ))}
     </div>
