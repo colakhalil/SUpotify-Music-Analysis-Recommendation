@@ -65,42 +65,55 @@ def save_song(songid):
         
         return jsonify({'message': True})
 
-
+from threading import Thread
+import time
+from flask import jsonify
+# updated spotify function !!!!! 
 @main.route('/recommendations/<genre>')
+@cross_origin()
 def get_recommendations_by_genre(genre):
+    def fetch_spotify_recommendations():
+        nonlocal recommendations, success
+        try:
+            sp = spotipy.Spotify(auth=token)
+            recommendations = sp.recommendations(seed_genres=[genre], limit=10)
+            success = True
+        except:
+            success = False
 
-    sp = spotipy.Spotify(auth=session[TOKEN_INFO]['access_token'])
-    recommendations = sp.recommendations(seed_genres=[genre], limit=10)
+    recommendations = None
+    success = False
+    spotify_thread = Thread(target=fetch_spotify_recommendations)
+    spotify_thread.start()
+    spotify_thread.join(timeout=5)
 
-    return jsonify(recommendations)
-
-@main.route('/song_info/<user_id>/<song_id>') 
-def get_song_info(song_id, user_id):
-    song = Song.query.filter_by(song_id=song_id).first()
-    
-    if song:
-        
-        prev_rate = RateSong.query.filter_by(song_id=song_id, user_id=user_id).first()
-        
-        song_info = {
-            'song_id': song.song_id,
-            'artists': song.artist_id.artist_name,
-            'title': song.song_name,
-            'thumbnail': song.picture,
-            'rateAvg': song.rate,
-            'playCount': song.play_count,
-            'popularity': song.popularity,
-            'valence': song.valence,
-            'duration': song.duration,
-            'genre': song.genre,
-            'releaseYear': song.release_date,
-            'dateAdded': song.date_added,
-            'userPrevRating': prev_rate.rating if prev_rate else 0
-        }
-        return jsonify(song_info)
+    if success and recommendations:
+        result = []
+        for track in recommendations['tracks']:
+            curr_track = {
+                'song_id': track['id'],
+                'song_name': track['name'],
+                'artist_name': [artist['name'] for artist in track['artists']],
+                'picture': track['album']['images'][0]['url'],
+                'songLength': track['duration_ms'],
+            }
+            result.append(curr_track)
+        return jsonify(result)
     else:
-        return jsonify({"message": False})
-
+        # Fetch songs from the database
+        songs = Song.query.filter_by(genre=genre).all()
+        db_result = []
+        for song in songs:
+            db_song = {
+                'song_id': song.song_id,
+                'song_name': song.song_name,
+                'artist_name': song.artist.artist_name if song.artist else '',
+                'picture': song.picture,
+                'songLength': song.duration,
+            }
+            db_result.append(db_song)
+        return jsonify(db_result)
+   
 
 @main.route('/get_user_playlists')
 def get_user_playlists():
