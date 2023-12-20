@@ -44,6 +44,35 @@ def user_page(email):
         'friends': friends,
         'friendsCount': len(friends)
     })
+    
+@user.route('/user_data_username/<user_id>', methods=['GET'])
+@cross_origin()
+def user_page_username(user_id):
+    
+    user = User.query.filter_by(user_id=user_id).first()
+    if not user:
+        return jsonify({'message': False})
+    
+    friends1 = Friendship.query.filter_by(user1_id=user_id).all()
+    
+    friends2 = Friendship.query.filter_by(user2_id=user_id).all()
+    
+    friends = []
+    
+    for friend in friends1:
+        friends.append(friend.user2_id)
+    
+    for friend in friends2:
+        friends.append(friend.user1_id)
+        
+    
+    return jsonify({
+        'username': user_id,
+        'profilePicture': user.profile_pic,
+        'lastListenedSong': user.last_sid,
+        'friends': friends,
+        'friendsCount': len(friends)
+    })
 
 
 # Route to retrieve the activity of friends of a given user
