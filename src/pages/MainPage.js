@@ -50,6 +50,14 @@ const MainPage = () => {
 
   // ... [other functions and states]
 
+  const [currentViewedFriend, setCurrentViewedFriend] = useState(null);
+
+  // This function will be called when a friend is clicked in the FriendActivity component
+  const viewFriendProfile = (friendEmail) => {
+    setCurrentViewedFriend(friendEmail); // Set the current viewed friend
+    setCurrentPlace('friend'); // Change the current place to 'friend' to view the friend's profile
+  };
+
   const formatDuration = (durationMs) => {
     const minutes = Math.floor(durationMs / 60000);
     const seconds = ((durationMs % 60000) / 1000).toFixed(0);
@@ -125,7 +133,7 @@ const MainPage = () => {
   const getSongsByGenre = async (genre) => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8008/rrecommendations/${genre}`
+        `http://127.0.0.1:8008/recommendations/${genre}`
       );
       if (!response.ok) {
         throw new Error(
@@ -352,9 +360,11 @@ const MainPage = () => {
           setFriendsUpdate={setFriendsUpdate}
           friendsData={friendsData}
           setCurrentPlace={setCurrentPlace}
+          viewFriendProfile={viewFriendProfile} // Pass the function to FriendActivity
+
         />
-        {currentPlace === "friend" && (
-          <FriendProfileMiddle></FriendProfileMiddle>
+        {currentPlace === 'friend' && (
+          <FriendProfileMiddle friendEmail={currentViewedFriend}></FriendProfileMiddle>
         )}
         {currentPlace === "searched" && (
           <Searched
