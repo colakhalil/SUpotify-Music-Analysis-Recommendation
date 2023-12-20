@@ -4,6 +4,7 @@ import Playlist from "./subcomponents/Playlist";
 import { useState, useEffect } from "react";
 import globalVar from "../global";
 import axios from "axios";
+import JoyRide from 'react-joyride';
 import RecommendArtist from "./subcomponents/RecommendArtist";
 
 
@@ -54,6 +55,23 @@ const MainMiddle = ({
     setCurrentPlaylistInfo(playlists[playlistName.toLowerCase()]);
     // Here you would handle the click event, such as navigating to the playlist page.
   };
+
+  const sendRecommendations = async () => {
+    try {
+      // Replace with your actual API URL and endpoint
+      const response = await axios.get(`http://localhost:5000/send_recommendations/${globalVar.username}`);
+
+      if (response.data.message) {
+        alert('Recommendations sent successfully!');
+      } else {
+        alert('Failed to send recommendations.');
+      }
+    } catch (error) {
+      console.error('Error sending recommendations:', error);
+      alert('An error occurred while sending recommendations.');
+    }
+  };
+
   const [recommendedArtistSongs, setRecommendedArtistSongs] = useState({
     url: "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
     songs: [],
@@ -192,10 +210,15 @@ const MainMiddle = ({
   const [playlistKey, setPlaylistKey] = useState(0);
   return (
     <div className="content-container">
-      <SearchBar
-        setCurrentPlace={setCurrentPlace}
-        setSearchedArray={setSearchedArray}
-      />
+      <div className="search-and-recommend">
+        <SearchBar
+          setCurrentPlace={setCurrentPlace}
+          setSearchedArray={setSearchedArray}
+        />
+        <button onClick={sendRecommendations}>
+        Send Me Song Recommendations
+        </button>
+      </div>
       <h2 className="recommended-title">
         Recommended Playlists Based on Genre
       </h2>
