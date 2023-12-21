@@ -3,6 +3,7 @@ from flask import Blueprint, Flask, request, url_for, session, jsonify, redirect
 from flask_cors import CORS, cross_origin
 from spotipy.oauth2 import SpotifyOAuth 
 from sqlalchemy import func, or_, desc
+from threading import Thread
 import lyricsgenius as lg
 import spotipy
 import requests
@@ -140,21 +141,48 @@ def save_song(song_id):
 @main.route('/recommendations/<genre>')
 @cross_origin()
 def get_recommendations_by_genre(genre):
+    def fetch_spotify_recommendations():
+        nonlocal recommendations, success
+        try:
+            sp = spotipy.Spotify(auth=token)
+            recommendations = sp.recommendations(seed_genres=[genre], limit=10)
+            success = True
+        except:
+            success = False
 
-    sp = spotipy.Spotify(auth=token)
-    recommendations = sp.recommendations(seed_genres=[genre], limit=10)
-    result = []
-    for track in recommendations['tracks']:
-        curr_track = {
-            'song_id': track['id'],
-            'song_name': track['name'],
-            'artist_name': [artist['name'] for artist in track['artists']],
-            'picture': track['album']['images'][0]['url'],
-            'songLength': track['duration_ms'],
-        }
-        result.append(curr_track)
+    recommendations = None
+    success = False
+    spotify_thread = Thread(target=fetch_spotify_recommendations)
+    spotify_thread.start()
+    spotify_thread.join(timeout=5)
 
-    return jsonify(result)
+    if success and recommendations:
+        result = []
+        for track in recommendations['tracks']:
+            curr_track = {
+                'song_id': track['id'],
+                'song_name': track['name'],
+                'artist_name': [artist['name'] for artist in track['artists']],
+                'picture': track['album']['images'][0]['url'],
+                'songLength': track['duration_ms'],
+            }
+            result.append(curr_track)
+        return jsonify(result)
+    else:
+        # Fetch songs from the database
+        songs = Song.query.all()
+        db_result = []
+        for song in songs:
+            if genre in song.genre:
+                db_song = {
+                    'song_id': song.song_id,
+                    'song_name': song.song_name,
+                    'artist_name': song.artist.artist_name if song.artist else '',
+                    'picture': song.picture,
+                    'songLength': song.duration,
+                }
+                db_result.append(db_song)
+        return jsonify(db_result)
 
 # Route to fetch and save song information, or retrieve existing song information
 @main.route('/get_song_info/<user_id>/<song_id>') 
