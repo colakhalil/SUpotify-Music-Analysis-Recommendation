@@ -132,3 +132,37 @@ def redirect_mobile():
         db.session.commit()
     
     return redirect("http://127.0.0.1:8008/token_add_mobile")
+
+
+##ticket master 
+
+@auth.route('/concerts/<city>')
+def get_concerts(city):
+    api_key = "h8Ghsf5Z7ISFcqBYPAurKpHYulSAC5JN"
+    url = "https://app.ticketmaster.com/discovery/v2/events.json"
+
+    params = {
+        "apikey": api_key,
+        "keyword": "concert",
+        "city": city,
+        "size": 20  
+    }
+
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+
+    data = response.json()
+    events = data['_embedded']['events'] if '_embedded' in data else []
+    concerts = [
+        {
+            "name": event["name"],
+            "date": event["dates"]["start"]["localDate"],
+            "venue": event["_embedded"]["venues"][0]["name"],
+            "url": event["url"]
+        } for event in events
+    ]
+
+    return jsonify(concerts) 
