@@ -284,7 +284,7 @@ def all_rated_songs(current_user_id):
     # Fetch the most recent highly-rated songs listened by the user
     recent_highly_rated_songs = (
         RateSong.query
-        .filter(RateSong.user_id == current_user_id)
+        .filter(RateSong.user_id == current_user_id, RateSong.rating >= 3)
         .all()
     )
     
@@ -296,13 +296,12 @@ def all_rated_songs(current_user_id):
         song_recommendations.append({
             'artists': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
             'song_name': song_info.song_name, 
-            'timestamp': song.timestamp,
             'rating': song.rating,
             'album_name': song_info.album.album_name,
             'picture': song_info.picture,
             'song_id': song.song_id,
             'album_id': song_info.album_id,
-            'duration': song_info.duration
+            'songLength': song_info.duration
         })
 
-    return jsonify({'all_rated_songs': song_recommendations})
+    return jsonify(song_recommendations)

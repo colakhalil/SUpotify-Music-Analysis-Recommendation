@@ -955,4 +955,49 @@ def get_top_50_songs_of_country(country_name):
         }
         songs.append(curr_track)
 
-    return jsonify(songs) 
+    return jsonify(songs)
+
+@main.route('/enrich_rec/<user_id>/<genre>', methods=['GET'])
+@cross_origin()
+def enrich_rec(user_id, genre):
+
+    songs = Song.query.filter(Song.genre.contains(genre)).all()
+    result = []
+    for song in songs:
+        rate = RateSong.query.filter_by(song_id=song.song_id, user_id=user_id).first()
+        artists = ArtistsOfSong.query.filter_by(song_id=song.song_id).all()
+        curr_song = {
+            'song_id': song.song_id,
+            'song_name': song.song_name,
+            'artist_name': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
+            'picture': song.picture,
+            'songLength': song.duration,
+            'release_date': song.release_date,
+            'rate': rate.rating if rate else 0
+        }
+        result.append(curr_song)
+    return jsonify(result)
+
+@main.route('/get_playlists_songs/<playlistID1>/<playlistID2>')
+@cross_origin()
+def get_playlists_songs(playlistID1, playlistID2):
+    sp = spotipy.Spotify(auth=token)  # token, geçerli bir Spotify API erişim tokeni olmalıdır
+
+    all_songs = []
+
+    # Her iki playlist için şarkıları sorgula ve birleştir
+    for playlist_id in [playlistID1, playlistID2]:
+        playlist_tracks = sp.playlist_tracks(playlist_id)
+
+        for track in playlist_tracks['items']:
+            track_data = track['track']
+            song_data = {
+                'artist_name': track_data['artists'][0]['name'],
+                'song_name': track_data['name'],
+                'song_id': track_data['id'],
+                'picture': track_data['album']['images'][0]['url'],
+                'songLength': track_data['duration_ms'],
+            }
+            all_songs.append(song_data)
+
+    return jsonify(all_songs)

@@ -137,6 +137,7 @@ def redirect_mobile():
 ##ticket master 
 
 @auth.route('/concerts/<city>')
+@cross_origin()
 def get_concerts(city):
     api_key = "h8Ghsf5Z7ISFcqBYPAurKpHYulSAC5JN"
     url = "https://app.ticketmaster.com/discovery/v2/events.json"
