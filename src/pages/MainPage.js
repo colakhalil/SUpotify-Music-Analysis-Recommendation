@@ -3,6 +3,8 @@ import "../pagesCSS/MainPage.css";
 import "../pagesCSS/LeftBar.css";
 import "../pagesCSS/FriendBar.css";
 import "../pagesCSS/BottomBar.css";
+import TutorialComponent from '../pages/TutorialComponent'; // Adjust the path as necessary
+
 
 
 
@@ -311,7 +313,11 @@ const MainPage = () => {
           setCurrentPlaylistInfo={setCurrentPlaylistInfo}
           setCurrentPlace={setCurrentPlace}
         />
-
+        {currentPlace === "tutorial" && (
+          <TutorialComponent 
+            setCurrentPlace={setCurrentPlace}
+            />
+        )}
         {currentPlace === "main" && (
           <MainMiddle
             friendsUpdate={friendsUpdate}

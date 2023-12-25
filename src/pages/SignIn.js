@@ -45,8 +45,12 @@ function SignIn() {
     }
     console.log("islogin: ", isLogin);
     if (isLogin) {
-      //Than naviagte to main page
-      navigate("/main");
+      const wantsTutorial = window.confirm("Would you like to take a tour?");
+      if (wantsTutorial) {
+        navigate("/tutorial"); // Assuming "tutorial" is a valid place in your app
+      } else {
+        navigate("/main"); // Go to main content
+      }
     }
     if (!isLogin) {
       //Than show pop-up register unsucessful!

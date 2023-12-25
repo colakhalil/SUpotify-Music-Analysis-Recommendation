@@ -340,3 +340,32 @@
   /* Add any additional styling for artist images */
 }
 
+
+/* Add this inside your CSS file for MainPage.css or a similar file */
+
+.content-container .search-and-recommend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px; /* Adjust as needed */
+}
+
+.content-container .recommend-button {
+  padding: 5px 10px; /* Adjust padding to change the size */
+  font-size: 0.8rem; /* Adjust font size as needed */
+  margin-left: 10px; /* Adds space between the search bar and the button */
+  cursor: pointer;
+  background-color: #4b4b4b; /* Background color for the button */
+  color: #fff; /* Text color for the button */
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+
+  /* You can add more styles like hover effects */
+}
+
+.content-container .recommend-button:hover {
+  background-color: #626262; /* Slightly darker on hover */
+}
+
+
