@@ -923,3 +923,36 @@ def format_recommendations(recommendations):
         result.append(curr_track)
     print("Formatted Recommendations:", result)  # Add this line for logging
     return result
+
+@main.route('/get_top_songs/<country_name>', methods=['GET'])
+@cross_origin()
+def get_top_50_songs_of_country(country_name):
+    # Create a Spotify client
+    sp = spotipy.Spotify(auth=token)
+
+    # Generate the playlist name
+    playlist_name = f"Top 50 - {country_name}"
+
+    # Search for the playlist
+    result = sp.search(q=playlist_name, type='playlist', limit=1)
+    if not result['playlists']['items']:
+        return {'message': False}
+
+    # Get the playlist ID
+    playlist_id = result['playlists']['items'][0]['id']
+
+    # Get the first 10 songs of the playlist
+    tracks = sp.playlist_tracks(playlist_id, limit=10)
+    songs = []
+    for item in tracks['items']:
+        track = item['track']
+        curr_track = {
+            'song_id': track['id'],
+            'song_name': track['name'],
+            'artist_name': [artist['name'] for artist in track['artists']],
+            'picture': track['album']['images'][0]['url'] if track['album']['images'] else None,
+            'songLength': track['duration_ms'],
+        }
+        songs.append(curr_track)
+
+    return jsonify(songs) 
