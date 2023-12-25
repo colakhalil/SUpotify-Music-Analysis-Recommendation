@@ -445,3 +445,28 @@ def search_friends(user_id, search_term):
 
     except Exception as e:
         return jsonify({'error': str(e)}) 
+
+
+
+@main.route('/get_playlists_songs/<playlistID1>/<playlistID2>')
+def get_playlists_songs(playlistID1, playlistID2):
+    sp = spotipy.Spotify(auth=token)  # token, geçerli bir Spotify API erişim tokeni olmalıdır
+
+    all_songs = []
+
+    # Her iki playlist için şarkıları sorgula ve birleştir
+    for playlist_id in [playlistID1, playlistID2]:
+        playlist_tracks = sp.playlist_tracks(playlist_id)
+
+        for track in playlist_tracks['items']:
+            track_data = track['track']
+            song_data = {
+                'artist_name': track_data['artists'][0]['name'],
+                'song_name': track_data['name'],
+                'song_id': track_data['id'],
+                'picture': track_data['album']['images'][0]['url'],
+                'songLength': track_data['duration_ms'],
+            }
+            all_songs.append(song_data)
+
+    return jsonify(all_songs) 
