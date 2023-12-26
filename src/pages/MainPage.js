@@ -3,11 +3,7 @@ import "../pagesCSS/MainPage.css";
 import "../pagesCSS/LeftBar.css";
 import "../pagesCSS/FriendBar.css";
 import "../pagesCSS/BottomBar.css";
-import TutorialComponent from '../pages/TutorialComponent'; // Adjust the path as necessary
-
-
-
-
+import TutorialComponent from "../pages/TutorialComponent"; // Adjust the path as necessary
 
 import Searched from "../components/Searched";
 import axios from "axios";
@@ -57,7 +53,7 @@ const MainPage = () => {
   // This function will be called when a friend is clicked in the FriendActivity component
   const viewFriendProfile = (friendEmail) => {
     setCurrentViewedFriend(friendEmail); // Set the current viewed friend
-    setCurrentPlace('friend'); // Change the current place to 'friend' to view the friend's profile
+    setCurrentPlace("friend"); // Change the current place to 'friend' to view the friend's profile
   };
 
   const formatDuration = (durationMs) => {
@@ -314,9 +310,7 @@ const MainPage = () => {
           setCurrentPlace={setCurrentPlace}
         />
         {currentPlace === "tutorial" && (
-          <TutorialComponent 
-            setCurrentPlace={setCurrentPlace}
-            />
+          <TutorialComponent setCurrentPlace={setCurrentPlace} />
         )}
         {currentPlace === "main" && (
           <MainMiddle
@@ -367,10 +361,11 @@ const MainPage = () => {
           friendsData={friendsData}
           setCurrentPlace={setCurrentPlace}
           viewFriendProfile={viewFriendProfile} // Pass the function to FriendActivity
-
         />
-        {currentPlace === 'friend' && (
-          <FriendProfileMiddle friendEmail={currentViewedFriend}></FriendProfileMiddle>
+        {currentPlace === "friend" && (
+          <FriendProfileMiddle
+            friendEmail={currentViewedFriend}
+          ></FriendProfileMiddle>
         )}
         {currentPlace === "searched" && (
           <Searched

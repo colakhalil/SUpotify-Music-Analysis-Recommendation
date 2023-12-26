@@ -4,9 +4,8 @@ import Playlist from "./subcomponents/Playlist";
 import { useState, useEffect } from "react";
 import globalVar from "../global";
 import axios from "axios";
-import JoyRide from 'react-joyride';
+import JoyRide from "react-joyride";
 import RecommendArtist from "./subcomponents/RecommendArtist";
-
 
 const MainMiddle = ({
   setCurrentPlace,
@@ -50,25 +49,88 @@ const MainMiddle = ({
         ...newlyRatedRecommendation,
         name: "Based on Newly Rated Songs",
       },
+      geolocationrecommendaiton: {
+        ...geolocationRecommendation,
+        name: "Based on Your Geolocation",
+      },
     };
 
     setCurrentPlaylistInfo(playlists[playlistName.toLowerCase()]);
     // Here you would handle the click event, such as navigating to the playlist page.
   };
 
+  const [formattedSongs, setFormattedSongs] = useState([]);
+
+  const [selectedCountry, setSelectedCountry] = useState("Global"); // Default selection
+
+  const countries = [
+    "Global",
+    "USA",
+    "Turkey",
+    "Italy",
+    "France",
+    "Spain",
+    "United Kingdom",
+    "Mexico",
+    "Bolivia",
+    "Colombia",
+    "Bulgaria",
+    "Morocco",
+    "South Korea",
+  ];
+
+  const handleCountrySelect = (e) => {
+    setSelectedCountry(e.target.value);
+  };
+
+  useEffect(() => {
+    // Define the URL
+    const url = `http://127.0.0.1:8008/get_top_songs/${selectedCountry}`;
+    // Send a GET request using the fetch API
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json(); // Parse the response as JSON
+      })
+      .then((data) => {
+        if (data.length !== 0) {
+          const transformedData = {
+            songs: data.map((item) => ({
+              artistName: item.artist_name.join(", "), // Assuming artist_name is an array
+              id: item.song_id,
+              songLength: item.songLength,
+              songName: item.song_name,
+            })),
+            url:
+              data.length > 0
+                ? data[0].picture
+                : "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
+          };
+          console.log("Response data as JSON:", transformedData);
+          setGeolocationRecommendation(transformedData);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, [selectedCountry]);
   const sendRecommendations = async () => {
     try {
       // Replace with your actual API URL and endpoint
-      const response = await axios.get(`http://localhost:5000/send_recommendations/${globalVar.username}`);
+      const response = await axios.get(
+        `http://localhost:5000/send_recommendations/${globalVar.username}`
+      );
 
       if (response.data.message) {
-        alert('Recommendations sent successfully!');
+        alert("Recommendations sent successfully!");
       } else {
-        alert('Failed to send recommendations.');
+        alert("Failed to send recommendations.");
       }
     } catch (error) {
-      console.error('Error sending recommendations:', error);
-      alert('An error occurred while sending recommendations.');
+      console.error("Error sending recommendations:", error);
+      alert("An error occurred while sending recommendations.");
     }
   };
 
@@ -82,6 +144,10 @@ const MainMiddle = ({
     songs: [],
   });
 
+  const [geolocationRecommendation, setGeolocationRecommendation] = useState({
+    url: "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
+    songs: [],
+  });
   const [friendPlaylist, setFriendPlaylist] = useState({
     url: "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
     songs: [],
@@ -216,7 +282,7 @@ const MainMiddle = ({
           setSearchedArray={setSearchedArray}
         />
         <button onClick={sendRecommendations}>
-        Send Me Song Recommendations
+          Send Me Song Recommendations
         </button>
       </div>
       <h2 className="recommended-title">
@@ -371,9 +437,37 @@ const MainMiddle = ({
             handlePlaylistClick("newlyratedrecommendation", setCurrentPlace)
           }
         />
+
+        <div>
+          <label style={{ color: "white" }} htmlFor="country-select">
+            Select a Country:
+          </label>
+          <select
+            id="country-select"
+            onChange={handleCountrySelect}
+            value={selectedCountry}
+          >
+            {countries.map((country) => (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            ))}
+          </select>
+          <Playlist
+            name="Based on GeoLocation"
+            playlistData={geolocationRecommendation}
+            thumbnail={
+              geolocationRecommendation.url ||
+              "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
+            }
+            onClick={() =>
+              handlePlaylistClick("geolocationrecommendaiton", setCurrentPlace)
+            }
+          />
+        </div>
       </div>
       <h2 className="recommended-title">Artist Recommendation</h2>
-      <RecommendArtist  currentUserId= {globalVar.username}/>
+      <RecommendArtist currentUserId={globalVar.username} />
     </div>
   );
 };
