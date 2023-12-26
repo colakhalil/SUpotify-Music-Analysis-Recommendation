@@ -274,6 +274,191 @@ const MainMiddle = ({
     setPlaylistKey((prevKey) => prevKey + 1);
   }, [friendsData]);
   const [playlistKey, setPlaylistKey] = useState(0);
+  const [selectedCity, setSelectedCity] = useState("");
+  const [concerts, setConcerts] = useState([]);
+
+  const handleCitySelect = async (e) => {
+    setSelectedCity(e.target.value);
+    const city = e.target.value;
+    const url = `http://127.0.0.1:8008/concerts/${city.toLowerCase()}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setConcerts(data);
+    } catch (error) {
+      console.error("Error fetching concerts:", error);
+      // Handle error appropriately
+    }
+  };
+  const countryCityMap = {
+    Global: [
+      "New York",
+      "London",
+      "Paris",
+      "Tokyo",
+      "Berlin",
+      "Sydney",
+      "Toronto",
+      "Moscow",
+      "Dubai",
+      "Singapore",
+    ],
+    USA: [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "San Antonio",
+      "San Diego",
+      "Dallas",
+      "San Jose",
+    ],
+    Turkey: [
+      "Istanbul",
+      "Ankara",
+      "Izmir",
+      "Antalya",
+      "Adana",
+      "Bursa",
+      "Gaziantep",
+      "Konya",
+      "Mersin",
+      "Kayseri",
+    ],
+    Italy: [
+      "Rome",
+      "Milan",
+      "Naples",
+      "Turin",
+      "Palermo",
+      "Genoa",
+      "Bologna",
+      "Florence",
+      "Bari",
+      "Catania",
+    ],
+    France: [
+      "Paris",
+      "Marseille",
+      "Lyon",
+      "Toulouse",
+      "Nice",
+      "Nantes",
+      "Strasbourg",
+      "Montpellier",
+      "Bordeaux",
+      "Lille",
+    ],
+    Spain: [
+      "Madrid",
+      "Barcelona",
+      "Valencia",
+      "Seville",
+      "Zaragoza",
+      "Malaga",
+      "Murcia",
+      "Palma",
+      "Las Palmas",
+      "Bilbao",
+    ],
+    United_Kingdom: [
+      "London",
+      "Birmingham",
+      "Manchester",
+      "Glasgow",
+      "Newcastle",
+      "Sheffield",
+      "Liverpool",
+      "Leeds",
+      "Bristol",
+      "Belfast",
+    ],
+    Mexico: [
+      "Mexico City",
+      "Guadalajara",
+      "Monterrey",
+      "Puebla",
+      "Tijuana",
+      "Cancún",
+      "Acapulco",
+      "Mazatlán",
+      "Chihuahua",
+      "Oaxaca",
+    ],
+    Bolivia: [
+      "Santa Cruz",
+      "La Paz",
+      "Cochabamba",
+      "Oruro",
+      "Sucre",
+      "Tarija",
+      "Potosí",
+      "Trinidad",
+      "Cobija",
+      "Montero",
+    ],
+    Colombia: [
+      "Bogotá",
+      "Medellín",
+      "Cali",
+      "Barranquilla",
+      "Cartagena",
+      "Cúcuta",
+      "Bucaramanga",
+      "Pereira",
+      "Santa Marta",
+      "Ibagué",
+    ],
+    Bulgaria: [
+      "Sofia",
+      "Plovdiv",
+      "Varna",
+      "Burgas",
+      "Ruse",
+      "Stara Zagora",
+      "Pleven",
+      "Sliven",
+      "Dobrich",
+      "Shumen",
+    ],
+    Morocco: [
+      "Casablanca",
+      "Fez",
+      "Tangier",
+      "Marrakesh",
+      "Rabat",
+      "Meknes",
+      "Oujda",
+      "Kenitra",
+      "Agadir",
+      "Tetouan",
+    ],
+    South_Korea: [
+      "Seoul",
+      "Busan",
+      "Incheon",
+      "Daegu",
+      "Daejeon",
+      "Gwangju",
+      "Suwon",
+      "Ulsan",
+      "Goyang",
+      "Seongnam",
+    ],
+  };
+
+  const [cities, setCities] = useState(countryCityMap["Global"]); // Default to global cities
+
+  useEffect(() => {
+    // Update cities when selectedCountry changes
+    const availableCities = countryCityMap[selectedCountry] || [];
+    setCities(availableCities);
+    setSelectedCity(""); // Reset selected city when country changes
+  }, [selectedCountry]);
+
   return (
     <div className="content-container">
       <div className="search-and-recommend">
@@ -439,15 +624,13 @@ const MainMiddle = ({
         />
 
         <div>
-          <label style={{ color: "white" }} htmlFor="country-select">
-            Select a Country:
-          </label>
+          <label htmlFor="country-select">Select a Country:</label>
           <select
             id="country-select"
             onChange={handleCountrySelect}
             value={selectedCountry}
           >
-            {countries.map((country) => (
+            {Object.keys(countryCityMap).map((country) => (
               <option key={country} value={country}>
                 {country}
               </option>
@@ -468,6 +651,49 @@ const MainMiddle = ({
       </div>
       <h2 className="recommended-title">Artist Recommendation</h2>
       <RecommendArtist currentUserId={globalVar.username} />
+      <div>
+        <label htmlFor="city-select">Select a City:</label>
+        <select
+          id="city-select"
+          onChange={handleCitySelect}
+          value={selectedCity}
+        >
+          <option value="">Select City</option>
+          {cities.map((city) => (
+            <option key={city} value={city}>
+              {city}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Display upcoming concerts */}
+      <div className="artist-recommendations-container">
+        {/* ... other artist recommendations ... */}
+      </div>
+
+      <div className="concerts-container">
+        <h2>Upcoming Concerts in {selectedCity}</h2>
+        <div className="concerts-list">
+          {concerts.map((concert, index) => (
+            <div className="concert-card" key={index}>
+              <div className="concert-info">
+                <p className="concert-date">Date: {concert.date}</p>
+                <p className="concert-name">Name: {concert.name}</p>
+                <p className="concert-venue">Venue: {concert.venue}</p>
+              </div>
+              <a
+                className="concert-link"
+                href={concert.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Buy Tickets
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
