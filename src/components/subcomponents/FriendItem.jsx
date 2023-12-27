@@ -1,17 +1,22 @@
 import React from 'react';
 
-const FriendItem = ({ friend , setCurrentPlace}) => {
-  const handleFriendProfile = ({friend}) => {
-    console.log("You clicked on friend");
+const FriendItem = ({ friend , onSelectFriend}) => {
+  /*
+  const handleFriendProfile = () => {
+    console.log("You clicked on friend item:", friend.name);
     setCurrentPlace("friend");
     // Implement your playlist click functionality here
-    console.log(friend)
+  };
+*/
+  const handleFriendProfile = () => {
+    console.log("You clicked on friend item:", friend.name);
+    onSelectFriend(friend.name); // Call the function passed from MainPage via FriendActivity
   };
   return (
     <div 
       className="friend" 
       key={friend.name} 
-      onClick={() => handleFriendProfile(friend, setCurrentPlace)}
+      onClick={handleFriendProfile}
       style={{ cursor: 'pointer' }} // Add cursor style for better UX
     >
       <img

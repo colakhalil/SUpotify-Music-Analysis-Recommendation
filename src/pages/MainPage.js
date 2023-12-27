@@ -52,11 +52,12 @@ const MainPage = () => {
 
   // ... [other functions and states]
 
-  const [currentViewedFriend, setCurrentViewedFriend] = useState(null);
 
-  // This function will be called when a friend is clicked in the FriendActivity component
-  const viewFriendProfile = (friendEmail) => {
-    setCurrentViewedFriend(friendEmail); // Set the current viewed friend
+  const [currentViewedFriendName, setCurrentViewedFriendName] = useState('');
+
+  // Modify the viewFriendProfile function to accept a friend's name
+  const viewFriendProfile = (friendName) => {
+    setCurrentViewedFriendName(friendName); // Set the current viewed friend's name
     setCurrentPlace('friend'); // Change the current place to 'friend' to view the friend's profile
   };
 
@@ -306,6 +307,8 @@ const MainPage = () => {
     fetchFriendsActivity();
   }, [friendsUpdate]); // Depend on friendsUpdate to refetch when it changes
 
+ 
+
   return (
     <>
       <div className="main-container">
@@ -367,10 +370,11 @@ const MainPage = () => {
           friendsData={friendsData}
           setCurrentPlace={setCurrentPlace}
           viewFriendProfile={viewFriendProfile} // Pass the function to FriendActivity
+          
 
         />
         {currentPlace === 'friend' && (
-          <FriendProfileMiddle friendEmail={currentViewedFriend}></FriendProfileMiddle>
+          <FriendProfileMiddle friendName={currentViewedFriendName}></FriendProfileMiddle>
         )}
         {currentPlace === "searched" && (
           <Searched

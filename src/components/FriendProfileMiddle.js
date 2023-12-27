@@ -3,57 +3,46 @@ import axios from 'axios';
 import UserPart from './subcomponents/UserPart';
 import MonthlyAverageRatingsChart from "./subcomponents/FriendMonthlyR";
 import SongsAddedByPerformerChart from "./subcomponents/FriendSongsAddedChart";
-
+import FavoriteSongs90s from './subcomponents/FavoriteSongs90s'
+import FavoriteRecentSongs from './subcomponents/FavoriteRecentSongs';
 import globalVar from '../global';
 
-const FriendProfileMiddle = ({ friendEmail }) => {
+const FriendProfileMiddle = ({ friendName }) => {
+
   const [friendData, setFriendData] = useState(null);
-  const [isFriend, setIsFriend] = useState(false);
 
   useEffect(() => {
-    // Replace 'x' with the actual endpoint
-    const apiEndpoint = `http://127.0.0.1:8008/friend_data/${friendEmail}`;
-
-    axios.get(apiEndpoint)
-      .then((response) => {
+    const fetchFriendData = async () => {
+      try {
+        // Assuming friendName is the user_id required by your API
+        const response = await axios.get(`http://127.0.0.1:8008/user_data_username/${friendName}`);
         setFriendData(response.data);
-        setIsFriend(response.data.isFriend);
-        console.log('Fetched friend data:', response.data);
-      })
-      .catch((error) => {
-        console.error('API request error:', error);
-      });
-  }, [friendEmail]);
+      } catch (error) {
+        console.error('Error fetching friend data:', error);
+      }
+    };
 
-  const handleFriendshipToggle = () => {
-    const apiEndpoint = `http://127.0.0.1:8008/toggle_friend/${friendEmail}`;
-    // Implement the API call to add or remove a friend
-    axios.post(apiEndpoint, { isFriend: !isFriend })
-      .then((response) => {
-        setIsFriend(!isFriend);
-        console.log(response.data.message); // Expected message: "Friend added" or "Friend removed"
-      })
-      .catch((error) => {
-        console.error('Error toggling friend status:', error);
-      });
-  };
+    fetchFriendData();
+  }, [friendName]);
 
+  
   return (
 
+    
     <div className="main-container">
       <div className="content-container">
         <UserPart userData={friendData} />
         <div className="friendship-button-container">
-          <button onClick={handleFriendshipToggle} className="friend-toggle-btn">
-            {isFriend ? 'Remove Friend' : 'Add Friend'}
-          </button>
         </div>
-        <div style={{ display: "flex" }}>
-            <MonthlyAverageRatingsChart />
-            <SongsAddedByPerformerChart />
-        </div>
+         <FavoriteSongs90s  userName = {friendName}/>
+          <FavoriteRecentSongs  userName = {friendName}/>
+          <div style={{ display: "flex" }}>
+            <MonthlyAverageRatingsChart userName = {friendName} />
+            <SongsAddedByPerformerChart userName = {friendName}/>
+          </div>
       </div>
     </div>
+    
   );
 };
 

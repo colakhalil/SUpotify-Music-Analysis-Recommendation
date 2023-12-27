@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../pagesCSS/FavoriteSongs90s.css";
 import globalVar from "../../global.js";
-const FavoriteRecentSongs = () => {
+const FavoriteRecentSongs = (userName) => {
   const [songs, setSongs] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8008/" + globalVar.username + "/new_songs")
+    fetch("http://127.0.0.1:8008/" + userName + "/new_songs")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");

@@ -61,7 +61,7 @@ const MainMiddle = ({
   const sendRecommendations = async () => {
     try {
       // Replace with your actual API URL and endpoint
-      const response = await axios.get(`http://127.0.0.1:8008//send_recommendations/${globalVar.username}`);
+      const response = await axios.get(`http://127.0.0.1:8008/send_recommendations/${globalVar.username}`);
 
       if (response.data.message) {
         alert('Recommendations sent successfully!');

@@ -9,12 +9,12 @@ import {
   Legend,
 } from "recharts";
 import globalVar from "../../global.js";
-const SongsAddedByPerformerChart = () => {
+const SongsAddedByPerformerChart = (userName) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     // Fetch data from the provided URL
-    fetch("http://127.0.0.1:8008/" + globalVar.username + "/artist_song_count")
+    fetch("http://127.0.0.1:8008/" + userName + "/artist_song_count")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");

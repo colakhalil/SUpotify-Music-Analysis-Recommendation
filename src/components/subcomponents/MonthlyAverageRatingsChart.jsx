@@ -12,13 +12,13 @@ import {
 
 import globalVar from "../../global.js";
 
-const MonthlyAverageRatingsChart = () => {
+const MonthlyAverageRatingsChart = (userName) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     // Fetch data from the provided URL
     fetch(
-      "http://127.0.0.1:8008/" + globalVar.username + "/monthly_average_rating"
+      "http://127.0.0.1:8008/" + userName + "/monthly_average_rating"
     )
       .then((response) => {
         if (!response.ok) {
