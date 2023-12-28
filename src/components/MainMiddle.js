@@ -4,9 +4,8 @@ import Playlist from "./subcomponents/Playlist";
 import { useState, useEffect } from "react";
 import globalVar from "../global";
 import axios from "axios";
-import JoyRide from 'react-joyride';
+import JoyRide from "react-joyride";
 import RecommendArtist from "./subcomponents/RecommendArtist";
-
 
 const MainMiddle = ({
   setCurrentPlace,
@@ -50,6 +49,10 @@ const MainMiddle = ({
         ...newlyRatedRecommendation,
         name: "Based on Newly Rated Songs",
       },
+      geolocationrecommendaiton: {
+        ...geolocationRecommendation,
+        name: "Based on Your Geolocation",
+      },
     };
 
     setCurrentPlaylistInfo(playlists[playlistName.toLowerCase()]);
@@ -58,19 +61,78 @@ const MainMiddle = ({
 
 
 
+  const [formattedSongs, setFormattedSongs] = useState([]);
+
+  const [selectedCountry, setSelectedCountry] = useState("Global"); // Default selection
+
+  const countries = [
+    "Global",
+    "USA",
+    "Turkey",
+    "Italy",
+    "France",
+    "Spain",
+    "United Kingdom",
+    "Mexico",
+    "Bolivia",
+    "Colombia",
+    "Bulgaria",
+    "Morocco",
+    "South Korea",
+  ];
+
+  const handleCountrySelect = (e) => {
+    setSelectedCountry(e.target.value);
+  };
+
+  useEffect(() => {
+    // Define the URL
+    const url = `http://127.0.0.1:8008/get_top_songs/${selectedCountry}`;
+    // Send a GET request using the fetch API
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json(); // Parse the response as JSON
+      })
+      .then((data) => {
+        if (data.length !== 0) {
+          const transformedData = {
+            songs: data.map((item) => ({
+              artistName: item.artist_name.join(", "), // Assuming artist_name is an array
+              id: item.song_id,
+              songLength: item.songLength,
+              songName: item.song_name,
+            })),
+            url:
+              data.length > 0
+                ? data[0].picture
+                : "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
+          };
+          console.log("Response data as JSON:", transformedData);
+          setGeolocationRecommendation(transformedData);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, [selectedCountry]);
   const sendRecommendations = async () => {
     try {
       // Replace with your actual API URL and endpoint
-      const response = await axios.get(`http://127.0.0.1:8008/send_recommendations/${globalVar.username}`);
+      const response = await axios.get(
+        `http://localhost:5000/send_recommendations/${globalVar.username}`
+      );
 
       if (response.data.message) {
-        alert('Recommendations sent successfully!');
+        alert("Recommendations sent successfully!");
       } else {
-        alert('Failed to send recommendations.');
+        alert("Failed to send recommendations.");
       }
     } catch (error) {
-      console.error('Error sending recommendations:', error);
-      alert('An error occurred while sending recommendations.');
+      console.error("Error sending recommendations:", error);
+      alert("An error occurred while sending recommendations.");
     }
   };
 
@@ -84,6 +146,10 @@ const MainMiddle = ({
     songs: [],
   });
 
+  const [geolocationRecommendation, setGeolocationRecommendation] = useState({
+    url: "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
+    songs: [],
+  });
   const [friendPlaylist, setFriendPlaylist] = useState({
     url: "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
     songs: [],
@@ -210,6 +276,191 @@ const MainMiddle = ({
     setPlaylistKey((prevKey) => prevKey + 1);
   }, [friendsData]);
   const [playlistKey, setPlaylistKey] = useState(0);
+  const [selectedCity, setSelectedCity] = useState("");
+  const [concerts, setConcerts] = useState([]);
+
+  const handleCitySelect = async (e) => {
+    setSelectedCity(e.target.value);
+    const city = e.target.value;
+    const url = `http://127.0.0.1:8008/concerts/${city.toLowerCase()}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setConcerts(data);
+    } catch (error) {
+      console.error("Error fetching concerts:", error);
+      // Handle error appropriately
+    }
+  };
+  const countryCityMap = {
+    Global: [
+      "New York",
+      "London",
+      "Paris",
+      "Tokyo",
+      "Berlin",
+      "Sydney",
+      "Toronto",
+      "Moscow",
+      "Dubai",
+      "Singapore",
+    ],
+    USA: [
+      "New York",
+      "Los Angeles",
+      "Chicago",
+      "Houston",
+      "Phoenix",
+      "Philadelphia",
+      "San Antonio",
+      "San Diego",
+      "Dallas",
+      "San Jose",
+    ],
+    Turkey: [
+      "Istanbul",
+      "Ankara",
+      "Izmir",
+      "Antalya",
+      "Adana",
+      "Bursa",
+      "Gaziantep",
+      "Konya",
+      "Mersin",
+      "Kayseri",
+    ],
+    Italy: [
+      "Rome",
+      "Milan",
+      "Naples",
+      "Turin",
+      "Palermo",
+      "Genoa",
+      "Bologna",
+      "Florence",
+      "Bari",
+      "Catania",
+    ],
+    France: [
+      "Paris",
+      "Marseille",
+      "Lyon",
+      "Toulouse",
+      "Nice",
+      "Nantes",
+      "Strasbourg",
+      "Montpellier",
+      "Bordeaux",
+      "Lille",
+    ],
+    Spain: [
+      "Madrid",
+      "Barcelona",
+      "Valencia",
+      "Seville",
+      "Zaragoza",
+      "Malaga",
+      "Murcia",
+      "Palma",
+      "Las Palmas",
+      "Bilbao",
+    ],
+    United_Kingdom: [
+      "London",
+      "Birmingham",
+      "Manchester",
+      "Glasgow",
+      "Newcastle",
+      "Sheffield",
+      "Liverpool",
+      "Leeds",
+      "Bristol",
+      "Belfast",
+    ],
+    Mexico: [
+      "Mexico City",
+      "Guadalajara",
+      "Monterrey",
+      "Puebla",
+      "Tijuana",
+      "Cancún",
+      "Acapulco",
+      "Mazatlán",
+      "Chihuahua",
+      "Oaxaca",
+    ],
+    Bolivia: [
+      "Santa Cruz",
+      "La Paz",
+      "Cochabamba",
+      "Oruro",
+      "Sucre",
+      "Tarija",
+      "Potosí",
+      "Trinidad",
+      "Cobija",
+      "Montero",
+    ],
+    Colombia: [
+      "Bogotá",
+      "Medellín",
+      "Cali",
+      "Barranquilla",
+      "Cartagena",
+      "Cúcuta",
+      "Bucaramanga",
+      "Pereira",
+      "Santa Marta",
+      "Ibagué",
+    ],
+    Bulgaria: [
+      "Sofia",
+      "Plovdiv",
+      "Varna",
+      "Burgas",
+      "Ruse",
+      "Stara Zagora",
+      "Pleven",
+      "Sliven",
+      "Dobrich",
+      "Shumen",
+    ],
+    Morocco: [
+      "Casablanca",
+      "Fez",
+      "Tangier",
+      "Marrakesh",
+      "Rabat",
+      "Meknes",
+      "Oujda",
+      "Kenitra",
+      "Agadir",
+      "Tetouan",
+    ],
+    South_Korea: [
+      "Seoul",
+      "Busan",
+      "Incheon",
+      "Daegu",
+      "Daejeon",
+      "Gwangju",
+      "Suwon",
+      "Ulsan",
+      "Goyang",
+      "Seongnam",
+    ],
+  };
+
+  const [cities, setCities] = useState(countryCityMap["Global"]); // Default to global cities
+
+  useEffect(() => {
+    // Update cities when selectedCountry changes
+    const availableCities = countryCityMap[selectedCountry] || [];
+    setCities(availableCities);
+    setSelectedCity(""); // Reset selected city when country changes
+  }, [selectedCountry]);
+
   return (
     <div className="content-container">
       <div className="search-and-recommend">
@@ -218,7 +469,7 @@ const MainMiddle = ({
           setSearchedArray={setSearchedArray}
         />
         <button onClick={sendRecommendations}>
-        Send Me Song Recommendations
+          Send Me Song Recommendations
         </button>
       </div>
       <h2 className="recommended-title">
@@ -373,9 +624,78 @@ const MainMiddle = ({
             handlePlaylistClick("newlyratedrecommendation", setCurrentPlace)
           }
         />
+
+        <div>
+          <label htmlFor="country-select">Select a Country:</label>
+          <select
+            id="country-select"
+            onChange={handleCountrySelect}
+            value={selectedCountry}
+          >
+            {Object.keys(countryCityMap).map((country) => (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            ))}
+          </select>
+          <Playlist
+            name="Based on GeoLocation"
+            playlistData={geolocationRecommendation}
+            thumbnail={
+              geolocationRecommendation.url ||
+              "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp"
+            }
+            onClick={() =>
+              handlePlaylistClick("geolocationrecommendaiton", setCurrentPlace)
+            }
+          />
+        </div>
       </div>
       <h2 className="recommended-title">Artist Recommendation</h2>
-      <RecommendArtist  currentUserId= {globalVar.username}/>
+      <RecommendArtist currentUserId={globalVar.username} />
+      <div>
+        <label htmlFor="city-select">Select a City:</label>
+        <select
+          id="city-select"
+          onChange={handleCitySelect}
+          value={selectedCity}
+        >
+          <option value="">Select City</option>
+          {cities.map((city) => (
+            <option key={city} value={city}>
+              {city}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Display upcoming concerts */}
+      <div className="artist-recommendations-container">
+        {/* ... other artist recommendations ... */}
+      </div>
+
+      <div className="concerts-container">
+        <h2>Upcoming Concerts in {selectedCity}</h2>
+        <div className="concerts-list">
+          {concerts.map((concert, index) => (
+            <div className="concert-card" key={index}>
+              <div className="concert-info">
+                <p className="concert-date">Date: {concert.date}</p>
+                <p className="concert-name">Name: {concert.name}</p>
+                <p className="concert-venue">Venue: {concert.venue}</p>
+              </div>
+              <a
+                className="concert-link"
+                href={concert.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Buy Tickets
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

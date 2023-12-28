@@ -67,7 +67,7 @@
   display: flex;
   overflow: hidden;
   height: 100vh; /* Full viewport height */
-  width:100%;
+  width: 100%;
 }
 
 .content-container {
@@ -233,7 +233,6 @@
   gap: 10px; /* Butonlar arasında boşluk ekler */
 }
 
-
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -311,8 +310,6 @@
   margin-top: 10px;
 }
 
-
-
 .recommend-artist {
   /* Add any additional styling for the parent container */
 }
@@ -330,7 +327,7 @@
   text-align: center;
 }
 
-.artist-name{
+.artist-name {
   color: white;
 }
 .artist-item img {
@@ -339,7 +336,6 @@
   border-radius: 200px;
   /* Add any additional styling for artist images */
 }
-
 
 /* Add this inside your CSS file for MainPage.css or a similar file */
 
@@ -368,4 +364,45 @@
   background-color: #626262; /* Slightly darker on hover */
 }
 
+/* Add to your CSS file */
 
+.concerts-container {
+  margin-top: 20px;
+}
+
+.concerts-list {
+  display: flex; /* This will arrange the concert cards in a row */
+  overflow-x: auto; /* Adds horizontal scrolling if the container is too small */
+}
+
+.concert-card {
+  flex: 0 0 auto; /* Do not grow, do not shrink, and base size on content */
+  margin-right: 20px; /* Spacing between cards */
+  background-color: #1c7894; /* Background color for the card */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+  border-radius: 8px; /* Rounds the corners */
+  padding: 10px;
+  width: 200px; /* Fixed width, or could be percentage */
+}
+
+.concert-info {
+  margin-bottom: 10px;
+}
+
+.concert-date,
+.concert-name,
+.concert-venue {
+  font-size: 0.9em;
+  margin: 5px 0;
+}
+
+.concert-link {
+  display: inline-block;
+  background-color: #007bff; /* Example primary button color */
+  color: #fff;
+  text-align: center;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
