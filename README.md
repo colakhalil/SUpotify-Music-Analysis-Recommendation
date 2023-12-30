@@ -1,5 +1,10 @@
 ### SUpotify - Music Analysis and Recommendation System
 
+#PROJECT TEST VIDEOS (PROJECT STILL CONT)
+
+WEB: https://drive.google.com/file/d/1klZQuFYr_u7aOYFa5jq0b8rvNL5sYWV9/view?usp=sharing
+Mobile: https://drive.google.com/file/d/1HxOtLX0JHn9DZ7UT2--LnphfrOSN3x2g/view?usp=sharing
+
 ## General Information##
 Project Title
 SUpotify
