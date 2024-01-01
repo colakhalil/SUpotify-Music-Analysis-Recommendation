@@ -268,6 +268,154 @@ class BluePrintTestCase(unittest.TestCase):
             'friendsCount': 4
         }
         self.assertEqual(json.loads(response.data), expected_response)"""
+    @patch('requests.get')
+    def test_get_concerts_success(self, mock_get):
+        # Mock response object for successful request
+        mock_response = MagicMock()
+        mock_response.json.return_value = {
+            '_embedded': {
+                'events': [
+                    {
+                        "name": "Concert A",
+                        "dates": {"start": {"localDate": "2023-12-01"}},
+                        "_embedded": {"venues": [{"name": "Venue A"}]},
+                        "url": "http://example.com/concert-a"
+                    },
+                    {
+                        "name": "Concert B",
+                        "dates": {"start": {"localDate": "2023-12-02"}},
+                        "_embedded": {"venues": [{"name": "Venue B"}]},
+                        "url": "http://example.com/concert-b"
+                    },
+                ]
+            }
+        }
+        mock_response.raise_for_status.return_value = None
+        mock_get.return_value = mock_response
+
+        # Make a GET request to the endpoint
+        response = self.app.get('/concerts/testcity')
+
+        # Assert request was successful
+        self.assertEqual(response.status_code, 200)
+
+        # Convert response data to JSON
+        response_data = json.loads(response.data.decode('utf-8'))
+
+        # Assert response contains correct data
+        expected_data = [
+            {
+                "name": "Concert A",
+                "date": "2023-12-01",
+                "venue": "Venue A",
+                "url": "http://example.com/concert-a"
+            },
+            {
+                "name": "Concert B",
+                "date": "2023-12-02",
+                "venue": "Venue B",
+                "url": "http://example.com/concert-b"
+            }
+        ]
+        self.assertEqual(response_data, expected_data)
+    #################
+    # genius  
+    ### ONEMLI NOT BUNUN MAIN.PY DA ROUTE U DEGISTI 
+    @patch('lyricsgenius.Genius.search_song')
+    def test_lyrics_success(self, mock_search_song):
+        # Mock response for successful lyrics fetch
+        mock_song = MagicMock()
+        mock_song.lyrics = "This is a song lyric."
+        mock_search_song.return_value = mock_song
+
+        # Make a GET request to the endpoint
+        response = self.app.get('/lyrics/ArtistName/SongName')
+
+        # Assert request was successful
+        self.assertEqual(response.status_code, 200)
+
+        # Assert response contains correct lyrics
+        response_data = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(response_data, "This is a song lyric.")
+
+    @patch('lyricsgenius.Genius.search_song')
+    def test_lyrics_not_found(self, mock_search_song):
+        # Mock response for when lyrics are not found
+        mock_search_song.return_value = None
+
+        # Make a GET request to the endpoint
+        response = self.app.get('/lyrics/ArtistName/SongName')
+
+        # Assert request was unsuccessful
+        # Update your Flask route to return 404 when lyrics are not found
+        self.assertEqual(response.status_code, 404)
+
+        # Assert response contains appropriate error message
+        response_data = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(response_data, {"error": "Lyrics not found"}) 
+
+
+#############   SPOTIFY USER PLAYLIST TEST   #################### 
+    @patch('spotipy.Spotify.current_user_playlists')
+    @patch('app.models.Playlist.query')
+    def test_get_user_playlists(self, mock_playlist_query, mock_current_user_playlists):
+        # Mock Spotify API response
+        mock_current_user_playlists.return_value = {
+            'items': [
+                {
+                    'name': 'Playlist 1',
+                    'images': [{'url': 'http://example.com/image1.jpg'}],
+                    'tracks': {'total': 10},
+                    'id': '1'
+                },
+                {
+                    'name': 'Playlist 2',
+                    'images': [],
+                    'tracks': {'total': 5},
+                    'id': '2'
+                }
+            ]
+        }
+
+        # Mock Playlist query
+        mock_playlist_query.filter_by.return_value.first.side_effect = [None, Playlist(playlist_id='2')]
+
+        # Mock the db session's add and commit methods
+        db.session.add = MagicMock()
+        db.session.commit = MagicMock()
+
+        # Make a GET request to the endpoint
+        response = self.app.get('/get_user_playlists')
+
+        # Assert request was successful
+        self.assertEqual(response.status_code, 200)
+
+        # Assert response contains the correct data
+        expected_data = [
+            {
+                "name": "Playlist 1",
+                "playlistPic": "http://example.com/image1.jpg",
+                "songNumber": 10,
+                "playlistID": "1"
+            },
+            {
+                "name": "Playlist 2",
+                "playlistPic": None,
+                "songNumber": 5,
+                "playlistID": "2"
+            }
+        ]
+        self.assertEqual(response.json, expected_data)
+
+        # Assert that the new playlist was added to the session
+        db.session.add.assert_called()
+
+        # Assert that the session was committed
+        db.session.commit.assert_called() 
+ 
+
+
+
 
 
 if __name__ == '__main__':
