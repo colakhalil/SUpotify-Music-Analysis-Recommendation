@@ -406,3 +406,43 @@
   border-radius: 5px;
   font-weight: bold;
 }
+
+
+/* Add this inside your CSS file under a section for chart styling */
+/* In your CSS file */
+.charts-container {
+  display: flex; /* Establishes a flex container */
+  justify-content: space-around; /* Puts space between the flex items */
+  align-items: stretch; /* Stretches items to fill the container vertically */
+
+  padding: 1rem; /* Optional padding */
+  gap:0;
+}
+
+.chart-wrapper {
+  flex: 1; /* Assigns equal width to both chart wrappers */
+  margin: 0.5rem; /* Optional margin between charts */
+}
+
+/* No changes to .chart-container, .chart-title, .chart-selector */
+
+.recharts-responsive-container {
+  width: 100%; /* Full width of the parent container */
+  height: 100%; /* Full height of the parent container */
+}
+
+.chart-selector {
+  background-color: #3498db; /* Button color */
+  color: #ffffff; /* Text color */
+  border: none; /* Removes the default border */
+  padding: 0.5rem 1rem; /* Top and Bottom Padding, Left and Right Padding */
+  margin-bottom: 1rem; /* Space below the selector */
+  cursor: pointer; /* Changes cursor to pointer */
+  border-radius: 20px; /* Rounded corners for the selector/button */
+  outline: none; /* Removes the outline */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+.chart-title {
+  color: #ecf0f1; /* Light text color for readability */
+  margin-bottom: 1rem; /* Space below the title */
+}

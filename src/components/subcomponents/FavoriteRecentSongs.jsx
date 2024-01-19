@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../pagesCSS/FavoriteSongs90s.css";
 import globalVar from "../../global.js";
-const FavoriteRecentSongs = (userName) => {
+const FavoriteRecentSongs = ({userName}) => {
   const [songs, setSongs] = useState([]);
 
   useEffect(() => {

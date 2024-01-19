@@ -136,11 +136,18 @@ const ProfileMiddle = ({ setCurrentPlace }) => {
 
           </div>
           {/* UserPart bileşenini burada kullan */}
+
+
           <FavoriteSongs90s  userName = {globalVar.username}/>
           <FavoriteRecentSongs  userName = {globalVar.username}/>
-          <div style={{ display: "flex" }}>
-            <MonthlyAverageRatingsChart userName = {globalVar.username} />
-            <SongsAddedByPerformerChart userName = {globalVar.username}/>
+          <div className="charts-container" style={{ display: "flex" }}>
+
+          <div className="chart-wrapper">
+            <MonthlyAverageRatingsChart userName={globalVar.username} />
+          </div>
+          <div className="chart-wrapper">
+            <SongsAddedByPerformerChart userName={globalVar.username} />
+          </div>
           </div>
         </div>
       </div>
