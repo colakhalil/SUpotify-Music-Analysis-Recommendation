@@ -7,7 +7,6 @@ const FavoriteAlbums90s = (userName) => {
 
   useEffect(() => {
     // Correct path assuming your server setup serves the public directory
-
     fetch("http://127.0.0.1:8008/" + userName + "/90s")
       .then((response) => {
         if (!response.ok) {
