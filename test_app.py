@@ -224,51 +224,5 @@ class BluePrintTestCase(unittest.TestCase):
         self.assertEqual(response.get_json(), expected_response)
     
 
-
-"""    @patch('app.models.User.query')
-    @patch('app.models.Friendship.query')
-    def test_user_page(self, mock_user_query, mock_friendship_query):
-        # Given a mocked User and Friendship query
-        user_instance = MagicMock()
-        friend_instance1 = MagicMock()
-        friend_instance2 = MagicMock()
-
-        # Configure the mock instances as needed
-        user_instance.first.return_value = User(
-            user_id='testuser',
-            profile_pic='test_profile_pic',
-            last_sid='last_song_id'
-        )
-
-        friend_instance1.all.return_value = [
-            Friendship(user1_id='testuser', user2_id='friend1'),
-            Friendship(user1_id='testuser', user2_id='friend2')
-        ]
-
-        friend_instance2.all.return_value = [
-            Friendship(user1_id='friend3', user2_id='testuser'),
-            Friendship(user1_id='friend4', user2_id='testuser')
-        ]
-
-        mock_user_query.filter_by.return_value = user_instance
-        mock_friendship_query.filter_by.side_effect = [friend_instance1, friend_instance2]
-
-        # When a GET request is made to the user_page endpoint
-        response = self.app.get('/user_data/test@example.com')
-
-        # Then the response status code should be 200 (OK)
-        self.assertEqual(response.status_code, 200)
-
-        # And the response JSON should include the expected user information
-        expected_response = {
-            'username': 'testuser',
-            'profilePicture': 'test_profile_pic',
-            'lastListenedSong': 'last_song_id',
-            'friends': ['friend1', 'friend2', 'friend3', 'friend4'],
-            'friendsCount': 4
-        }
-        self.assertEqual(json.loads(response.data), expected_response)"""
-
-
 if __name__ == '__main__':
     unittest.main()

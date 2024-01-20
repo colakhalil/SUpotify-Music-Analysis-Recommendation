@@ -3,6 +3,7 @@ from flask import Blueprint, Flask, request, url_for, session, jsonify, redirect
 from flask_cors import CORS, cross_origin
 from spotipy.oauth2 import SpotifyOAuth 
 from sqlalchemy import func, or_, desc
+from threading import Thread
 import lyricsgenius as lg
 import spotipy
 import requests
@@ -140,21 +141,48 @@ def save_song(song_id):
 @main.route('/recommendations/<genre>')
 @cross_origin()
 def get_recommendations_by_genre(genre):
+    def fetch_spotify_recommendations():
+        nonlocal recommendations, success
+        try:
+            sp = spotipy.Spotify(auth=token)
+            recommendations = sp.recommendations(seed_genres=[genre], limit=10)
+            success = True
+        except:
+            success = False
 
-    sp = spotipy.Spotify(auth=token)
-    recommendations = sp.recommendations(seed_genres=[genre], limit=10)
-    result = []
-    for track in recommendations['tracks']:
-        curr_track = {
-            'song_id': track['id'],
-            'song_name': track['name'],
-            'artist_name': [artist['name'] for artist in track['artists']],
-            'picture': track['album']['images'][0]['url'],
-            'songLength': track['duration_ms'],
-        }
-        result.append(curr_track)
+    recommendations = None
+    success = False
+    spotify_thread = Thread(target=fetch_spotify_recommendations)
+    spotify_thread.start()
+    spotify_thread.join(timeout=5)
 
-    return jsonify(result)
+    if success and recommendations:
+        result = []
+        for track in recommendations['tracks']:
+            curr_track = {
+                'song_id': track['id'],
+                'song_name': track['name'],
+                'artist_name': [artist['name'] for artist in track['artists']],
+                'picture': track['album']['images'][0]['url'],
+                'songLength': track['duration_ms'],
+            }
+            result.append(curr_track)
+        return jsonify(result)
+    else:
+        # Fetch songs from the database
+        songs = Song.query.all()
+        db_result = []
+        for song in songs:
+            if genre in song.genre:
+                db_song = {
+                    'song_id': song.song_id,
+                    'song_name': song.song_name,
+                    'artist_name': song.artist.artist_name if song.artist else '',
+                    'picture': song.picture,
+                    'songLength': song.duration,
+                }
+                db_result.append(db_song)
+        return jsonify(db_result)
 
 # Route to fetch and save song information, or retrieve existing song information
 @main.route('/get_song_info/<user_id>/<song_id>') 
@@ -895,3 +923,81 @@ def format_recommendations(recommendations):
         result.append(curr_track)
     print("Formatted Recommendations:", result)  # Add this line for logging
     return result
+
+@main.route('/get_top_songs/<country_name>', methods=['GET'])
+@cross_origin()
+def get_top_50_songs_of_country(country_name):
+    # Create a Spotify client
+    sp = spotipy.Spotify(auth=token)
+
+    # Generate the playlist name
+    playlist_name = f"Top 50 - {country_name}"
+
+    # Search for the playlist
+    result = sp.search(q=playlist_name, type='playlist', limit=1)
+    if not result['playlists']['items']:
+        return {'message': False}
+
+    # Get the playlist ID
+    playlist_id = result['playlists']['items'][0]['id']
+
+    # Get the first 10 songs of the playlist
+    tracks = sp.playlist_tracks(playlist_id, limit=10)
+    songs = []
+    for item in tracks['items']:
+        track = item['track']
+        curr_track = {
+            'song_id': track['id'],
+            'song_name': track['name'],
+            'artist_name': [artist['name'] for artist in track['artists']],
+            'picture': track['album']['images'][0]['url'] if track['album']['images'] else None,
+            'songLength': track['duration_ms'],
+        }
+        songs.append(curr_track)
+
+    return jsonify(songs)
+
+@main.route('/enrich_rec/<user_id>/<genre>', methods=['GET'])
+@cross_origin()
+def enrich_rec(user_id, genre):
+
+    songs = Song.query.filter(Song.genre.contains(genre)).all()
+    result = []
+    for song in songs:
+        rate = RateSong.query.filter_by(song_id=song.song_id, user_id=user_id).first()
+        artists = ArtistsOfSong.query.filter_by(song_id=song.song_id).all()
+        curr_song = {
+            'song_id': song.song_id,
+            'song_name': song.song_name,
+            'artist_name': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
+            'picture': song.picture,
+            'songLength': song.duration,
+            'release_date': song.release_date,
+            'rate': rate.rating if rate else 0
+        }
+        result.append(curr_song)
+    return jsonify(result)
+
+@main.route('/get_playlists_songs/<playlistID1>/<playlistID2>')
+@cross_origin()
+def get_playlists_songs(playlistID1, playlistID2):
+    sp = spotipy.Spotify(auth=token)  # token, geçerli bir Spotify API erişim tokeni olmalıdır
+
+    all_songs = []
+
+    # Her iki playlist için şarkıları sorgula ve birleştir
+    for playlist_id in [playlistID1, playlistID2]:
+        playlist_tracks = sp.playlist_tracks(playlist_id)
+
+        for track in playlist_tracks['items']:
+            track_data = track['track']
+            song_data = {
+                'artist_name': track_data['artists'][0]['name'],
+                'song_name': track_data['name'],
+                'song_id': track_data['id'],
+                'picture': track_data['album']['images'][0]['url'],
+                'songLength': track_data['duration_ms'],
+            }
+            all_songs.append(song_data)
+
+    return jsonify(all_songs)

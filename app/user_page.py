@@ -44,6 +44,35 @@ def user_page(email):
         'friends': friends,
         'friendsCount': len(friends)
     })
+    
+@user.route('/user_data_username/<user_id>', methods=['GET'])
+@cross_origin()
+def user_page_username(user_id):
+    
+    user = User.query.filter_by(user_id=user_id).first()
+    if not user:
+        return jsonify({'message': False})
+    
+    friends1 = Friendship.query.filter_by(user1_id=user_id).all()
+    
+    friends2 = Friendship.query.filter_by(user2_id=user_id).all()
+    
+    friends = []
+    
+    for friend in friends1:
+        friends.append(friend.user2_id)
+    
+    for friend in friends2:
+        friends.append(friend.user1_id)
+        
+    
+    return jsonify({
+        'username': user_id,
+        'profilePicture': user.profile_pic,
+        'lastListenedSong': user.last_sid,
+        'friends': friends,
+        'friendsCount': len(friends)
+    })
 
 
 # Route to retrieve the activity of friends of a given user
@@ -255,7 +284,7 @@ def all_rated_songs(current_user_id):
     # Fetch the most recent highly-rated songs listened by the user
     recent_highly_rated_songs = (
         RateSong.query
-        .filter(RateSong.user_id == current_user_id)
+        .filter(RateSong.user_id == current_user_id, RateSong.rating >= 3)
         .all()
     )
     
@@ -267,13 +296,12 @@ def all_rated_songs(current_user_id):
         song_recommendations.append({
             'artists': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
             'song_name': song_info.song_name, 
-            'timestamp': song.timestamp,
             'rating': song.rating,
             'album_name': song_info.album.album_name,
             'picture': song_info.picture,
             'song_id': song.song_id,
             'album_id': song_info.album_id,
-            'duration': song_info.duration
+            'songLength': song_info.duration
         })
 
-    return jsonify({'all_rated_songs': song_recommendations})
+    return jsonify(song_recommendations)
