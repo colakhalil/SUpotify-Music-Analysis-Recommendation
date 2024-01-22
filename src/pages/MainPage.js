@@ -26,6 +26,8 @@ const MainPage = () => {
   const [searchedarray, setSearchedArray] = useState({});
   const [currentPlaylistInfo, setCurrentPlaylistInfo] = useState(null);
   const [dataBaseChanged, setDataBaseChanged] = useState(false);
+    // Add a new state to hold the list of left bar playlists
+  const [leftBarPlaylists, setLeftBarPlaylists] = useState([]);
   const [currentBottomSong, setCurrentBottomSong] = useState({
     id: "song_id",
     artists: "Ebru Gündeş",
@@ -308,10 +310,11 @@ const MainPage = () => {
   return (
     <>
       <div className="main-container">
-        <LeftBar
-          setCurrentPlaylistInfo={setCurrentPlaylistInfo}
-          setCurrentPlace={setCurrentPlace}
-        />
+          <LeftBar
+            setCurrentPlaylistInfo={setCurrentPlaylistInfo}
+            setCurrentPlace={setCurrentPlace}
+            setLeftBarPlaylists={setLeftBarPlaylists} // new prop
+          />
         {currentPlace === "tutorial" && (
           <TutorialComponent setCurrentPlace={setCurrentPlace} />
         )}
@@ -351,7 +354,10 @@ const MainPage = () => {
         {currentPlace === "playlist" && (
           <PlaylistMiddle
             setCurrentBottomSong={setCurrentBottomSong}
-            playlistInfo={currentPlaylistInfo}
+            playlistInfo={{
+              ...currentPlaylistInfo,
+              isMergeAllowed: leftBarPlaylists.some(p => p.playlistID === currentPlaylistInfo.id),
+            }}
           />
         )}
         {currentPlace === "lyrc" && (

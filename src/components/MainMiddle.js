@@ -22,44 +22,48 @@ const MainMiddle = ({
   setSearchedArray,
   friendsData,
 }) => {
+
+  const enrichablePlaylists = new Set(["Pop", "Rock", "Jazz", "House", "Happy", "Sad", "Study", "Chill"]);
+
+
+  
   const handlePlaylistClick = (playlistName, setCurrentPlace) => {
+    
     setCurrentPlace("playlist");
 
-    const playlists = {
-      pop: { ...popPlaylist, name: "Pop" },
-      rock: { ...rockPlaylist, name: "Rock" },
-      jazz: { ...jazzPlaylist, name: "Jazz" },
-      house: { ...housePlaylist, name: "House" },
+    const enrichAllowedPlaylists = ["Pop", "Rock", "Jazz", "House", "Happy", "Sad", "Study", "Chill"];
 
-      happy: { ...happyPlaylist, name: "Happy" },
-      sad: { ...sadPlaylist, name: "Sad" },
-      study: { ...studyPlaylist, name: "Study" },
-      chill: { ...chillPlaylist, name: "Chill" },
-
-      friendrecommendation: {
-        ...friendPlaylist,
-        name: "Friend Recommendation",
-      },
-      recommendedartistsongs: {
-        ...recommendedArtistSongs,
-        name: "Recommended Artist Songs",
-      },
-
-      newlyratedrecommendation: {
-        ...newlyRatedRecommendation,
-        name: "Based on Newly Rated Songs",
-      },
-      geolocationrecommendaiton: {
-        ...geolocationRecommendation,
-        name: "Based on Your Geolocation",
-      },
+    // Build the enriched playlist object only for allowed playlists
+    const buildEnrichedPlaylist = (basePlaylist, name) => {
+      return {
+        ...basePlaylist,
+        name,
+        isEnrichAllowed: enrichAllowedPlaylists.includes(name),
+      };
     };
 
+    const playlists = {
+      pop: buildEnrichedPlaylist(popPlaylist, "Pop"),
+      rock: buildEnrichedPlaylist(rockPlaylist, "Rock"),
+      jazz: buildEnrichedPlaylist(jazzPlaylist, "Jazz"),
+      house: buildEnrichedPlaylist(housePlaylist, "House"),
+      happy: buildEnrichedPlaylist(happyPlaylist, "Happy"),
+      sad: buildEnrichedPlaylist(sadPlaylist, "Sad"),
+      study: buildEnrichedPlaylist(studyPlaylist, "Study"),
+      chill: buildEnrichedPlaylist(chillPlaylist, "Chill"),
+      // Other playlists should have isEnrichAllowed set to false by default
+      friendrecommendation: { ...friendPlaylist, name: "Friend Recommendation" },
+      recommendedartistsongs: { ...recommendedArtistSongs, name: "Recommended Artist Songs" },
+      newlyratedrecommendation: { ...newlyRatedRecommendation, name: "Based on Newly Rated Songs" },
+      geolocationrecommendaiton: { ...geolocationRecommendation, name: "Based on Your Geolocation" },
+    };
+
+    
     setCurrentPlaylistInfo(playlists[playlistName.toLowerCase()]);
     // Here you would handle the click event, such as navigating to the playlist page.
   };
 
-
+ 
 
   const [formattedSongs, setFormattedSongs] = useState([]);
 
@@ -477,6 +481,7 @@ const MainMiddle = ({
       </h2>
       <div className="header-line" />
       <div class="container">
+        
         <div class="Playlist1">
           <Playlist
             name="Pop"
