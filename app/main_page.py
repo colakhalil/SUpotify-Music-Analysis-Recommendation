@@ -110,14 +110,15 @@ def token_add_mobile():
 @main.route("/lyrics/<artist_name>/<song_name>")
 @cross_origin()
 def lyrics(artist_name, song_name):
-    
-    #DB check must be done here
-    
     genius = lg.Genius(GENIUS_API_KEY)
-    song = genius.search_song(title = song_name, artist = artist_name)
-    
+    song = genius.search_song(title=song_name, artist=artist_name)
+
+    if song is None:
+        # If the song is not found, return a 404 response
+        return jsonify({"error": "Lyrics not found"}), 404
+
     return jsonify(song.lyrics)
-    
+
 # Route to save a song to the database 
 @main.route('/save_song/<song_id>', methods=['GET', 'POST'])
 @cross_origin()
