@@ -37,8 +37,12 @@ const FriendProfileMiddle = ({ friendName }) => {
          <FavoriteSongs90s  userName = {friendName}/>
           <FavoriteRecentSongs  userName = {friendName}/>
           <div style={{ display: "flex" }}>
-            <MonthlyAverageRatingsChart userName = {friendName} />
-            <SongsAddedByPerformerChart userName = {friendName}/>
+          <div className="chart-wrapper">
+            <MonthlyAverageRatingsChart userName={friendName} />
+          </div>
+          <div className="chart-wrapper">
+            <SongsAddedByPerformerChart userName={friendName} />
+          </div>
           </div>
       </div>
     </div>

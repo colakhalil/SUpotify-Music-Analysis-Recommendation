@@ -40,6 +40,7 @@
 
   max-width: 1200px; /* Maximum width */
   overflow-y: auto; /* Allow vertical scrolling */
+  margin-bottom: 5rem;
 }
 
 /* Adjustments to song row and other elements as needed */
@@ -193,4 +194,39 @@
 
 
 }
+
+
+.enrich-button {
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #4CAF50; /* A nice shade of green */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  outline: none; /* Remove the outline */
+}
+
+.enrich-button:hover {
+  background-color: #45a049; /* Darken the button a bit on hover for feedback */
+}
+
+.enrich-button:active {
+  transform: translateY(2px); /* Slight push down effect on click */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.enrich-button:focus {
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.5); /* Focus ring around the button */
+}
+
+/* Ensure the button is not too wide on larger screens */
+.enrich-button {
+  max-width: 200px;
+  align-self: center; /* Center button in the flex container */
+}
+
 

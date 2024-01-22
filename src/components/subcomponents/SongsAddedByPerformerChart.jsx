@@ -16,7 +16,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 const SongsAddedByPerformerChart = ({ userName }) => {
   const [data, setData] = useState([]);
   const [chartType, setChartType] = useState('LineChart');
-  const [chartColor, setChartColor] = useState('#8884d8'); // Default color
+  const [chartColor, setChartColor] = useState('#e0f00b'); // Default color
 
   // Function to handle chart type change
   const handleChartTypeChange = (event) => {
