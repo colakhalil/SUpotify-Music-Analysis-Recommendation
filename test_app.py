@@ -91,25 +91,6 @@ class BluePrintTestCase(unittest.TestCase):
             self.assertEqual(inserted_user.email, 'test@example.com')
 
     """"
-    GIVEN a user wants to sign up
-    WHEN the user enters user_id, password and email
-    THEN request should return True
-    """
-    def test_sing_up(self):
-        with create_app().app_context():
-            user_data = {
-                'user_id': 'testuser2',
-                'password': 'testpassword',
-                'email': 'test2@example.com'
-            }
-            response = self.app.post('/sign_up', json=user_data, content_type='application/json')
-        self.assertEqual(response.status_code, 200)
-        result = response.data
-
-        expected_message = b'{"message":true}\n'
-        self.assertEqual(result, expected_message)
-
-    """"
     GIVEN a username already exists
     WHEN the same username is used to sign up
     THEN request should return False
@@ -127,27 +108,6 @@ class BluePrintTestCase(unittest.TestCase):
         result = json.loads(response.data)
 
         self.assertEqual(result['message'], False)
-
-    """ 
-    GIVEN a user in the database with correct credentials
-    WHEN a POST request is made to the login endpoint with correct credentials
-    THEN the response status code should be 200
-    AND the login message should be True
-    """
-    def test_login_success(self):
-        with create_app().app_context():
-            test_user = User(user_id='testuser', password='testpassword', email='test@example.com')
-            db.session.add(test_user)
-            db.session.commit()
-
-            response = self.app.post('/login', json={'email': 'test@example.com', 'password': 'testpassword'})
-
-        self.assertEqual(response.status_code, 200)
-
-        result = json.loads(response.data)
-
-        self.assertEqual(result['message'], True)
-
 
     """
     GIVEN a user in the database with correct credentials

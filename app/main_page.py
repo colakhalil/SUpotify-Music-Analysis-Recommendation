@@ -155,9 +155,9 @@ def get_recommendations_by_genre(genre):
     success = False
     spotify_thread = Thread(target=fetch_spotify_recommendations)
     spotify_thread.start()
-    spotify_thread.join(timeout=5)
+    spotify_thread.join(timeout=10)
 
-    if success and recommendations:
+    if success:
         result = []
         for track in recommendations['tracks']:
             curr_track = {
