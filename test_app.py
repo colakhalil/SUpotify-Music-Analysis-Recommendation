@@ -394,54 +394,6 @@ class BluePrintTestCase(unittest.TestCase):
             self.assertIn('popularity', recommendation)
             self.assertIn('genres', recommendation)
             self.assertIn('followers', recommendation)
-    """
-    # DOES NOT WORK
-    @patch('app.main_page.find_most_liked_artist')
-    @patch('app.main_page.Artist.query')
-    @patch('app.main_page.spotipy.Spotify')
-    def test_recommended_artist_songs_endpoint(self, mock_spotipy, mock_artist_query, mock_find_most_liked_artist):
-        # Mock the Spotify API response
-        mock_find_most_liked_artist.return_value = '1'
-        mock_artist_query.filter_by.return_value.first.return_value = Artist(artist_name='Artist 1', artist_id='1')
-
-        mock_spotify_instance = MagicMock()
-        mock_spotipy.return_value = mock_spotify_instance
-        mock_spotify_instance.artist_top_tracks.return_value = {
-            'tracks': [
-                {
-                    'artists': [{'name': 'Artist 1'}],
-                    'name': 'Song 1',
-                    'id': 'song1',
-                    'album': {'images': [{'url': 'song1.jpg'}], 'name': 'Album 1'},
-                    'duration_ms': 180000
-                },
-                {
-                    'artists': [{'name': 'Artist 1'}],
-                    'name': 'Song 2',
-                    'id': 'song2',
-                    'album': {'images': [{'url': 'song2.jpg'}], 'name': 'Album 2'},
-                    'duration_ms': 240000
-                }
-            ]
-        }
-
-        response = self.app.get('/recommended_artist_songs/1')
-
-        self.assertEqual(response.status_code, 200)
-
-        data = response.get_json()
-        self.assertIn('song_recommendations', data)
-
-        song_recommendations = data['song_recommendations']
-        self.assertTrue(isinstance(song_recommendations, list))
-        self.assertEqual(len(song_recommendations), 2)  # Assert that two songs are returned
-
-        expected_songs = [
-            {'artist_name': 'Artist 1', 'song_name': 'Song 1', 'song_id': 'song1', 'picture': 'song1.jpg', 'songLength': 180000},
-            {'artist_name': 'Artist 1', 'song_name': 'Song 2', 'song_id': 'song2', 'picture': 'song2.jpg', 'songLength': 240000}
-        ]
-        self.assertEqual(song_recommendations, expected_songs)
-        """
     
     @patch('app.main_page.spotipy.Spotify')
     @patch('app.main_page.format_recommendations')
@@ -606,48 +558,6 @@ class BluePrintTestCase(unittest.TestCase):
         # Validate the calls to the Spotify API
         mock_spotify_instance.playlist_tracks.assert_any_call(playlistID1)
         mock_spotify_instance.playlist_tracks.assert_any_call(playlistID2)
-    
-    """
-    @patch('app.main_page.Artist.query')
-    @patch('app.main_page.ArtistsOfSong.query')
-    @patch('app.main_page.RateSong.query')
-    @patch('app.main_page.Song.query')
-    def test_enrich_rec(self, mock_song_query, mock_rate_song_query, mock_artists_of_song_query, mock_artist_query):
-        # Mock Song query
-        mock_songs = [
-            MockSong('song1', 'Song 1', 'image1.jpg', 180000, '2022-01-01', 'Rock'),
-            MockSong('song2', 'Song 2', 'image2.jpg', 200000, '2023-01-01', 'Rock')
-        ]
-        mock_song_query.filter.return_value.all.return_value = mock_songs
-
-        # Mock ArtistsOfSong query
-        mock_artists_of_song_query.filter_by.return_value.all.return_value = [MagicMock(artist_id='artist1')]
-
-        # Mock Artist query
-        mock_artist_query.filter_by.side_effect = lambda artist_id: MagicMock(artist_name='Artist 1') if artist_id == 'artist1' else MagicMock(artist_name='Artist 2')
-
-        # Mock RateSong query
-        mock_rate_song_query.filter_by.side_effect = lambda song_id, user_id: MagicMock(rating=4) if song_id == 'song1' else MagicMock(rating=3)
-
-        user_id = 'user123'
-        genre = 'Rock'
-        response = self.app.get(f'/enrich_rec/{user_id}/{genre}')
-
-        self.assertEqual(response.status_code, 200)
-        response_data = response.get_json()
-        self.assertTrue(isinstance(response_data, list))
-
-        # Check the contents of the response
-        self.assertEqual(len(response_data), 2)
-        for song in response_data:
-            self.assertIn('song_id', song)
-            self.assertIn('song_name', song)
-            self.assertIn('artist_name', song)
-            self.assertIn('picture', song)
-            self.assertIn('songLength', song)
-            self.assertIn('release_date', song)
-            self.assertIn('rate', song)
-    """
         
 if __name__ == '__main__':
     unittest.main()
