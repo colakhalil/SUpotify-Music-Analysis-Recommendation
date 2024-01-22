@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import styles from "../../pagesCSS/FavoriteSongs90s.css";
 import globalVar from "../../global.js";
 
-const FavoriteAlbums90s = () => {
+const FavoriteAlbums90s = ({userName}) => {
   const [albums, setAlbums] = useState([]);
 
   useEffect(() => {
     // Correct path assuming your server setup serves the public directory
-
-    fetch("http://127.0.0.1:8008/" + globalVar.username + "/90s")
+    fetch("http://127.0.0.1:8008/" + userName + "/90s")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");

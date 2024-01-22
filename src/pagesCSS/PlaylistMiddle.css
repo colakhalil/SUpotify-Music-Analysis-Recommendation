@@ -40,6 +40,7 @@
 
   max-width: 1200px; /* Maximum width */
   overflow-y: auto; /* Allow vertical scrolling */
+  margin-bottom: 5rem;
 }
 
 /* Adjustments to song row and other elements as needed */
@@ -193,4 +194,123 @@
 
 
 }
+
+
+.enrich-button {
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #4CAF50; /* A nice shade of green */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  outline: none; /* Remove the outline */
+}
+
+.enrich-button:hover {
+  background-color: #45a049; /* Darken the button a bit on hover for feedback */
+}
+
+.enrich-button:active {
+  transform: translateY(2px); /* Slight push down effect on click */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.enrich-button:focus {
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.5); /* Focus ring around the button */
+}
+
+/* Ensure the button is not too wide on larger screens */
+.enrich-button {
+  max-width: 200px;
+  align-self: center; /* Center button in the flex container */
+}
+
+
+.merge-form {
+  position: fixed; /* or 'absolute' if you want it relative to a positioned parent */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px; /* Adjust width as needed */
+  max-height: 400px; /* Adjust height as needed */
+  background: white;
+  border-radius: 5px;
+  padding: 10px;
+  overflow-y: auto; /* Make it scrollable */
+  z-index: 10; /* Make sure it's above other elements */
+}
+
+.merge-playlist-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.playlist-entry {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+}
+
+.playlist-entry:hover {
+  background-color: #f0f0f0;
+}
+
+/* Shared button styling */
+.button-shared {
+  padding: 10px 20px;
+  font-size: 1em;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  outline: none; /* Remove the outline */
+  max-width: 200px;
+  align-self: center; /* Center button in the flex container */
+}
+
+.button-shared:hover {
+  background-color: #45a049; /* Darken the button a bit on hover for feedback */
+}
+
+.button-shared:active {
+  transform: translateY(2px); /* Slight push down effect on click */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.button-shared:focus {
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.5); /* Focus ring around the button */
+}
+
+/* Enrich button specific styles */
+.enrich-button {
+  background-color: #4CAF50; /* A nice shade of green */
+}
+
+/* Merge button specific styles */
+.merge-button {
+  background-color: #4CAF50; /* A nice shade of blue */
+  margin-left: 1rem;
+}
+
+
+
+/* Button Container Styling */
+.button-container {
+  display: flex; /* This will place the buttons side by side */
+  justify-content: center; /* This will center the buttons in the container */
+}
+
+
+.back-button {
+  background-color: #f44336; /* Red color for the back button */
+  margin-bottom: 1rem; /* Spacing below the button */
+}
+
 

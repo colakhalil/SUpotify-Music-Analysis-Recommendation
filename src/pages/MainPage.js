@@ -3,11 +3,7 @@ import "../pagesCSS/MainPage.css";
 import "../pagesCSS/LeftBar.css";
 import "../pagesCSS/FriendBar.css";
 import "../pagesCSS/BottomBar.css";
-import TutorialComponent from '../pages/TutorialComponent'; // Adjust the path as necessary
-
-
-
-
+import TutorialComponent from "../pages/TutorialComponent"; // Adjust the path as necessary
 
 import Searched from "../components/Searched";
 import axios from "axios";
@@ -30,6 +26,8 @@ const MainPage = () => {
   const [searchedarray, setSearchedArray] = useState({});
   const [currentPlaylistInfo, setCurrentPlaylistInfo] = useState(null);
   const [dataBaseChanged, setDataBaseChanged] = useState(false);
+    // Add a new state to hold the list of left bar playlists
+  const [leftBarPlaylists, setLeftBarPlaylists] = useState([]);
   const [currentBottomSong, setCurrentBottomSong] = useState({
     id: "song_id",
     artists: "Ebru Gündeş",
@@ -52,11 +50,12 @@ const MainPage = () => {
 
   // ... [other functions and states]
 
-  const [currentViewedFriend, setCurrentViewedFriend] = useState(null);
 
-  // This function will be called when a friend is clicked in the FriendActivity component
-  const viewFriendProfile = (friendEmail) => {
-    setCurrentViewedFriend(friendEmail); // Set the current viewed friend
+  const [currentViewedFriendName, setCurrentViewedFriendName] = useState('');
+
+  // Modify the viewFriendProfile function to accept a friend's name
+  const viewFriendProfile = (friendName) => {
+    setCurrentViewedFriendName(friendName); // Set the current viewed friend's name
     setCurrentPlace('friend'); // Change the current place to 'friend' to view the friend's profile
   };
 
@@ -306,17 +305,18 @@ const MainPage = () => {
     fetchFriendsActivity();
   }, [friendsUpdate]); // Depend on friendsUpdate to refetch when it changes
 
+ 
+
   return (
     <>
       <div className="main-container">
-        <LeftBar
-          setCurrentPlaylistInfo={setCurrentPlaylistInfo}
-          setCurrentPlace={setCurrentPlace}
-        />
-        {currentPlace === "tutorial" && (
-          <TutorialComponent 
+          <LeftBar
+            setCurrentPlaylistInfo={setCurrentPlaylistInfo}
             setCurrentPlace={setCurrentPlace}
-            />
+            setLeftBarPlaylists={setLeftBarPlaylists} // new prop
+          />
+        {currentPlace === "tutorial" && (
+          <TutorialComponent setCurrentPlace={setCurrentPlace} />
         )}
         {currentPlace === "main" && (
           <MainMiddle
@@ -354,7 +354,10 @@ const MainPage = () => {
         {currentPlace === "playlist" && (
           <PlaylistMiddle
             setCurrentBottomSong={setCurrentBottomSong}
-            playlistInfo={currentPlaylistInfo}
+            playlistInfo={{
+              ...currentPlaylistInfo,
+              isMergeAllowed: leftBarPlaylists.some(p => p.playlistID === currentPlaylistInfo.id),
+            }}
           />
         )}
         {currentPlace === "lyrc" && (
@@ -367,10 +370,11 @@ const MainPage = () => {
           friendsData={friendsData}
           setCurrentPlace={setCurrentPlace}
           viewFriendProfile={viewFriendProfile} // Pass the function to FriendActivity
+          
 
         />
         {currentPlace === 'friend' && (
-          <FriendProfileMiddle friendEmail={currentViewedFriend}></FriendProfileMiddle>
+          <FriendProfileMiddle friendName={currentViewedFriendName}></FriendProfileMiddle>
         )}
         {currentPlace === "searched" && (
           <Searched

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState }  from "react";
 import FriendItem from "./subcomponents/FriendItem";
 import globalVar from "../global.js"; // Assuming globalVar holds your user info
 
@@ -7,6 +7,7 @@ const FriendActivity = ({
   setCurrentPlace,
   setFriendsUpdate,
   friendsUpdate,
+  viewFriendProfile
 }) => {
   const changeFriendship = async (friend_id, index) => {
     let rateSharing = "private";
@@ -21,6 +22,7 @@ const FriendActivity = ({
       rateSharing = "private";
     }
 
+    console.log("Friends data: ", friendsData);
     let userId = globalVar.username; // Assuming this is how you get the logged-in user's ID
 
     console.log("Rate Sharing:", rateSharing);
@@ -55,11 +57,22 @@ const FriendActivity = ({
     console.log("friendsUpdate:", friendsUpdate);
   };
 
+  const [currentViewedFriendName, setCurrentViewedFriendName] = useState('');
+
+  const handleFriendSelection = (friendName) => {
+    setCurrentViewedFriendName(friendName); // Set the currently viewed friend's name
+    setCurrentPlace("friend"); // Switch to the "friend" view
+  };
+
   return (
     <div className="friend-bar" style={{ overflow: "auto" }}>
       {friendsData.map((friend, index) => (
         <React.Fragment key={friend.name}>
-          <FriendItem friend={friend} setCurrentPlace={setCurrentPlace} />
+          <FriendItem
+            friend={friend}
+            setCurrentPlace={setCurrentPlace}
+            onSelectFriend={viewFriendProfile}
+          />
           <button onClick={() => changeFriendship(friend.name, index)}>
             Change Friendship Type
           </button>

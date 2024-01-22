@@ -1,8 +1,12 @@
 import React from "react";
+import { useEffect } from "react";
 import globalVar from "../../global.js";
 
 const PlaylistContainer = ({ songs, setCurrentBottomSong }) => {
   console.log("ihtiyacım olan", songs);
+  useEffect(() => {
+    console.log('Current songs in PlaylistContainer:', songs); // This will log every time songs is updated
+  }, [songs]);
   const handleSongClick = async (song) => {
     console.log("Song: " + song.id + " clicked");
 

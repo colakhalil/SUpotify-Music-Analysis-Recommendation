@@ -4,24 +4,25 @@ import NavigationButtons from "./subcomponents/NavigationButtons";
 import PlaylistCardLeftbar from "./subcomponents/PlaylistCardLeftbar";
 import globalVar from "../global";
 
-const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
+const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo, setLeftBarPlaylists }) => {
   const [playlists, setPlaylists] = useState([]);
+
+ 
 
   useEffect(() => {
     // Fetch playlists from the API when the component mounts
     const fetchPlaylists = async () => {
       try {
-        const response = await axios.get(
-          "http://127.0.0.1:8008/get_user_playlists"
-        );
+        const response = await axios.get("http://127.0.0.1:8008/get_user_playlists");
         setPlaylists(response.data); // Update the state with the fetched playlists
+        setLeftBarPlaylists(response.data); // Lift the playlists up to the parent component
       } catch (error) {
         console.error("Error fetching playlists:", error);
       }
     };
 
     fetchPlaylists();
-  }, []);
+  }, [setLeftBarPlaylists]);
 
   function transformJson(originalJson) {
     return {
@@ -45,43 +46,38 @@ const LeftBar = ({ setCurrentPlace, setCurrentPlaylistInfo }) => {
 
   const handleClick = async (playlistId) => {
     console.log(`You clicked on playlist with ID: ${playlistId}`);
-
-    const url =
-      "http://127.0.0.1:8008/get_playlist_info/" +
-      globalVar.username +
-      "/" +
-      playlistId;
-
+  
+    const url = `http://127.0.0.1:8008/get_playlist_info/${globalVar.username}/${playlistId}`;
+  
     try {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      let data = await response.json(); // Parsing the JSON data
-      console.log("Fetched data in leftbar: ", data); // Now you log the actual data
-
-      // Assuming transformJson is a function that transforms each song
-      // For example:
-      // function transformJson(song) {
-      //   // transform logic here
-      //   return transformedSong;
-      // }
-
+      let data = await response.json();
+      console.log("Fetched data in leftbar: ", data);
+  
+      // Transform each song in the playlist
       const transformedArray = data.songs.map(transformJson);
-
+  
+      // Add the transformed songs back to the data
       data.songs = transformedArray;
+  
+      // Transform the playlist data
       data = transformPlaylistJson(data);
-      // Update the songs array in data with the transformed array
-      console.log("halıl burdayız", data);
-      setCurrentPlaylistInfo(data);
-
+  
+      // Set the current playlist info with an additional property 'isMergeAllowed'
+      setCurrentPlaylistInfo({
+        ...data,
+        isMergeAllowed: true  // Enable merge button for this playlist
+      });
+  
       setCurrentPlace("playlist");
-
-      /* After getting data put this data to umit's playlist component*/
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+  
 
   const handleMain = () => {
     console.log("Home clicked");
