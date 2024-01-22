@@ -222,52 +222,316 @@ class BluePrintTestCase(unittest.TestCase):
 
         expected_response = {'message': False}
         self.assertEqual(response.get_json(), expected_response)
+
+
+    # Feature: User Page Functionality
+    # Scenario: Retrieve user data based on email
+    # Given: A mocked user and friendship data
+    # When: A GET request is made to '/user_data/test_email'
+    # Then: The user data should be returned successfully     
+    @patch('app.main_page.User.query')
+    @patch('app.main_page.Friendship.query')
+    def test_user_page(self, mock_friendship_query, mock_user_query):
+        # Mock the User query to return a User object when filtered by email
+        mock_user = mock_user_query.filter_by.return_value.first.return_value
+        mock_user.user_id = 'test_user_id'
+        mock_user.profile_pic = 'test_profile_pic'
+        mock_user.last_sid = 'test_last_sid'
+
+        # Mock the Friendship query to return a list of Friendship objects
+        # for both user1_id and user2_id filters
+        mock_friendship1 = MagicMock()
+        mock_friendship1.all.return_value = [
+            Friendship(user1_id="test_user_id", user2_id="friend1"),
+            Friendship(user1_id="test_user_id", user2_id="friend2")
+        ]
+        mock_friendship2 = MagicMock()
+        mock_friendship2.all.return_value = [
+            Friendship(user1_id="friend3", user2_id="test_user_id"),
+            Friendship(user1_id="friend4", user2_id="test_user_id")
+        ]
+        mock_friendship_query.filter_by.side_effect = [mock_friendship1, mock_friendship2]
+        
+        # Send a GET request to the user_page endpoint with a test email
+        response = self.app.get('/user_data/test_email')
+
+        # Assert the response and data returned by the function
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), {
+            'username': 'test_user_id',
+            'profilePicture': 'test_profile_pic',
+            'lastListenedSong': 'test_last_sid',
+            'friends': ['friend1', 'friend2', 'friend3', 'friend4'],
+            'friendsCount': 4,
+        })
+
+    # Feature: User Page Functionality
+    # Scenario: Retrieve user data based on username
+    # Given: A mocked user and friendship data
+    # When: A GET request is made to '/user_data_username/test_user_id'
+    # Then: The user data should be returned successfully 
+    @patch('app.main_page.User.query')
+    @patch('app.main_page.Friendship.query')
+    def test_user_page_username(self, mock_friendship_query, mock_user_query):
+        # Mock the User query to return a User object when filtered by user_id
+        mock_user = mock_user_query.filter_by.return_value.first.return_value
+        mock_user.user_id = 'test_user_id'
+        mock_user.profile_pic = 'test_profile_pic'
+        mock_user.last_sid = 'test_last_sid'
+
+        # Mock the Friendship query to return a list of Friendship objects
+        # for both user1_id and user2_id filters
+        mock_friendship1 = MagicMock()
+        mock_friendship1.all.return_value = [
+            Friendship(user1_id="test_user_id", user2_id="friend1"),
+            Friendship(user1_id="test_user_id", user2_id="friend2")
+        ]
+        mock_friendship2 = MagicMock()
+        mock_friendship2.all.return_value = [
+            Friendship(user1_id="friend3", user2_id="test_user_id"),
+            Friendship(user1_id="friend4", user2_id="test_user_id")
+        ]
+        mock_friendship_query.filter_by.side_effect = [mock_friendship1, mock_friendship2]
+        
+        # Send a GET request to the user_page_username endpoint with a test user_id
+        response = self.app.get('/user_data_username/test_user_id')
+
+        # Assert the response and data returned by the function
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), {
+            'username': 'test_user_id',
+            'profilePicture': 'test_profile_pic',
+            'lastListenedSong': 'test_last_sid',
+            'friends': ['friend1', 'friend2', 'friend3', 'friend4'],
+            'friendsCount': 4,
+        }) 
+
+    # Feature: Friends Activity Functionality
+    # Scenario: Retrieve friends activity data for a user
+    # Given: Mocked user and friendship data
+    # When: A GET request is made to '/friends_activity/test_user_id'
+    # Then: Friends activity data should be returned successfully 
+    @patch('app.main_page.User.query')
+    @patch('app.main_page.Friendship.query')
+    def test_friends_activity(self, mock_friendship_query, mock_user_query):
+        # Mock the Friendship query to return a list of Friendship objects
+        # for both user1_id and user2_id filters
+        mock_friendship1 = MagicMock()
+        mock_friendship1.all.return_value = [
+            Friendship(user1_id="test_user_id", user2_id="friend1", rate_sharing="public"),
+            Friendship(user1_id="test_user_id", user2_id="friend2", rate_sharing="private")
+        ]
+        mock_friendship2 = MagicMock()
+        mock_friendship2.all.return_value = [
+            Friendship(user1_id="friend3", user2_id="test_user_id", rate_sharing="public")
+        ]
+        mock_friendship_query.filter_by.side_effect = [mock_friendship1, mock_friendship2]
+
+        # Setup a side effect function for the mock_user_query.filter_by
+        def user_query_side_effect(**kwargs):
+            user_id = kwargs.get('user_id')
+            mock_user = MagicMock()
+            mock_user.user_id = user_id
+            mock_user.profile_pic = f'{user_id}_profile_pic'
+            mock_user.last_sid = f'{user_id}_last_sid'
+            return MagicMock(first=MagicMock(return_value=mock_user))
+
+        mock_user_query.filter_by.side_effect = user_query_side_effect
+
+        # Send a GET request to the friends_activity endpoint with a test user_id
+        response = self.app.get('/friends_activity/test_user_id')
+
+        # Assert the response and data returned by the function
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), [
+            {'name': 'friend1', 'profilePicture': 'friend1_profile_pic', 'lastListenedSong': 'friend1_last_sid'},
+            {'name': 'friend2', 'profilePicture': 'friend2_profile_pic', 'lastListenedSong': 'private'},
+            {'name': 'friend3', 'profilePicture': 'friend3_profile_pic', 'lastListenedSong': 'friend3_last_sid'}
+        ]) 
+
+    # Feature: Monthly Average Rating Functionality
+    # Scenario: Retrieve monthly average rating for a user
+    # Given: Mocked database query results
+    # When: A GET request is made to '/test_user_id/monthly_average_rating'
+    # Then: Monthly average ratings should be returned successfully 
+    @patch('app.main_page.db.session.query')
+    def test_get_user_monthly_average_rating(self, mock_db_query):
+        # Create a mock for the query results
+        mock_query_result = MagicMock()
+        mock_query_result.all.return_value = [
+            MagicMock(year=2023, month=1, average_rating=4.5),
+            MagicMock(year=2023, month=2, average_rating=4.2)
+        ]
+        mock_db_query.return_value.filter.return_value.group_by.return_value.order_by.return_value.all = mock_query_result.all
+
+        # Send a GET request to the get_user_monthly_average_rating endpoint with a test user_id
+        response = self.app.get('/test_user_id/monthly_average_rating')
+
+        # Expected result
+        expected_result = {
+            'user_id': 'test_user_id',
+            'monthly_average_ratings': [
+                {'year': 2023, 'month': 1, 'average_rating': 4.5},
+                {'year': 2023, 'month': 2, 'average_rating': 4.2}
+            ],
+        }
+
+        # Assert the response and data returned by the function
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), expected_result) 
+    
+    # Feature: Add Friend Functionality
+    # Scenario: Add a new friend
+    # Given: Mocked user and friendship data
+    # When: A POST request is made to '/add_friend/valid_user_id'
+    # Then: The friend should be added successfully 
+    @patch('app.main_page.User.query')
+    @patch('app.main_page.Friendship.query')
+    @patch('app.main_page.db.session')
+    def test_add_friend(self, mock_db_session, mock_friendship_query, mock_user_query):
+        # Mock User query for both user and friend
+        mock_user_query.get.side_effect = lambda user_id: MagicMock(user_id=user_id) if user_id in ['valid_user_id', 'valid_friend_id'] else None
+
+        # Mock Friendship query to simulate no existing friendship
+        mock_friendship_query.filter.return_value.first.return_value = None
+
+        # Mock data for POST request
+        data = {
+            'friend_id': 'valid_friend_id',
+            'rate_sharing': 'public'
+        }
+
+        # Send a POST request to the add_friend endpoint
+        response = self.app.post('/add_friend/valid_user_id', json=data)
+
+        # Assert the response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), {'message': 'Friend added successfully'})
+
+        # Assert that a new Friendship is added and commit is called
+        mock_db_session.add.assert_called()
+        mock_db_session.commit.assert_called() 
+    #
     
 
+    # Feature: Search User Functionality
+    # Scenario: Search for users by a search term
+    # Given: Mocked user data
+    # When: A GET request is made to '/search_user/user'
+    # Then: Users matching the search term should be returned successfully 
+    @patch('app.main_page.User.query')
+    def test_search_friends(self, mock_user_query):
+        # Mock User query to return a list of users for the search term
+        mock_users = [
+            MagicMock(user_id='user123', profile_pic='pic123.jpg'),
+            MagicMock(user_id='user456', profile_pic='pic456.jpg')
+        ]
+        mock_user_query.filter.return_value.all.return_value = mock_users
 
-"""    @patch('app.models.User.query')
-    @patch('app.models.Friendship.query')
-    def test_user_page(self, mock_user_query, mock_friendship_query):
-        # Given a mocked User and Friendship query
-        user_instance = MagicMock()
-        friend_instance1 = MagicMock()
-        friend_instance2 = MagicMock()
+        # Search term
+        search_term = 'user'
 
-        # Configure the mock instances as needed
-        user_instance.first.return_value = User(
-            user_id='testuser',
-            profile_pic='test_profile_pic',
-            last_sid='last_song_id'
-        )
+        # Send a GET request to the search_user endpoint with the search term
+        response = self.app.get(f'/search_user/{search_term}')
 
-        friend_instance1.all.return_value = [
-            Friendship(user1_id='testuser', user2_id='friend1'),
-            Friendship(user1_id='testuser', user2_id='friend2')
+        # Expected result
+        expected_result = [
+            {'user_id': 'user123', 'profile_pic': 'pic123.jpg'},
+            {'user_id': 'user456', 'profile_pic': 'pic456.jpg'}
         ]
 
-        friend_instance2.all.return_value = [
-            Friendship(user1_id='friend3', user2_id='testuser'),
-            Friendship(user1_id='friend4', user2_id='testuser')
-        ]
-
-        mock_user_query.filter_by.return_value = user_instance
-        mock_friendship_query.filter_by.side_effect = [friend_instance1, friend_instance2]
-
-        # When a GET request is made to the user_page endpoint
-        response = self.app.get('/user_data/test@example.com')
-
-        # Then the response status code should be 200 (OK)
+        # Assert the response
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), expected_result)
 
-        # And the response JSON should include the expected user information
-        expected_response = {
-            'username': 'testuser',
-            'profilePicture': 'test_profile_pic',
-            'lastListenedSong': 'last_song_id',
-            'friends': ['friend1', 'friend2', 'friend3', 'friend4'],
-            'friendsCount': 4
+        # Verify that the filter method was called
+        mock_user_query.filter.assert_called() 
+
+
+    # Feature: Update Friendship Functionality
+    # Scenario: Update rate sharing status in a friendship
+    # Given: Mocked friendship data
+    # When: A POST request is made to '/update_friendship/user123'
+    # Then: The friendship's rate sharing status should be updated successfully 
+    @patch('app.main_page.Friendship.query')
+    @patch('app.main_page.db.session')
+    def test_update_friendship(self, mock_db_session, mock_friendship_query):
+        user_id = 'user123'
+        friend_id = 'friend456'
+        new_rate_sharing = 'public'
+
+        # Create a mock Friendship object
+        mock_friendship = MagicMock()
+        mock_friendship.user1_id = user_id
+        mock_friendship.user2_id = friend_id
+        mock_friendship.rate_sharing = 'private'
+
+        # Set up the mock to return the mock Friendship object
+        mock_friendship_query.filter.return_value.first.return_value = mock_friendship
+
+        # Data to send with the POST request
+        data = {
+            'friend_id': friend_id,
+            'rate_sharing': new_rate_sharing
         }
-        self.assertEqual(json.loads(response.data), expected_response)"""
+
+        # Send a POST request to the update_friendship endpoint
+        response = self.app.post(f'/update_friendship/{user_id}', json=data)
+
+        # Assert the response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), {"message": "Friendship rate_sharing updated successfully."})
+
+        # Assert that the rate_sharing attribute was updated
+        self.assertEqual(mock_friendship.rate_sharing, new_rate_sharing)
+
+        # Assert that commit was called
+        mock_db_session.commit.assert_called()
+
+        # Test the case when friendship is not found
+        mock_friendship_query.filter.return_value.first.return_value = None
+        response_not_found = self.app.post(f'/update_friendship/{user_id}', json=data)
+        self.assertEqual(response_not_found.status_code, 404)
+        self.assertEqual(response_not_found.get_json(), {"message": "Friendship not found."})
+    ##all rated songs 
+
+   # Feature: Send Email Recommendations Functionality
+    # Scenario: Send song recommendations via email
+    # Given: Mocked user and email sending function
+    # When: A GET request is made to '/send_recommendations/user123'
+    # Then: Song recommendations should be sent via email successfully 
+    @patch('app.main_page.User.query')
+    @patch('app.user_page.most_rated_songs_mail')
+    @patch('app.user_page.send_email')
+    def test_send_recommendations(self, mock_send_email, mock_most_rated_songs_mail, mock_user_query):
+        user_id = 'user123'
+        user_email = 'user123@example.com'
+
+        # Mock the User query to return a user object
+        mock_user = MagicMock()
+        mock_user.email = user_email
+        mock_user_query.get.return_value = mock_user
+
+        # Mock the most_rated_songs_mail function
+        mock_most_rated_songs_mail.return_value = 'Mocked song recommendations'
+
+        # Send a GET request to the send_recommendations endpoint
+        response = self.app.get(f'/send_recommendations/{user_id}')
+
+        # Assert the response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), {'message': 'Recommendations sent successfully!'})
+
+        # Assert that the send_email function was called with the correct parameters
+        mock_send_email.assert_called_with(user_email, "Song Recommendations", "Your song recommendations:\nMocked song recommendations\nlove <3, \n SUpotify")
+
+        # Test the case when the user is not found
+        mock_user_query.get.return_value = None
+        response_not_found = self.app.get(f'/send_recommendations/{user_id}')
+        self.assertEqual(response_not_found.status_code, 404)
+        self.assertEqual(response_not_found.get_json(), {'error': 'User not found'}) 
+        
+    ## old test 
     @patch('requests.get')
     def test_get_concerts_success(self, mock_get):
         # Mock response object for successful request
@@ -411,11 +675,9 @@ class BluePrintTestCase(unittest.TestCase):
         db.session.add.assert_called()
 
         # Assert that the session was committed
-        db.session.commit.assert_called() 
- 
-
-
-
+        db.session.commit.assert_called()  
+if __name__ == '_main_':
+    unittest.main()  
 
 
 if __name__ == '__main__':
