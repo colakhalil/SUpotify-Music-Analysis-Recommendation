@@ -26,7 +26,6 @@ const MainMiddle = ({
   const enrichablePlaylists = new Set(["Pop", "Rock", "Jazz", "House", "Happy", "Sad", "Study", "Chill"]);
 
 
-  
   const handlePlaylistClick = (playlistName, setCurrentPlace) => {
     
     setCurrentPlace("playlist");
@@ -631,7 +630,7 @@ const MainMiddle = ({
         />
 
         <div>
-          <label htmlFor="country-select">Select a Country:</label>
+          <label className="geo-loc" htmlFor="country-select">Select a Country:</label>
           <select
             id="country-select"
             onChange={handleCountrySelect}
@@ -659,7 +658,7 @@ const MainMiddle = ({
       <h2 className="recommended-title">Artist Recommendation</h2>
       <RecommendArtist currentUserId={globalVar.username} />
       <div>
-        <label htmlFor="city-select">Select a City:</label>
+        <label className="select-cty" htmlFor="city-select">Select a City:</label>
         <select
           id="city-select"
           onChange={handleCitySelect}
@@ -680,7 +679,7 @@ const MainMiddle = ({
       </div>
 
       <div className="concerts-container">
-        <h2>Upcoming Concerts in {selectedCity}</h2>
+        <h2 className="recommended-event">Upcoming Concerts in {selectedCity}</h2>
         <div className="concerts-list">
           {concerts.map((concert, index) => (
             <div className="concert-card" key={index}>

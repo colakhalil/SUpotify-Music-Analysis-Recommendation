@@ -101,12 +101,37 @@
   font-size: 22px;
   text-align-last: center;
 }
-
+.select-cty{
+  font-size:22px;
+  color:white;
+  margin-left: 2rem;
+  margin-bottom: 0.1rem;
+  margin-top:3rem;
+}
 .recommended-title {
   font-size: 30px;
   margin-left: 1.5rem;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   color: white;
+  margin-top:2.3rem;
+}
+
+.geo-loc{
+  font-size: 18px;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  color: white;
+  margin-top:0.1rem;
+  margin-bottom: 3rem;
+
+}
+
+.recommended-event{
+  font-size: 30px;
+  margin-left: 1.5rem;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  color: white;
+  margin-top:0.1rem;
+  margin-bottom:1rem;
 }
 .recommended-genre-title {
   font-size: 25px;

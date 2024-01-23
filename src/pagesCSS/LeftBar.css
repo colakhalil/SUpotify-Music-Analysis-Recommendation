@@ -1,6 +1,18 @@
 
+
+@media (min-width:768px){
+    .left-bar{
+        background-color: #101010;
+        color: #fff;
+        padding: 20px;
+        width: 250px;
+        height: 100vh;
+        box-sizing: border-box;
+        overflow-y: auto;
+    }
+}
 .left-bar{
-    background-color: #000;
+    background-color: #101010;
     color: #fff;
     padding: 20px;
     width: 250px;
