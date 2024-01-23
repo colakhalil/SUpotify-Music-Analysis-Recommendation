@@ -35,7 +35,7 @@ const FavoriteAlbums90s = ({userName}) => {
         // Set the transformed data to your state variable (e.g., albums)
         setAlbums(first6Items);
       });
-  }, []);
+  }, [userName]);
 
   return (
     <div>

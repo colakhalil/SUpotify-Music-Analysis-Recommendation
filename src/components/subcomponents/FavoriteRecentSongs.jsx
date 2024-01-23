@@ -33,7 +33,7 @@ const FavoriteRecentSongs = ({userName}) => {
         // Set the transformed data to your state variable (e.g., albums)
         setSongs(transformedData);
       });
-  }, []);
+  }, [userName]);
 
   return (
     <div>
