@@ -15,13 +15,16 @@ import InfoIcon from "@mui/icons-material/Info";
 import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ setCurrentPlace }) => {
   const [openMenu, setOpenMenu] = useState(false);
   const menuOptions = [
   ];
+  const navigate = useNavigate();
+
   const finishTutorial = () => {
-    setCurrentPlace('main'); // Or any other place you want to navigate to after the tutorial
+    navigate('/main'); // Or any other place you want to navigate to after the tutorial
   };
   return (
     <nav>

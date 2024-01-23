@@ -7,12 +7,10 @@ import Contact from "../TutorialComponents/Contact";
 import Footer from "../TutorialComponents/Footer";
 
 const TutorialComponent = ({ setCurrentPlace}) => {
-  const finishTutorial = () => {
-    setCurrentPlace('main'); // Or any other place you want to navigate to after the tutorial
-  };
+
   return (
     <div className="App">
-      <Home />
+      <Home setCurrentPlace= {setCurrentPlace}/>
       <Work />
 
     </div>

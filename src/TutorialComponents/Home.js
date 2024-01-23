@@ -3,10 +3,10 @@ import React from "react";
 import Navbar from "./Navbar";
 import { FiArrowRight } from "react-icons/fi";
 
-const Home = () => {
+const Home = ({setCurrentPlace}) => {
   return (
     <div className="home-container">
-      <Navbar />
+      <Navbar setCurrentPlace={setCurrentPlace}/>
       <div className="home-banner-container">
 
       <div className="work-section-top">

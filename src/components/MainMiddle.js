@@ -122,23 +122,29 @@ const MainMiddle = ({
         console.error("Error:", error);
       });
   }, [selectedCountry]);
+
   const sendRecommendations = async () => {
     try {
       // Replace with your actual API URL and endpoint
       const response = await axios.get(
-        `http://localhost:5000/send_recommendations/${globalVar.username}`
+        `http://127.0.0.1:8008/send_recommendations/${globalVar.username}`
       );
-
-      if (response.data.message) {
+  
+      if (response.data && response.data.message) {
+        // Display success message
         alert("Recommendations sent successfully!");
       } else {
-        alert("Failed to send recommendations.");
+        // Handle cases where no error is thrown, but the response is not as expected
+        console.error("Unexpected response:", response);
+        alert("Failed to send recommendations. Please try again later.");
       }
     } catch (error) {
+      // Log the error to the console
       console.error("Error sending recommendations:", error);
       alert("An error occurred while sending recommendations.");
     }
   };
+  
 
   const [recommendedArtistSongs, setRecommendedArtistSongs] = useState({
     url: "https://cdn.mos.cms.futurecdn.net/oCtbBypcUdNkomXw7Ryrtf-650-80.jpg.webp",
@@ -472,7 +478,7 @@ const MainMiddle = ({
           setCurrentPlace={setCurrentPlace}
           setSearchedArray={setSearchedArray}
         />
-        <button onClick={sendRecommendations}>
+        <button className="sendRecommendation" onClick={sendRecommendations}>
           Send Me Song Recommendations
         </button>
       </div>

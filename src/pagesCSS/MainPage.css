@@ -446,3 +446,21 @@
   color: #ecf0f1; /* Light text color for readability */
   margin-bottom: 1rem; /* Space below the title */
 }
+
+.sendRecommendation {
+  transform: translateY(2px); /* Slight push down effect on click */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  background-color: #45a049; /* Darken the button a bit on hover for feedback */
+  padding: 10px 20px;
+  font-size: 1em;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  outline: none; /* Remove the outline */
+  max-width: 200px;
+  align-self: center; /* Center button in the flex container */
+}
