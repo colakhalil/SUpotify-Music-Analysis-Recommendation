@@ -110,14 +110,15 @@ def token_add_mobile():
 @main.route("/lyrics/<artist_name>/<song_name>")
 @cross_origin()
 def lyrics(artist_name, song_name):
-    
-    #DB check must be done here
-    
     genius = lg.Genius(GENIUS_API_KEY)
-    song = genius.search_song(title = song_name, artist = artist_name)
-    
+    song = genius.search_song(title=song_name, artist=artist_name)
+
+    if song is None:
+        # If the song is not found, return a 404 response
+        return jsonify({"error": "Lyrics not found"}), 404
+
     return jsonify(song.lyrics)
-    
+
 # Route to save a song to the database 
 @main.route('/save_song/<song_id>', methods=['GET', 'POST'])
 @cross_origin()
@@ -154,9 +155,9 @@ def get_recommendations_by_genre(genre):
     success = False
     spotify_thread = Thread(target=fetch_spotify_recommendations)
     spotify_thread.start()
-    spotify_thread.join(timeout=5)
+    spotify_thread.join(timeout=10)
 
-    if success and recommendations:
+    if success:
         result = []
         for track in recommendations['tracks']:
             curr_track = {

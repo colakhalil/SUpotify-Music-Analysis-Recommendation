@@ -3,6 +3,9 @@ from flask_cors import CORS, cross_origin
 from spotipy.oauth2 import SpotifyOAuth 
 from sqlalchemy import or_, func
 from sqlalchemy.orm import aliased
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import smtplib
 import spotipy
 import requests
 import time 
@@ -305,3 +308,70 @@ def all_rated_songs(current_user_id):
         })
 
     return jsonify(song_recommendations)
+
+def send_email(receiver_address, subject, body):
+    sender_address = 'supotifysabanci@gmail.com'
+    sender_pass = 'njzq stga irtl irrp'
+    server = smtplib.SMTP('smtp.gmail.com', 587)  # SMTP sunucu adresini ve portunu girin
+
+    # SMTP sunucusuna bağlanma ve oturum açma
+    server.starttls()
+    server.login(sender_address, sender_pass)
+
+    # E-posta içeriğini oluşturma
+    message = MIMEMultipart()
+    message['From'] = sender_address
+    message['To'] = receiver_address
+    message['Subject'] = subject
+    message.attach(MIMEText(body, 'plain'))
+
+    # E-posta gönderme ve bağlantıyı kapatma
+    server.send_message(message)
+    server.quit()
+##mail icin  highly rated route
+def most_rated_songs_mail(current_user_id):
+    # Fetch the most recent highly-rated songs listened by the user
+    recent_highly_rated_songs = (
+        RateSong.query
+        .filter(RateSong.user_id == current_user_id, RateSong.rating >= 4)
+        .limit(20)
+        .all()
+    )
+    
+    # Recommendation based on highly-rated songs
+    song_recommendations = []
+    for song in recent_highly_rated_songs:
+        song_info = Song.query.filter(Song.song_id == song.song_id).first()
+        artists = ArtistsOfSong.query.filter(ArtistsOfSong.song_id == song.song_id).all()
+        song_recommendations.append({
+            'artists': [Artist.query.filter_by(artist_id=artist.artist_id).first().artist_name for artist in artists],
+            'song_name': song_info.song_name, 
+            'timestamp': song.timestamp,
+            'rating': song.rating,
+            'album_name': song_info.album.album_name,
+            'picture': song_info.picture,
+            'song_id': song.song_id,
+            'album_id': song_info.album_id,
+            'duration': song_info.duration
+        })
+
+    return str(song_recommendations)
+@user.route('/send_recommendations/<user_id>', methods=['GET'])
+@cross_origin()
+def send_recommendations(user_id):
+    try:
+        # Kullanıcıyı ve tavsiye edilen şarkıları getirin
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        song_recommendations = most_rated_songs_mail(user_id)+ "\n"
+        email_body = "Your song recommendations:\n" + song_recommendations + "love <3, \n SUpotify"
+
+        # E-posta gönder
+        send_email(user.email, "Song Recommendations", email_body)
+
+        return jsonify({'message': 'Recommendations sent successfully!'})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
